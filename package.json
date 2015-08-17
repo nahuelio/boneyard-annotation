@@ -1,0 +1,20 @@
+{
+  "name": "spinal-annotation",
+  "version": "0.1.0",
+  "description": "Annotated IoC implementation for Spinal",
+  "main": "run.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "spinal",
+    "ioc",
+    "annotations"
+  ],
+  "author": "Patricio Ferreira <3dimentionar@gmail.com>",
+  "license": "MIT"
+}
