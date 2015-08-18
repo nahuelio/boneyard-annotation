@@ -1,20 +1,39 @@
 {
-  "name": "spinal-annotation",
-  "version": "0.1.0",
-  "description": "Annotated IoC implementation for Spinal",
-  "main": "run.js",
-  "scripts": {
-    "test": "make test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "none"
-  },
-  "keywords": [
-    "spinal",
-    "ioc",
-    "annotations"
-  ],
-  "author": "Patricio Ferreira <3dimentionar@gmail.com>",
-  "license": "MIT"
+    "name": "spinal-ioc-annotation",
+    "version": "0.1.0",
+    "description": "Annotated IoC implementation for Spinal",
+    "dependencies": {
+        "babel": "5.8.x",
+        "commander": "2.8.1",
+        "violin-annotations": "0.0.x",
+        "underscore": "~1.8"
+    },
+    "devDependencies": {
+        "mocha": "~2.2.5",
+        "yuidocjs": "0.3.x",
+        "karma": "~0.13.9",
+        "karma-mocha": "~0.1",
+        "karma-coverage": "~0.5.0",
+        "karma-spec-reporter": "0.0.x",
+        "karma-htmlfile-reporter": "git+ssh://git@github.com:matthias-schuetz/karma-htmlfile-reporter.git#master"
+    },
+    "main": "./src/build.js",
+    "bin": "./bin/sioc",
+    "scripts": {
+        "test": "make test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "none"
+    },
+    "keywords": [
+        "spinal",
+        "ioc",
+        "annotations"
+    ],
+    "engines": {
+        "node": ">=0.8"
+    },
+    "author": "Patricio Ferreira <3dimentionar@gmail.com>",
+    "license": "MIT"
 }
