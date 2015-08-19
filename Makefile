@@ -28,7 +28,7 @@ docs:
 build:
 	@echo "Build Phase..."
 	@make clean-build && mkdir bin
-	@cp src/com/spinal/ioc-annotation/cli/sioc.js bin/sioc
+	@cp src/com/spinal/annotation/cli/sioc.js bin/sioc
 
 release:
 	@echo "\nCreate Release..."

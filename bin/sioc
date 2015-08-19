@@ -24,4 +24,4 @@ program
 	}).parse(process.argv);
 
 require('babel/register');
-require('../src/com/spinal/ioc-annotation/run')(program.source, program.exclude);
+require('../src/com/spinal/annotation/run')(program.source, program.exclude);
