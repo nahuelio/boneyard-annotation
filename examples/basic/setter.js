@@ -4,37 +4,26 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Backbone from 'libs/backbone';
+import Container from 'views/container';
 
 /**
 *	Class ViaSetter
 *	@namespace examples.basic
 *	@class examples.basic.ViaSetter
+*	@extends examples.views.Container
 *
 *	@requires Backbone
 **/
-export default class ViaSetter extends Backbone.View {
+export default class ViaSetter extends Container {
 
 	/**
+	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
-	*	@param [view] {Backbone.View} view
 	*	@return examples.basic.ViaSetter
 	**/
-	constructor(attrs = {}, view) {
+	constructor(attrs = {}) {
 		super(attrs);
-		return this;
-	}
-
-	/**
-	*	Render View
-	*	@public
-	*	@method render
-	*	@return examples.basic.ViaSetter
-	**/
-	render() {
-		super();
-		this.view.hello();
 		return this;
 	}
 

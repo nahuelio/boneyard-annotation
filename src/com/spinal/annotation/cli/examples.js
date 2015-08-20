@@ -117,6 +117,7 @@ class Examples {
 	get bowerDependencies() {
 		return [
 			'git@github.com:jrburke/requirejs-bower.git#2.1.20',
+			'requirejs-text#2.0.14',
 			'bootstrap#3.3.5',
 			'jquery#2.1.4',
 			'backbone#1.2.2',

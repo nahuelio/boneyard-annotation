@@ -4,38 +4,27 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Backbone from 'libs/backbone';
+import Container from 'views/container';
 
 /**
 *	Class ViaConstructor
 *	@namespace examples.basic
 *	@class examples.basic.ViaConstructor
+*	@extends examples.views.Container
 *
-*	@requires Backbone
+*	@requires examples.views.Container
 **/
-export default class ViaConstructor extends Backbone.View {
+export default class ViaConstructor extends Container {
 
 	/**
 	*	@constructor
-	*	@HERE...
+	*	@autowired
 	*	@param [attrs] {Object} attributes
-	*	@param [view] {Backbone.View} view
+	*	@param [component] {examples.views.Component} Component View
 	*	@return examples.basic.ViaConstructor
 	**/
-	constructor(attrs = {}, view) {
+	constructor(attrs = {}, component) {
 		super(attrs);
-		return this;
-	}
-
-	/**
-	*	Render View
-	*	@public
-	*	@method render
-	*	@return examples.basic.ViaConstructor
-	**/
-	render() {
-		super();
-		this.view.hello();
 		return this;
 	}
 

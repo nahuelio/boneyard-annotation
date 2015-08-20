@@ -11,15 +11,16 @@ requirejs.config({
 		bootstrap: 'libraries/bootstrap/dist/js/bootstrap.min',
 		jquery: 'libraries/jquery/dist/jquery.min',
 		backbone: 'libraries/backbone/backbone-min',
-		underscore: 'libraries/underscore/underscore-min'
+		underscore: 'libraries/underscore/underscore-min',
+		text: 'libraries/requirejs-text/text'
 	},
 
 	shim: {
 		jquery: ['underscore'],
-		bootstrap: ['jquery'],
+		bootstrap: ['jquery', 'text'],
 		backbone: ['bootstrap', 'babel/browser-polyfill.min', 'babel/external-helpers.min']
 	}
 
 });
 
-require(['common/application'], function(Application) { return Application.bootstrap(); })
+require(['application'], function(Application) { return Application.bootstrap(); })

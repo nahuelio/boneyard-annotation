@@ -4,16 +4,17 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Backbone from 'libs/backbone';
+import Container from 'views/container';
 
 /**
 *	Class ViaProperty
 *	@namespace examples.basic
 *	@class examples.basic.ViaProperty
+*	@extends examples.views.Container
 *
 *	@requires Backbone
 **/
-export default class ViaProperty extends Backbone.View {
+export default class ViaProperty extends Container {
 
 	/**
 	*	@constructor
@@ -27,18 +28,6 @@ export default class ViaProperty extends Backbone.View {
 	}
 
 	/**
-	*	Render View
-	*	@public
-	*	@method render
-	*	@return examples.basic.ViaProperty
-	**/
-	render() {
-		super();
-		this.view.hello();
-		return this;
-	}
-
-	/**
 	*	Class Name
 	*	@public
 	*	@property className
@@ -46,16 +35,6 @@ export default class ViaProperty extends Backbone.View {
 	**/
 	get className() {
 		return 'via-property';
-	}
-
-	/**
-	*	@HERE...
-	*	@public
-	*	@property view
-	*	@type Backbone.View
-	**/
-	get view() {
-		return this.view;
 	}
 
 }
