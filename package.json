@@ -4,6 +4,7 @@
     "description": "Annotated IoC implementation for Spinal",
     "dependencies": {
         "babel": "5.8.x",
+        "babel-connect": "6.0.2",
         "commander": "2.8.1",
         "bower": "1.4.x",
         "connect": "3.4.x",

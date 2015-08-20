@@ -8,7 +8,7 @@ requirejs.config({
 
 	paths: {
 		babel: 'libraries/babel',
-		bootstrap: 'libraries/dist/js/bootstrap.min',
+		bootstrap: 'libraries/bootstrap/dist/js/bootstrap.min',
 		jquery: 'libraries/jquery/dist/jquery.min',
 		backbone: 'libraries/backbone/backbone-min',
 		underscore: 'libraries/underscore/underscore-min'

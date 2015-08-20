@@ -8,6 +8,7 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import Bower from 'bower';
 import Connect from 'connect';
+import BabelConnect from 'babel-connect';
 import StaticServe from 'serve-static';
 import colors from 'colors';
 
@@ -21,6 +22,7 @@ import colors from 'colors';
 *	@requires underscore
 *	@requires bower
 *	@requires connect
+*	@requires babel-connect
 *	@requires server-static
 *	@requires colors
 **/
@@ -57,6 +59,7 @@ class Examples {
 	**/
 	clean() {
 		fs.removeSync(this.libraries);
+		fs.removeSync((this.rootDir + '/examples-dist'));
 		return this;
 	}
 
@@ -98,7 +101,11 @@ class Examples {
 	**/
 	spinUp() {
 		console.log(`Server localhost listening on port ${this.port}...`.cyan);
-		Connect().use(StaticServe(this.baseUrl)).listen(this.port);
+		Connect()
+			.use(BabelConnect(this.babelConnect))
+			.use(StaticServe((this.rootDir + '/examples-dist')))
+			.use(StaticServe(this.baseUrl))
+			.listen(this.port);
 		return this;
 	}
 
@@ -128,6 +135,24 @@ class Examples {
 			{ file: 'browser-polyfill.min.js', path: (this.rootDir + babelcorePath) },
 			{ file: 'external-helpers.min.js', path: (this.rootDir + babelcorePath) }
 		];
+	}
+
+	/**
+	*	Babel Connect Configuration
+	*	@public
+	*	@property babelConnect
+	*	@type Object
+	**/
+	get babelConnect() {
+		return {
+			options: {
+				modules: 'amd',
+				externalHelpers: true
+			},
+			src: this.baseUrl,
+			dest: (this.rootDir + '/examples-dist'),
+			ignore: [/libraries/, 'main.js']
+		};
 	}
 
 	/**
