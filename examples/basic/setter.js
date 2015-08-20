@@ -16,16 +16,6 @@ import Backbone from 'libs/backbone';
 export default class ViaSetter extends Backbone.View {
 
 	/**
-	*	Class Name
-	*	@public
-	*	@property className
-	*	@type String
-	**/
-	get className() {
-		return 'via-setter';
-	}
-
-	/**
 	*	@constructor
 	*	@param [attrs] {Object} attributes
 	*	@param [view] {Backbone.View} view
@@ -49,11 +39,21 @@ export default class ViaSetter extends Backbone.View {
 	}
 
 	/**
+	*	Class Name
+	*	@public
+	*	@property className
+	*	@type String
+	**/
+	get className() {
+		return 'via-setter';
+	}
+
+	/**
 	*	Sets View
 	*	@HERE...
 	*	@public
-	*	@property view
-	*	@type Backbone.View
+	*	@method view
+	*	@param basicView {Backbone.View} dependent view
 	**/
 	set view(basicView) {
 		this.basicView = basicView;

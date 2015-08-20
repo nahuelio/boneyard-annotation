@@ -16,16 +16,6 @@ import Backbone from 'libs/backbone';
 export default class ViaConstructor extends Backbone.View {
 
 	/**
-	*	Class Name
-	*	@public
-	*	@property className
-	*	@type String
-	**/
-	get className() {
-		return 'via-constructor';
-	}
-
-	/**
 	*	@constructor
 	*	@HERE...
 	*	@param [attrs] {Object} attributes
@@ -47,6 +37,16 @@ export default class ViaConstructor extends Backbone.View {
 		super();
 		this.view.hello();
 		return this;
+	}
+
+	/**
+	*	Class Name
+	*	@public
+	*	@property className
+	*	@type String
+	**/
+	get className() {
+		return 'via-constructor';
 	}
 
 }

@@ -5,8 +5,13 @@
     "dependencies": {
         "babel": "5.8.x",
         "commander": "2.8.1",
+        "bower": "1.4.x",
+        "connect": "3.4.x",
+        "serve-static": "*",
         "violin-annotations": "0.0.x",
-        "underscore": "~1.8"
+        "underscore": "~1.8",
+        "fs-extra": "0.23.x",
+        "colors": "~0.6.2"
     },
     "devDependencies": {
         "mocha": "~2.2.5",

@@ -1,5 +1,5 @@
 /**
-*	Basic Examples - Injection via constructor and setter
+*	Basic Examples - Injection via property
 *	@module examples.basic
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
@@ -7,22 +7,21 @@
 import Backbone from 'libs/backbone';
 
 /**
-*	Class All
+*	Class ViaProperty
 *	@namespace examples.basic
-*	@class examples.basic.All
+*	@class examples.basic.ViaProperty
 *
 *	@requires Backbone
 **/
-export default class All extends Backbone.View {
+export default class ViaProperty extends Backbone.View {
 
 	/**
 	*	@constructor
-	*	@HERE...
 	*	@param [attrs] {Object} attributes
 	*	@param [view] {Backbone.View} view
-	*	@return examples.basic.All
+	*	@return examples.basic.ViaProperty
 	**/
-	constructor(attrs = {}, view) {
+	constructor(attrs = {}) {
 		super(attrs);
 		return this;
 	}
@@ -31,7 +30,7 @@ export default class All extends Backbone.View {
 	*	Render View
 	*	@public
 	*	@method render
-	*	@return examples.basic.All
+	*	@return examples.basic.ViaProperty
 	**/
 	render() {
 		super();
@@ -46,18 +45,17 @@ export default class All extends Backbone.View {
 	*	@type String
 	**/
 	get className() {
-		return 'via-all';
+		return 'via-property';
 	}
 
 	/**
-	*	Sets View
 	*	@HERE...
 	*	@public
 	*	@property view
 	*	@type Backbone.View
 	**/
-	set view(basicView) {
-		this.basicView = basicView;
+	get view() {
+		return this.view;
 	}
 
 }
