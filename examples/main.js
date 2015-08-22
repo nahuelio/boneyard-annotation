@@ -1,7 +1,7 @@
 /**
 *	Spinal IoC annotation Require Config
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-**/
+*/
 requirejs.config({
 
 	baseUrl: '/',

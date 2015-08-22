@@ -2,7 +2,7 @@
 *	Examples List View
 *	@module examples.views
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-**/
+*/
 
 import Container from 'views/container';
 import ListTemplate from 'text!partials/list.html';
@@ -15,14 +15,14 @@ import ListTemplate from 'text!partials/list.html';
 *
 *	@requires examples.views.Container
 *	@requires examples.partials.ListTemplate
-**/
+*/
 export default class List extends Container {
 
 	/**
 	*	@constructor
 	*	@param [attrs] {Object} attributes
 	*	@return examples.views.List
-	**/
+	*/
 	constructor(attrs = {}) {
 		return super(attrs);
 	}
@@ -33,7 +33,7 @@ export default class List extends Container {
 	*	@method template
 	*	@param [model] {Object} model reference
 	*	@return String
-	**/
+	*/
 	template(model) {
 		return model.map((v, k) => { return ListTemplate });
 	}
@@ -43,7 +43,7 @@ export default class List extends Container {
 	*	@public
 	*	@property tagName
 	*	@type String
-	**/
+	*/
 	get tagName() {
 		return 'ul';
 	}
@@ -53,7 +53,7 @@ export default class List extends Container {
 	*	@public
 	*	@property className
 	*	@type String
-	**/
+	*/
 	get className() {
 		return 'list-group';
 	}

@@ -2,7 +2,7 @@
 *	Basic Examples - Injection via constructor
 *	@module examples.basic
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-**/
+*/
 
 import Container from 'views/container';
 
@@ -13,7 +13,7 @@ import Container from 'views/container';
 *	@extends examples.views.Container
 *
 *	@requires examples.views.Container
-**/
+*/
 export default class ViaConstructor extends Container {
 
 	/**
@@ -22,10 +22,10 @@ export default class ViaConstructor extends Container {
 	*	@param [attrs] {Object} attributes
 	*	@param [component] {examples.views.Component} Component View
 	*	@return examples.basic.ViaConstructor
-	**/
+	*/
 	constructor(attrs = {}, component) {
 		super(attrs);
-		return this;
+		return this.add(component);
 	}
 
 	/**
@@ -33,7 +33,7 @@ export default class ViaConstructor extends Container {
 	*	@public
 	*	@property className
 	*	@type String
-	**/
+	*/
 	get className() {
 		return 'via-constructor';
 	}
