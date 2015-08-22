@@ -3,15 +3,15 @@
 *	@module com.spinal.annotation.cli
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
-import {Annotation, Target} from 'violin-annotations';
+
+import Scanner from '../scanner';
 
 /**
 *	Class Runner
 *	@namespace com.spinal.annotation.cli
 *	@class com.spinal.annotation.cli.Runner
 *
-*	@requires violin-annotations.Annotation
-*	@requires violin-annotations.Target
+*	@requires com.spinal.annotation.Scanner
 **/
 class Runner {
 
@@ -34,7 +34,48 @@ class Runner {
 	*	@return com.spinal.annotation.cli.Runner
 	**/
 	scan() {
-		console.log(this.source, this.exclude);
+		this.scanner = new Scanner(this);
+		this.scanner.on(Scanner.Events.complete, this.onScannerComplete, this)
+			.on(Scanner.Events.bone, this.onScannerBone, this)
+			.on(Scanner.Events.inject, this.onScannerInject, this)
+			.parse();
+		return this;
+	}
+
+	/**
+	*	Scanner Bone Handler
+	*	@public
+	*	@method onScannerBone
+	*	@param bone {com.spinal.annotation.support.Bone} bone reference
+	*	@return com.spinal.annotation.cli.Runner
+	**/
+	onScannerBone(bone) {
+		// TODO
+		return this;
+	}
+
+	/**
+	*	Scanner Injection Handler
+	*	@public
+	*	@method onScannerInject
+	*	@param bone {com.spinal.annotation.support.Bone} bone reference
+	*	@param info {Object} injection information
+	*	@return com.spinal.annotation.cli.Runner
+	**/
+	onScannerInject(bone, info) {
+		// TODO
+		return this;
+	}
+
+	/**
+	*	Scanner Complete Handler
+	*	@public
+	*	@method onScannerComplete
+	*	@param scanner {com.spinal.annotation.Scanner} scanner reference
+	*	@return com.spinal.annotation.cli.Runner
+	**/
+	onScannerComplete() {
+		// TODO
 		return this;
 	}
 

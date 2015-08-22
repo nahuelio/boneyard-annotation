@@ -1,27 +1,27 @@
 /**
-*	Basic Examples - Injection via setter
+*	Basic Examples - Injection via method
 *	@module examples.basic
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-**/
+*/
 
 import Container from 'views/container';
 
 /**
-*	Class ViaSetter
+*	Class ViaMethod
 *	@namespace examples.basic
-*	@class examples.basic.ViaSetter
+*	@class examples.basic.ViaMethod
 *	@extends examples.views.Container
 *
 *	@requires Backbone
-**/
-export default class ViaSetter extends Container {
+*/
+export default class ViaMethod extends Container {
 
 	/**
 	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
-	*	@return examples.basic.ViaSetter
-	**/
+	*	@return examples.basic.ViaMethod
+	*/
 	constructor(attrs = {}) {
 		super(attrs);
 		return this;
@@ -32,20 +32,22 @@ export default class ViaSetter extends Container {
 	*	@public
 	*	@property className
 	*	@type String
-	**/
+	*/
 	get className() {
-		return 'via-setter';
+		return 'via-method';
 	}
 
 	/**
-	*	Sets View
-	*	@HERE...
+	*	Sets Component
 	*	@public
-	*	@method view
-	*	@param basicView {Backbone.View} dependent view
-	**/
-	set view(basicView) {
-		this.basicView = basicView;
+	*	@override
+	*	@autowired
+	*	@method add
+	*	@param component {Backbone.View} component view
+	*	@return examples.basic.ViaMethod
+	*/
+	add(component) {
+		return super().add(component);
 	}
 
 }

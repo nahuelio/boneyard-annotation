@@ -10,7 +10,6 @@ import Bower from 'bower';
 import Connect from 'connect';
 import BabelConnect from 'babel-connect';
 import StaticServe from 'serve-static';
-import colors from 'colors';
 
 /**
 *	Class Examples
@@ -24,7 +23,6 @@ import colors from 'colors';
 *	@requires connect
 *	@requires babel-connect
 *	@requires server-static
-*	@requires colors
 **/
 class Examples {
 
@@ -47,7 +45,7 @@ class Examples {
 	*	@return com.spinal.annotation.cli.Examples
 	**/
 	initialize() {
-		console.log(this.program.version().magenta);
+		console.log(this.program.version());
 		return this;
 	}
 
@@ -71,7 +69,7 @@ class Examples {
 	*	@return com.spinal.annotation.cli.Examples
 	**/
 	install(callback = function() {}) {
-		console.log('Installing Dependencies...'.cyan);
+		console.log('Installing Dependencies...');
 		Bower.commands.install(this.bowerDependencies, null, { cwd: this.baseUrl, directory: 'libraries' })
 			.on('end', _.bind(this.babel, this, callback));
 		return this;
@@ -100,7 +98,7 @@ class Examples {
 	*	@return Connect
 	**/
 	spinUp() {
-		console.log(`Server localhost listening on port ${this.port}...`.cyan);
+		console.log(`Server localhost listening on port ${this.port}...`);
 		Connect()
 			.use(BabelConnect(this.babelConnect))
 			.use(StaticServe((this.rootDir + '/examples-dist')))

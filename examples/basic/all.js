@@ -2,7 +2,7 @@
 *	Basic Examples - Injection via constructor and setter
 *	@module examples.basic
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-**/
+*/
 
 import Backbone from 'libs/backbone';
 
@@ -12,7 +12,7 @@ import Backbone from 'libs/backbone';
 *	@class examples.basic.All
 *
 *	@requires Backbone
-**/
+*/
 export default class All extends Backbone.View {
 
 	/**
@@ -21,7 +21,7 @@ export default class All extends Backbone.View {
 	*	@param [attrs] {Object} attributes
 	*	@param [view] {Backbone.View} view
 	*	@return examples.basic.All
-	**/
+	*/
 	constructor(attrs = {}, view) {
 		super(attrs);
 		return this;
@@ -32,7 +32,7 @@ export default class All extends Backbone.View {
 	*	@public
 	*	@method render
 	*	@return examples.basic.All
-	**/
+	*/
 	render() {
 		super();
 		this.view.hello();
@@ -44,7 +44,7 @@ export default class All extends Backbone.View {
 	*	@public
 	*	@property className
 	*	@type String
-	**/
+	*/
 	get className() {
 		return 'via-all';
 	}
@@ -55,7 +55,7 @@ export default class All extends Backbone.View {
 	*	@public
 	*	@property view
 	*	@type Backbone.View
-	**/
+	*/
 	set view(basicView) {
 		this.basicView = basicView;
 	}
