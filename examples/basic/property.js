@@ -29,11 +29,13 @@ export default class ViaProperty extends Container {
 
 	/**
 	*	@public
-	*	@autowired
+	*	@wire(bone = "List", property = "view", name = "list")
 	*	@property component
 	*	@type Backbone.View
 	*/
-	get component() { }
+	get view() {
+		return this.list;
+	}
 
 	/**
 	*	Class Name

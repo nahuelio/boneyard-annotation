@@ -14,7 +14,7 @@ import Container from 'views/container';
 *
 *	@requires Backbone
 */
-export default class ViaMethod extends Container {
+class ViaMethod extends Container {
 
 	/**
 	*	Constructor
@@ -39,15 +39,17 @@ export default class ViaMethod extends Container {
 
 	/**
 	*	Sets Component
+	*	@wire(bone = "Container", method = "add", name = "view")
 	*	@public
 	*	@override
-	*	@autowired
 	*	@method add
 	*	@param component {Backbone.View} component view
 	*	@return examples.basic.ViaMethod
 	*/
-	add(component) {
-		return super().add(component);
+	add(view) {
+		return super().add(view);
 	}
 
 }
+
+export default ViaMethod;

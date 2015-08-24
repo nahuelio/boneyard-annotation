@@ -14,18 +14,17 @@ import Container from 'views/container';
 *
 *	@requires examples.views.Container
 */
-export default class ViaConstructor extends Container {
+class ViaConstructor extends Container {
 
 	/**
 	*	@constructor
-	*	@autowired
+	*	@wire(bone = "Container", method = "constructor", name = "container")
 	*	@param [attrs] {Object} attributes
-	*	@param [component] {examples.views.Component} Component View
 	*	@return examples.basic.ViaConstructor
 	*/
-	constructor(attrs = {}, component) {
+	constructor(attrs = {}, container) {
 		super(attrs);
-		return this.add(component);
+		return this.add(container);
 	}
 
 	/**
@@ -39,3 +38,5 @@ export default class ViaConstructor extends Container {
 	}
 
 }
+
+export default ViaConstructor;

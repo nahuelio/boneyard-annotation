@@ -32,8 +32,8 @@ export default class Bone extends Annotation {
 	*	@property id
 	*	@type String
 	**/
-	get id() {
-		return 'Something';
+	set id(id) {
+		this.boneId = id;
 	}
 
 	/**

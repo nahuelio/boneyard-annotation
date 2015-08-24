@@ -4,17 +4,17 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
 
-import Backbone from 'backbone';
+import {View} from 'backbone';
 
 /**
 *	Class Container
 *	@namespace examples.views
 *	@class examples.views.Container
-*	@bone(id = 'container')
+*	@bone(id = "Container")
 *
 *	@requires Backbone
 */
-export default class Container extends Backbone.View {
+class Container extends View {
 
 	/**
 	*	Constructor
@@ -217,3 +217,5 @@ export default class Container extends Backbone.View {
 	}
 
 }
+
+export default Container;

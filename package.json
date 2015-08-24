@@ -12,7 +12,7 @@
         "violin-annotations": "0.0.x",
         "underscore": "~1.8",
         "fs-extra": "0.23.x",
-        "colors": "~0.6.2"
+        "glob": "5.0.14"
     },
     "devDependencies": {
         "mocha": "~2.2.5",
@@ -23,7 +23,7 @@
         "karma-spec-reporter": "0.0.x",
         "karma-htmlfile-reporter": "git+ssh://git@github.com:matthias-schuetz/karma-htmlfile-reporter.git#master"
     },
-    "main": "./src/build.js",
+    "main": "./src/com/spinal/annotation/cli/sioc.js",
     "bin": "./bin/sioc",
     "scripts": {
         "test": "make test"

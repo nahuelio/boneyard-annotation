@@ -6,6 +6,7 @@
 **/
 
 var program = require('commander'),
+	resolve = require('path').resolve,
 	_ = require('underscore'),
 	pkg = require('../package.json'),
 	es6 = require('babel/register');
@@ -27,7 +28,7 @@ program
 		return paths.split(',');
 	})
 	.action(_.bind(function(source, program) {
-		require('../src/com/spinal/annotation/cli/run')(source, program.exclude, program);
+		require('../src/com/spinal/annotation/cli/run')(resolve(__dirname, '../', source), program.exclude, program);
 	}, this));
 
 /**
