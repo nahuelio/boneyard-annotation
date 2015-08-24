@@ -87,7 +87,7 @@ class Runner {
 	*	@param exclude {Array} list of files/patterns to be excluded
 	*	@return com.spinal.annotation.cli.Runner
 	**/
-	static run(source = './src', exclude = []) {
+	static run(source = './examples', exclude = []) {
 		return new Runner(source, exclude).scan();
 	}
 

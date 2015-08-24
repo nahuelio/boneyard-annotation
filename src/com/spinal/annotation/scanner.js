@@ -7,6 +7,7 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import {EventEmitter} from 'events';
+import Glob from 'glob';
 import _ from 'underscore';
 import Parser from 'violin-annotations';
 import ES6Reader from 'violin-annotations/src/reader/Es6Reader';
@@ -20,6 +21,7 @@ import ES6Reader from 'violin-annotations/src/reader/Es6Reader';
 *	@requires path
 *	@requires events.EventEmitter
 *	@requires underscore
+*	@requires glob
 *	@requires violin-annotations.Parser
 *	@requires violin-annotations.src.reader.Es6Reader
 **/
@@ -83,7 +85,7 @@ export default class Scanner extends EventEmitter {
 	parse() {
 		console.log('\nScanning annotations...\n');
 		if(this.isFile(this.runner.source)) this.file(this.runner.source);
-		if(this.isFolder(this.runner.source)) this.batch();
+		if(this.isFolder(this.runner.source)) this.batch(this.allowedMatches, this.rootDir);
 		return this;
 	}
 
@@ -93,8 +95,10 @@ export default class Scanner extends EventEmitter {
 	*	@method batch
 	*	@return com.spinal.annotation.Scanner
 	**/
-	batch() {
-		fs.readdirSync(this.runner.source).forEach(p => this.file(p));
+	batch(patterns, basePath) {
+		Glob.sync('**/*.js', { cwd: this.runner.source, nodir: true, ignore: this.ignoreList }).forEach(f => {
+			this.file(resolve(this.runner.source, f), f);
+		});
 	}
 
 	/**
@@ -104,9 +108,9 @@ export default class Scanner extends EventEmitter {
 	*	@param path {String} source path
 	*	@return com.spinal.annotation.Scanner
 	**/
-	file(path) {
+	file(path, filename) {
 		console.log(`File ${path}:\n`);
-		this.parser.parseFile(path, _.bind(this.onFile, this));
+		this.parser.parseFile(path, _.bind(this.onFile, this, filename));
 		return this;
 	}
 
@@ -118,9 +122,22 @@ export default class Scanner extends EventEmitter {
 	*	@param annotations {Array} annotations found
 	*	@return com.spinal.annotation.Scanner
 	**/
-	onFile(err, annotations) {
-		if(err) throw new Error(err);
-		//console.log(annotations.classAnnotations);
+	onFile(filename, err, annotations) {
+		if(err) {
+			console.log(err);
+			process.exit(1);
+		}
+		console.log(filename, ' =>', annotations);
+	}
+
+	/**
+	*	Ignore List
+	*	@public
+	*	@property ignoreList
+	*	@type Array
+	**/
+	get ignoreList() {
+		return ['libraries/**/*.*', 'main.js'];
 	}
 
 	/**
@@ -147,7 +164,6 @@ export default class Scanner extends EventEmitter {
 		return [
 			'bone',
 			'scan',
-			'autowired',
 			'wire'
 		];
 	}

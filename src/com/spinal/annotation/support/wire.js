@@ -23,17 +23,48 @@ export default class Wire extends Annotation {
 	*	@return com.spinal.annotation.support.Wire
 	**/
 	constructor(attrs = {}) {
-		return super(attrs);
+		super(attrs);
+		return this;
 	}
 
 	/**
-	*	Reference to bone id
+	*	Sets bone id
 	*	@public
-	*	@property id
+	*	@property bone id
 	*	@type String
 	**/
-	get id() {
-		return 'Something';
+	set bone(id) {
+		this.boneId = id;
+	}
+
+	/**
+	*	Sets Param Name
+	*	@public
+	*	@property name
+	*	@type String
+	**/
+	set name(name) {
+		this.paramName = name;
+	}
+
+	/**
+	*	Sets Property Name
+	*	@public
+	*	@property property
+	*	@type String
+	**/
+	set property(name) {
+		this.propertyName = name;
+	}
+
+	/**
+	*	Sets Method Name
+	*	@public
+	*	@property method name
+	*	@type String
+	**/
+	set method(name) {
+		this.methodName = name;
 	}
 
 	/**

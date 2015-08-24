@@ -11,12 +11,12 @@ import ListTemplate from 'text!partials/list.html';
 *	Class List
 *	@namespace examples.views
 *	@class examples.views.List
-*	@bone(id = 'list')
+*	@bone(id = "List")
 *
 *	@requires examples.views.Container
 *	@requires examples.partials.ListTemplate
 */
-export default class List extends Container {
+class List extends Container {
 
 	/**
 	*	@constructor
@@ -59,3 +59,5 @@ export default class List extends Container {
 	}
 
 }
+
+export default List;

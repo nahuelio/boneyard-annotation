@@ -29,7 +29,6 @@ class Application extends Container {
 	/**
 	*	Views setter
 	*	@public
-	*	@autowired
 	*	@param [exampleViews...] {Array} collection of views
 	*	@method setViews
 	*/
