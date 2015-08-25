@@ -5,7 +5,6 @@
 **/
 import fs from 'fs-extra';
 import {resolve} from 'path';
-import _ from 'underscore';
 import Bower from 'bower';
 import Connect from 'connect';
 import BabelConnect from 'babel-connect';
@@ -18,7 +17,6 @@ import StaticServe from 'serve-static';
 *
 *	@requires fs-extra
 *	@requires resolve
-*	@requires underscore
 *	@requires bower
 *	@requires connect
 *	@requires babel-connect
@@ -57,7 +55,7 @@ class Examples {
 	**/
 	clean() {
 		fs.removeSync(this.libraries);
-		fs.removeSync((this.rootDir + '/examples-dist'));
+		fs.removeSync((this.rootDir + '/dist'));
 		return this;
 	}
 
@@ -101,7 +99,7 @@ class Examples {
 		console.log(`Server localhost listening on port ${this.port}...`);
 		Connect()
 			.use(BabelConnect(this.babelConnect))
-			.use(StaticServe((this.rootDir + '/examples-dist')))
+			.use(StaticServe((this.rootDir + '/dist')))
 			.use(StaticServe(this.baseUrl))
 			.listen(this.port);
 		return this;
@@ -149,7 +147,7 @@ class Examples {
 				externalHelpers: true
 			},
 			src: this.baseUrl,
-			dest: (this.rootDir + '/examples-dist'),
+			dest: (this.rootDir + '/dist'),
 			ignore: [/libraries/, 'main.js']
 		};
 	}

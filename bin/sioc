@@ -8,27 +8,27 @@
 var program = require('commander'),
 	resolve = require('path').resolve,
 	_ = require('underscore'),
-	pkg = require('../package.json'),
+	pkg = require('./package.json'),
 	es6 = require('babel/register');
 
 /**
 *	Version
 **/
 program
-	.version(('Sioc@' + pkg.version + ' - Spinal IoC Annotation based CLI Tool\n'))
+	.version(('sioc@' + pkg.version + ' - Spinal IoC Annotation based CLI Tool\n'))
 	.usage('[command] [options]');
 
 /**
 *	Command: Build
 **/
 program
-	.command('build [source]')
+	.command('sioc [source]')
 	.description('Scans, analyzes and build dependency injection given a source dir (or an specific file that uses @scan annotations)')
 	.option('-e, --exclude <paths...>', 'Exclude files using patterns from the scanner', function(paths) {
 		return paths.split(',');
 	})
 	.action(_.bind(function(source, program) {
-		require('../src/com/spinal/annotation/cli/run')(resolve(__dirname, '../', source), program.exclude, program);
+		require('./src/com/spinal/annotation/commands/run')(resolve(__dirname, '../', source), program.exclude, program);
 	}, this));
 
 /**
@@ -38,7 +38,7 @@ program
 	.command('examples [port]')
 	.description('Spins up a simple http server to check examples results')
 	.action(_.bind(function(command, port) {
-		require('../src/com/spinal/annotation/cli/examples')((arguments.length === 3) ? port : undefined, program);
+		require('./src/com/spinal/annotation/commands/examples')((arguments.length === 3) ? port : undefined, program);
 	}, this));
 
 /**

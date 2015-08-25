@@ -4,10 +4,14 @@
 
 clean:
 	@echo "Clean Phase..."
-	@make clean-test && make clean-docs && make clean-build
+	@make clean-test && make clean-examples-test && make clean-docs && make clean-build
 
 clean-test:
 	@rm -fr coverage
+	@rm -f coverage.html
+
+clean-examples-test:
+	@rm -fr examples-coverage
 
 clean-docs:
 	@rm -fr apidocs
@@ -18,6 +22,11 @@ clean-build:
 test:
 	@echo "Test Phase..."
 	@make clean-test
+	@./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha -- --opts mocha.opts
+
+test-examples:
+	@echo "Example Tests Phase..."
+	@make clean-examples-test
 	@karma start karma.config.js --no-auto-watch --single-run
 
 docs:
@@ -28,7 +37,7 @@ docs:
 build:
 	@echo "Build Phase..."
 	@make clean-build && mkdir bin
-	@cp src/com/spinal/annotation/cli/sioc.js bin/sioc
+	@cp ./index.js bin/sioc
 
 release:
 	@echo "\nCreate Release..."
@@ -36,5 +45,4 @@ release:
 	@echo "NPM Linking..."
 	@npm link
 
-.PHONY:
-	clean clean-test clean-docs clean-build test docs build release
+.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples docs build release

@@ -6,19 +6,38 @@ module.exports = function(config) {
 
     config.set({
 
-        basePath: 'test',
+        basePath: './',
 
-        frameworks: ['mocha'],
+        frameworks: ['mocha', 'expect', 'requirejs'],
 
-        files: ['src/**/*.js', 'test/**/*.js'],
+        files: [
+            'node_modules/karma-babel-preprocessor/node_modules/babel-core/browser-polyfill.js',
+            './src/examples/**/*.js',
+            './test/examples/**/*.js'
+        ],
 
         exclude: [],
 
-        preprocessors: { 'src/*.js': ['coverage'] },
+        preprocessors: {
+            './src/examples/**/*.js': ['babel', 'coverage'],
+            './test/examples/**/*.js': ['babel']
+        },
 
         reporters: ['progress', 'coverage'],
 
-        coverageReporter: { type : 'html', dir : 'coverage/' },
+        babelPreprocessor: {
+            options: {
+                sourceMap: 'inline'
+            },
+            filename: function (file) {
+                return file.originalPath.replace(/\.js$/, '.es5.js');
+            },
+            sourceFileName: function (file) {
+                return file.originalPath;
+            }
+        },
+
+        coverageReporter: { type : 'html', dir : 'examples-coverage' },
 
         port: 9876,
 
@@ -28,7 +47,7 @@ module.exports = function(config) {
 
         autoWatch: true,
 
-        browsers: [],
+        browsers: ['PhantomJS'],
 
         singleRun: false
     });
