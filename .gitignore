@@ -1,4 +1,5 @@
 /node_modules/
 /apidocs/
-/examples/libraries/
-/examples-dist/
+/src/examples/libraries/
+/dist/
+/coverage/
