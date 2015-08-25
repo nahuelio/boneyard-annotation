@@ -1,6 +1,6 @@
 /**
 *	Spinal IoC Annotation module
-*	@module com.spinal.annotation.cli
+*	@module com.spinal.annotation.commands
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 import fs from 'fs-extra';
@@ -12,8 +12,8 @@ import StaticServe from 'serve-static';
 
 /**
 *	Class Examples
-*	@namespace com.spinal.annotation.cli
-*	@class com.spinal.annotation.cli.Examples
+*	@namespace com.spinal.annotation.commands
+*	@class com.spinal.annotation.commands.Examples
 *
 *	@requires fs-extra
 *	@requires resolve
@@ -28,7 +28,7 @@ class Examples {
 	*	@constructor
 	*	@param port {Number} port number
 	*	@param program {Object} program reference
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	constructor(port, program) {
 		this.port = port;
@@ -40,7 +40,7 @@ class Examples {
 	*	initialize
 	*	@public
 	*	@method initialize
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	initialize() {
 		console.log(this.program.version());
@@ -51,7 +51,7 @@ class Examples {
 	*	Clean Installed Dependencies
 	*	@public
 	*	@method clean
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	clean() {
 		fs.removeSync(this.libraries);
@@ -64,7 +64,7 @@ class Examples {
 	*	@public
 	*	@method install
 	*	@param callback {Function} callback
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	install(callback = function() {}) {
 		console.log('Installing Dependencies...');
@@ -77,7 +77,7 @@ class Examples {
 	*	Install Babel Goodies (Helpers and Polyfill)
 	*	@public
 	*	@method babel
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	babel(callback) {
 		if(fs.existsSync(this.rootDir + '/node_modules')) {
@@ -185,7 +185,7 @@ class Examples {
 	*	@method run
 	*	@param port {Number} Port Number
 	*	@param program {Object} program reference
-	*	@return com.spinal.annotation.cli.Examples
+	*	@return com.spinal.annotation.commands.Examples
 	**/
 	static run(port = 9393, program) {
 		return new Examples(port, program);

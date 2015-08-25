@@ -3,7 +3,7 @@
     "description": "API Docs for Annotated IoC implementation on Spinal",
     "version": "0.1.0",
     "options": {
-        "exclude": "src/examples"
+        "exclude": "src/examples",
         "outdir": "apidocs"
     }
 }

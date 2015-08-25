@@ -1,6 +1,6 @@
 /**
 *	Spinal IoC Annotation module
-*	@module com.spinal.annotation.cli
+*	@module com.spinal.annotation.commands
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
@@ -8,8 +8,8 @@ import Scanner from '../scanner';
 
 /**
 *	Class Runner
-*	@namespace com.spinal.annotation.cli
-*	@class com.spinal.annotation.cli.Runner
+*	@namespace com.spinal.annotation.commands
+*	@class com.spinal.annotation.commands.Runner
 *
 *	@requires com.spinal.annotation.Scanner
 **/
@@ -19,7 +19,7 @@ class Runner {
 	*	@constructor
 	*	@param source {String} source path
 	*	@param [exclude] {Array} list of file patterns to exclude
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	constructor(source, exclude) {
 		this.source = source;
@@ -31,7 +31,7 @@ class Runner {
 	*	Scan Source path
 	*	@public
 	*	@method scan
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	scan() {
 		this.scanner = new Scanner(this);
@@ -47,7 +47,7 @@ class Runner {
 	*	@public
 	*	@method onScannerBone
 	*	@param bone {com.spinal.annotation.support.Bone} bone reference
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	onScannerBone(bone) {
 		// TODO
@@ -60,7 +60,7 @@ class Runner {
 	*	@method onScannerInject
 	*	@param bone {com.spinal.annotation.support.Bone} bone reference
 	*	@param info {Object} injection information
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	onScannerInject(bone, info) {
 		// TODO
@@ -72,7 +72,7 @@ class Runner {
 	*	@public
 	*	@method onScannerComplete
 	*	@param scanner {com.spinal.annotation.Scanner} scanner reference
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	onScannerComplete() {
 		// TODO
@@ -85,7 +85,7 @@ class Runner {
 	*	@method run
 	*	@param source {String} source path to be analyzed
 	*	@param exclude {Array} list of files/patterns to be excluded
-	*	@return com.spinal.annotation.cli.Runner
+	*	@return com.spinal.annotation.commands.Runner
 	**/
 	static run(source = './examples', exclude = []) {
 		return new Runner(source, exclude).scan();
