@@ -5,6 +5,7 @@
 **/
 import fs from 'fs-extra';
 import {resolve} from 'path';
+import _ from 'underscore';
 import Bower from 'bower';
 import Connect from 'connect';
 import BabelConnect from 'babel-connect';
@@ -17,6 +18,7 @@ import StaticServe from 'serve-static';
 *
 *	@requires fs-extra
 *	@requires resolve
+*	@requires underscore
 *	@requires bower
 *	@requires connect
 *	@requires babel-connect
@@ -176,7 +178,7 @@ class Examples {
 	*	@type String
 	**/
 	get rootDir() {
-		return resolve(__dirname, '../../../../../');
+		return resolve(__dirname, '../../../../');
 	}
 
 	/**
