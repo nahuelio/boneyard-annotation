@@ -3,8 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import expect from 'expect.js';
-import Tokenizer from '../../../../../../src/com/spinal/annotation/engine/parser/tokenizer';
+var Tokenizer = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/parser/tokenizer');
 
 describe('com.spinal.annotation.engine.parser.Tokenizer', function() {
 
