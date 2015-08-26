@@ -1,3 +1,4 @@
+--require ./test/global
 --recursive
 --ui bdd
 --timeout 500
