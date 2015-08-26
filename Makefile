@@ -8,7 +8,6 @@ clean:
 
 clean-test:
 	@rm -fr coverage
-	@rm -f coverage.html
 
 clean-examples-test:
 	@rm -fr examples-coverage
@@ -22,13 +21,18 @@ clean-build:
 test:
 	@echo "\033[1;36m[Test Phase]\033[0m"
 	@make clean-test
-	@LIB_PATH=$(shell pwd)/src/ ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover \
-		./node_modules/.bin/_mocha -- --opts mocha.opts
+	@LIB_PATH=$(shell pwd)/src/ ./node_modules/.bin/_mocha --opts mocha.opts --watch
 
 test-examples:
 	@echo "\033[1;36m[Example Tests Phase]\033[0m"
 	@make clean-examples-test
 	@karma start karma.config.js --no-auto-watch --single-run
+
+coverage:
+	@echo "\033[1;36m[Coverage Phase]\033[0m"
+	@make clean-test
+	@LIB_PATH=$(shell pwd)/src/ ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover \
+		./node_modules/.bin/_mocha -- --opts mocha.opts
 
 docs:
 	@echo "\033[1;36m[Documentation Phase]\033[0m"
@@ -42,8 +46,8 @@ build:
 
 release:
 	@echo "\033[1;36m[Releasing Spinal IoC Annotation Tool]\n\033[0m"
-	@make test && make docs && make build
+	@make coverage && make docs && make build
 	@echo "\033[1;33mNPM Linking...\033[0m"
 	@npm link
 
-.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples docs build release
+.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples coverage docs build release
