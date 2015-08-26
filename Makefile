@@ -22,12 +22,17 @@ clean-build:
 test:
 	@echo "\033[1;36m[Test Phase]\033[0m"
 	@make clean-test
-	@./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha -- --opts mocha.opts
+	@./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover \
+		./node_modules/.bin/_mocha -- --opts mocha.opts
 
 test-examples:
 	@echo "\033[1;36m[Example Tests Phase]\033[0m"
 	@make clean-examples-test
 	@karma start karma.config.js --no-auto-watch --single-run
+
+coverage:
+	@echo "\033[1;36m[Coverage Results]\033[0m"
+	@./bin/sioc coverage
 
 docs:
 	@echo "\033[1;36m[Documentation Phase]\033[0m"
@@ -45,4 +50,4 @@ release:
 	@echo "\033[1;33mNPM Linking...\033[0m"
 	@npm link
 
-.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples docs build release
+.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples coverage docs build release

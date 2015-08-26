@@ -47,7 +47,7 @@ class ViaMethod extends Container {
 	*	@return examples.basic.ViaMethod
 	*/
 	add(view) {
-		return super().add(view);
+		return super.add(view);
 	}
 
 }
