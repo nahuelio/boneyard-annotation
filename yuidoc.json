@@ -1,6 +1,6 @@
 {
-    "name": "spinal-ioc-annotation",
-    "description": "API Docs for Annotated IoC implementation on Spinal",
+    "name": "Spinal IoC Annotation Tool",
+    "description": "API Docs",
     "version": "0.1.0",
     "options": {
         "exclude": "src/examples",

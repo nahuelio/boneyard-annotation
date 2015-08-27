@@ -1,21 +1,37 @@
-### Experimental IoC Annotation Based for Spinal
+### Spinal IoC Annotation Tool
 
-#### Initial Specs
+##### Introduction
 
-1 - Package Scanning
+`TODO`
 
-	- ```@scan([packages...])```
+##### Requirements
 
+* Node & Npm Installed
 
-2 - Dependency Injection
+##### Installation
 
-	- Via Constructor ```@wire({paramName} = {BoneId}, ...) | @autowired```
-	- Via Setter ```@wire({paramName} = {BoneId}, ...) | @autowired```
+`npm install -g spioc`
 
+##### Quick Start
 
-3 - MVC annotations & Factory Pattern
+`TODO`
 
-	- ```@Service```
-	- ```@Controller```
-	- ```@Model```
-	- ```@Factory```
+### Developers/Contributors
+
+##### Build from Source
+
+`TODO`
+
+##### API Documentation
+
+`TODO`
+
+##### Unit Testing / Code Coverage
+
+`TODO`
+
+### License
+
+Copyright (c) 2015 Patricio Ferreira
+
+Licensed under the MIT License

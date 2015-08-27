@@ -41,10 +41,10 @@ class Parser extends EventEmitter {
 	*	@param config {Object} config used to load files
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	beforeParse(attrs) {
-		if(!attrs.basePath || !attrs.path)
-			throw new Error(`Parser requires 2 parameters 'basePath' and 'path' in order to work.`);
-		if(!attrs.ignoreList) attrs.ignoreList = [];
+	beforeParse(config) {
+		if(!config.cwd || !config.target)
+			throw new Error(`Parser requires at least 2 parameters 'cwd' and 'target' in order to work.`);
+		if(!config.ignore) config.ignore = [];
 		return this.emit(Parser.Events.start, this);
 	}
 
@@ -55,10 +55,9 @@ class Parser extends EventEmitter {
 	*	@param config {Object} config used to load files
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	parse(attrs = {}) {
-		return this.beforeParse(attrs)
-			.load(Glob.sync(attrs.path, { cwd: attrs.basePath, ignore: attrs.ignoreList, nodir: true }))
-			.afterParse();
+	parse(config = {}) {
+		console.log('Parsing Annotations...\n');
+		return this.beforeParse(config).load(Glob.sync(config.target, config)).afterParse();
 	}
 
 	/**

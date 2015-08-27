@@ -17,7 +17,7 @@ import Parser from 'engine/parser';
 *	@requires underscore
 *	@requires com.spinal.annotation.engine.Parser
 **/
-export default class Scanner extends EventEmitter {
+class Scanner extends EventEmitter {
 
 	/**
 	*	@constructor
@@ -42,22 +42,18 @@ export default class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onStart(parser) {
-		console.log('\nScanning annotations...\n');
+		this.output('Configuration Detected', config);
 		return parser.on(Parser.Events.read, this.onRead);
 	}
 
 	/**
-	*	Parse Source path
+	*	Scans using the parser
 	*	@public
-	*	@method parse
+	*	@method scan
 	*	@return com.spinal.annotation.Scanner
 	**/
-	load() {
-		this.parser.parse({
-			basePath: "/"
-			path: this.runner.source,
-			ignore: this.ignoreList
-		});
+	scan() {
+		this.parser.parse(this.runner.config);
 		return this;
 	}
 
@@ -81,18 +77,23 @@ export default class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onEnd() {
-		console.log('Summary?');
 		return this;
 	}
 
 	/**
-	*	Ignore List
+	*	Outputs to the stdout the configuration Detected
 	*	@public
-	*	@property ignoreList
-	*	@type Array
+	*	@method output
+	*	@param title {String} title
+	*	@param summary {Object} Config key value pairs options
+	*	@return com.spinal.annotation.Scanner
 	**/
-	get ignoreList() {
-		return ['libraries/**/*.*', 'main.js'];
+	output(title, summary) {
+		console.log(`${title}\n`);
+		_.each(summary, function(v, k) { console.log(`\t${k}: ${v}\n`); }, this);
+		return this;
 	}
 
 }
+
+export default Scanner;

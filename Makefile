@@ -29,7 +29,7 @@ test-examples:
 	@karma start karma.config.js --no-auto-watch --single-run
 
 coverage:
-	@echo "\033[1;36m[Coverage Phase]\033[0m"
+	@echo "\033[1;36m[Test/Coverage Phase]\033[0m"
 	@make clean-test
 	@LIB_PATH=$(shell pwd)/src/ ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover \
 		./node_modules/.bin/_mocha -- --opts mocha.opts
@@ -42,12 +42,11 @@ docs:
 build:
 	@echo "\033[1;36m[Build Phase]\033[0m"
 	@make clean-build && mkdir bin
-	@cp ./index.js bin/sioc
+	@cp -p ./index.js bin/spioc
 
 release:
 	@echo "\033[1;36m[Releasing Spinal IoC Annotation Tool]\n\033[0m"
 	@make coverage && make docs && make build
-	@echo "\033[1;33mNPM Linking...\033[0m"
-	@npm link
+	@echo "\n\033[1;36mRelease Completed.\033[0m"
 
 .PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples coverage docs build release
