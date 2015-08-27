@@ -4,7 +4,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Annotation from 'annotation';
+import Annotation from './annotation';
 
 /**
 *	Class Bone
