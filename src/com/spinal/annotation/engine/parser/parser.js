@@ -25,12 +25,14 @@ class Parser extends EventEmitter {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param reader {com.spinal.annotation.engine.reader.Reader} reader instance
+	*	@param config {Object} config used to load files
+	*	@param promise {Promise} promise as a result of loading reader's supported annotations
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	constructor(reader) {
+	constructor(config, reader) {
 		super();
-		this.reader = reader.register();
+		this.config = config;
+		this.reader = reader;
 		return this;
 	}
 
@@ -41,10 +43,10 @@ class Parser extends EventEmitter {
 	*	@param config {Object} config used to load files
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	beforeParse(config) {
-		if(!config.cwd || !config.target)
+	beforeParse() {
+		if(!this.config.cwd || !this.config.target)
 			throw new Error(`Parser requires at least 2 parameters 'cwd' and 'target' in order to work.`);
-		if(!config.ignore) config.ignore = [];
+		if(!this.config.ignore) this.config.ignore = [];
 		return this.emit(Parser.Events.start, this);
 	}
 
@@ -52,12 +54,11 @@ class Parser extends EventEmitter {
 	*	Parse files
 	*	@public
 	*	@method parse
-	*	@param config {Object} config used to load files
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	parse(config = {}) {
+	parse() {
 		console.log('Parsing Annotations...\n');
-		return this.beforeParse(config).load(Glob.sync(config.target, config)).afterParse();
+		return this.beforeParse().load(Glob.sync(this.config.target, this.config)).afterParse();
 	}
 
 	/**
@@ -90,11 +91,13 @@ class Parser extends EventEmitter {
 	*	Instanciates a new Parser given an a list of files
 	*	@static
 	*	@method from
-	*	@param reader {Class} Reader Class
+	*	@param config {Object} configuration reference
+	*	@param reader {String} Reader Support
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	static from(Reader = Es6Reader) {
-		return new Parser(Reader.new());
+	static from(config = {}, reader) {
+		let Reader = System.import('../reader/' + reader);
+		return new Parser(config, Reader.new());
 	}
 
 	/**

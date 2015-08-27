@@ -26,6 +26,25 @@ class Annotation extends EventEmitter {
 		return this;
 	}
 
+	/**
+	*	Extracts annotation name if possible
+	*	@static
+	*
+	**/
+	static name(expr) {
+		// TODO
+	}
+
+	/**
+	*	Symbol
+	*	@static
+	*	@property Symbol
+	*	@type String
+	**/
+	static get Symbol() {
+		return '@';
+	}
+
 }
 
 export default Annotation;
