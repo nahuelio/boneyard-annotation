@@ -4,23 +4,22 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Annotation from 'annotation';
+import {EventEmitter} from 'events';
 
 /**
-*	Class Scan
+*	Class Annotation
 *	@namespace com.spinal.annotation.support
-*	@class com.spinal.annotation.support.Scan
-*	@extends com.spinal.annotation.support.Annotation
+*	@class com.spinal.annotation.support.Annotation
+*	@extends events.EventEmitter
 *
-*	@requires com.spinal.annotation.support.Annotation
+*	@requires events.EventEmitter
 **/
-class Scan extends Annotation {
+class Annotation extends EventEmitter {
 
 	/**
-	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
-	*	@return com.spinal.annotation.support.Scan
+	*	@return
 	**/
 	constructor(attrs = {}) {
 		super(attrs);
@@ -29,4 +28,4 @@ class Scan extends Annotation {
 
 }
 
-export default Scan;
+export default Annotation;

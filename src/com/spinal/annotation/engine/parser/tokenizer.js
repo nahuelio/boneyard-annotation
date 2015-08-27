@@ -4,16 +4,16 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
 import {EventEmitter} from 'events';
-import Es5Reader from '../reader/es5';
 
 /**
 *	Class Tokenizer
 *	@namespace com.spinal.annotation.engine.parser
 *	@class com.spinal.annotation.engine.parser.Tokenizer
 *
+*	@requires underscore
 *	@requires events.EventEmitter
-*	@requires com.spinal.annotation.engine.reader.es5
 **/
 export default class Tokenizer extends EventEmitter {
 
@@ -23,27 +23,31 @@ export default class Tokenizer extends EventEmitter {
 	*	@param input {String} input string to be tokenized
 	*	@return com.spinal.annotation.engine.parser.Tokenizer
 	**/
-	constructor(input = "") {
+	constructor(input) {
 		super();
-		this.bf = Tokenizer.newBuffer(input);
-		this.cur = -1;
-		return this;
+		return this.reset(input);
 	}
 
 	/**
-	*	Returns All tokens of this tokenizer as an array for convenience asynchrounously.
+	*	Outputs Clean Token
+	*	@private
+	*	@method _output
+	*	@return String
+	**/
+	_output(token) {
+		return token.replace(/(\n|\r\n|\t)/gm, '');
+	}
+
+	/**
+	*	Resets this tokenizer and optionally
 	*	@public
-	*	@method tokenize
-	*	@param [callback] {Function} callback reference
+	*	@method reset
+	*	@param [input] {String} input string to be tokenized
 	*	@return com.spinal.annotation.engine.parser.Tokenizer
 	**/
-	tokenize(callback) {
-		while(this.hasNext()) {
-
-		}
-		this.cur = -1;
-		callback(null, result);
-		return this;
+	reset(input = "") {
+		this.content = _.compact(input.split(Tokenizer.delimiters));
+		return this.rewind();
 	}
 
 	/**
@@ -53,8 +57,13 @@ export default class Tokenizer extends EventEmitter {
 	*	@param input {String} input string to be tokenized
 	*	@return Array
 	**/
-	tokenizeSync() {
-		return this;
+	tokenize() {
+		var out = [];
+		while(this.hasNext()) {
+			let token = this.next();
+			if(token.length > 0) out.push(token);
+		}
+		return out;
 	}
 
 	/**
@@ -64,7 +73,9 @@ export default class Tokenizer extends EventEmitter {
 	*	@return Boolean
 	**/
 	hasNext() {
-		return (this.cur < (this.bf.length-1));
+		let r = (this.cur < (this.content.length-1));
+		if(!r) this.rewind();
+		return r;
 	}
 
 	/**
@@ -74,19 +85,9 @@ export default class Tokenizer extends EventEmitter {
 	*	@return String
 	**/
 	next() {
-		// FIXME
-		return this.bf.toString(this.enconding, this.cur++);
-	}
-
-	/**
-	*	Returns the next token, without removing it from the Tokenizer.
-	*	Same token will be returned again on the next call to next() or peek().
-	*	@public
-	*	@method peek
-	*	@return String
-	**/
-	peek() {
-		// TODO
+		let token = this._output(this.content[++this.cur]);
+		this.emit(Tokenizer.Events.next, token);
+		return token;
 	}
 
 	/**
@@ -97,40 +98,47 @@ export default class Tokenizer extends EventEmitter {
 	*	@return String
 	**/
 	remove() {
-		// FIXME
-		return this.bf.slice(this.encoding, this.cur++);
+		var removed = null;
+		if(this.content.length > 0 && this.cur !== -1) {
+			removed = this._output(this.content.splice(this.cur, 1)[0]);
+			this.emit(Tokenizer.Events.remove, removed);
+		}
+		return removed;
 	}
 
 	/**
-	*	Returns Encoding supported by this tokenizer
+	*	Reset the cursor to the beginning to the index 0.
 	*	@public
-	*	@property enconding
-	*	@type String
+	*	@chainable
+	*	@method rewind
+	*	@return com.spinal.annotation.engine.parser.Tokenizer
 	**/
-	get encoding() {
-		return 'utf8';
-	}
-
-	/**
-	*	Returns a new fresh buffer with a default size of 4096
-	*	@static
-	*	@method newBuffer
-	*	@param [size] {Number} buffer size
-	*	@return Object
-	**/
-	static newBuffer(input = "") {
-		let bf = new Buffer(input.length);
-		return bf.write(input, 0, input.length, 'utf8');
+	rewind() {
+		this.cur = -1;
+		return this;
 	}
 
 	/**
 	*	Returns RegExp that specifies the strategy trim tokens from the input
 	*	@static
-	*	@property token_delimiters
+	*	@property delimiters
 	*	@type RegExp
 	**/
-	static get token_delimiters() {
-		return /\n\t/;
+	static get delimiters() {
+		return /(\n|{|})/gm;
+	}
+
+	/**
+	*	Events
+	*	@static
+	*	@property Events
+	*	@type Object
+	**/
+	static get Events() {
+		return {
+			next: 'com:spinal:annotation:engine:parser:tokenizer:next',
+			remove: 'com:spinal:annotation:engine:parser:tokenizer:remove'
+		};
 	}
 
 }
