@@ -24,11 +24,10 @@ class Scanner extends EventEmitter {
 	*	@param runner {com.spinal.annotation.commands.Runner} runner
 	*	@return com.spinal.annotation.Scanner
 	**/
-	constructor(runner) {
+	constructor(runner, reader) {
 		super();
 		this.runner = runner;
-		this.parser = new Parser();
-		this.parser
+		this.parser = Parser.from(this.runner.config, reader)
 			.once(Parser.Events.start, this.onStart)
 			.once(Parser.Events.end, this.onEnd);
 		return this;
@@ -42,7 +41,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onStart(parser) {
-		this.output('Configuration Detected', config);
+		this.output('\033[1;36mConfiguration Detected\033[0m', config);
 		return parser.on(Parser.Events.read, this.onRead);
 	}
 
@@ -53,7 +52,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	scan() {
-		this.parser.parse(this.runner.config);
+		this.parser.parse();
 		return this;
 	}
 
@@ -77,6 +76,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onEnd() {
+		this.output(`\033[1;36m[DONE]\033[0m`);
 		return this;
 	}
 
@@ -88,7 +88,7 @@ class Scanner extends EventEmitter {
 	*	@param summary {Object} Config key value pairs options
 	*	@return com.spinal.annotation.Scanner
 	**/
-	output(title, summary) {
+	output(title, summary = {}) {
 		console.log(`${title}\n`);
 		_.each(summary, function(v, k) { console.log(`\t${k}: ${v}\n`); }, this);
 		return this;

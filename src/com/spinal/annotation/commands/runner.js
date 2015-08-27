@@ -21,21 +21,11 @@ class Runner {
 	*	@param [exclude] {Array} list of file patterns to exclude
 	*	@return com.spinal.annotation.commands.Runner
 	**/
-	constructor(source, exclude) {
+	constructor(reader, source, exclude) {
 		this.source = source;
 		this.exclude = exclude;
-		this.scanner = new Scanner(this);
+		this.scanner = new Scanner(this, reader).scan();
 		return this;
-	}
-
-	/**
-	*	Scan Source path
-	*	@public
-	*	@method scan
-	*	@return com.spinal.annotation.Scanner
-	**/
-	run() {
-		return this.scanner.scan();
 	}
 
 	/**
@@ -57,12 +47,13 @@ class Runner {
 	*	Static Scanner Run
 	*	@static
 	*	@method run
+	*	@param reader {String} Reader Support
 	*	@param source {String} source path to be analyzed
 	*	@param exclude {Array} list of files/patterns to be excluded
 	*	@return com.spinal.annotation.Scanner
 	**/
-	static run(source = './examples', exclude = []) {
-		return new Runner(source, exclude).run();
+	static run(reader = 'es6', source = './examples', exclude = []) {
+		return new Runner(reader, source, exclude);
 	}
 
 }
