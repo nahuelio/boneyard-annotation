@@ -4,7 +4,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Reader from 'reader';
+import Reader from './reader';
 
 /**
 *	Class Es5Reader

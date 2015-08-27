@@ -6,7 +6,7 @@
 
 import {EventEmitter} from 'events';
 import _ from 'underscore';
-import Parser from 'engine/parser';
+import Parser from './engine/parser/parser';
 
 /**
 *	Class Scanner
