@@ -1,5 +1,5 @@
 {
-    "name": "spinal-ioc-annotation",
+    "name": "spioc",
     "version": "0.1.0",
     "description": "Annotated IoC implementation for Spinal",
     "dependencies": {
@@ -31,7 +31,7 @@
         "karma-phantomjs-launcher": "^0.1.4"
     },
     "main": "index.js",
-    "bin": "./bin/sioc",
+    "bin": "./bin/spioc",
     "scripts": {
         "test": "make test"
     },

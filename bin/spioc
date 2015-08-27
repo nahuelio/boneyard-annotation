@@ -15,7 +15,7 @@ var program = require('commander'),
 *	Version
 **/
 program
-	.version(('sioc@' + pkg.version + ' - Spinal IoC Annotation based CLI Tool\n'))
+	.version(('spioc@' + pkg.version + ' - Spinal IoC Annotation based CLI Tool\n'))
 	.usage('[command] [options]');
 
 /**
@@ -23,12 +23,12 @@ program
 **/
 program
 	.command('build [source]')
-	.description('Scans, analyzes and build dependency injection given a source dir (or an specific file that uses @scan annotations)')
+	.description('Scans, analyzes and executes dependency injection given a source dir (or an specific file that uses @scan annotations)')
 	.option('-e, --exclude <paths...>', 'Exclude files using patterns from the scanner', function(paths) {
 		return paths.split(',');
 	})
 	.action(_.bind(function(source, program) {
-		require('../src/com/spinal/annotation/commands/run')(resolve(__dirname, '../', source), program.exclude, program);
+		require('../src/com/spinal/annotation/commands/runner')(resolve(__dirname, '../', source), program.exclude, program);
 	}, this));
 
 /**
@@ -47,9 +47,9 @@ program
 program
 	.on('--help', _.bind(function() {
 		console.log('\tCommand Build usage example:\n');
-		console.log('\t\tsioc build ./src/**/*.js -e src/excludeme/**/*.js,src/other.js');
+		console.log('\t\tspioc build ./src/**/*.js -e src/excludeme/**/*.js,src/other.js');
 		console.log('\n');
 		console.log('\tCommand Examples usage:\n');
-		console.log('\t\tsioc examples -p 9393');
+		console.log('\t\tspioc examples -p 9393');
 		console.log('\n');
 	}, this)).parse(process.argv);
