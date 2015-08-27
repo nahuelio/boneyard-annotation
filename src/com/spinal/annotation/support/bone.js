@@ -1,61 +1,32 @@
 /**
-*	Annotation Bone
+*	Supported Annotations module
 *	@module com.spinal.annotation.support
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import {Annotation, Target} from 'violin-annotations';
+import Annotation from 'annotation';
 
 /**
 *	Class Bone
 *	@namespace com.spinal.annotation.support
 *	@class com.spinal.annotation.support.Bone
-*	@extends violin-annotations.Annotation
+*	@extends com.spinal.annotation.support.Annotation
 *
-*	@requires violin-annotations.Annnotation
-*	@requires violin-annotations.Target
+*	@requires com.spinal.annotation.support.Annotation
 **/
-export default class Bone extends Annotation {
+class Bone extends Annotation {
 
 	/**
+	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
 	*	@return com.spinal.annotation.support.Bone
 	**/
 	constructor(attrs = {}) {
-		return super(attrs);
-	}
-
-	/**
-	*	Bone Id
-	*	@public
-	*	@property id
-	*	@type String
-	**/
-	set id(id) {
-		this.boneId = id;
-	}
-
-	/**
-	*	Where this annotation can be found
-	*	@static
-	*	@override
-	*	@method getTargets
-	*	@return Array
-	**/
-	static getTargets() {
-		return [Target.CLASS_ANNOTATION];
-	}
-
-	/**
-	*	Annotation name
-	*	@static
-	*	@override
-	*	@method getName
-	*	@return String
-	**/
-	static getName() {
-		return 'bone';
+		super(attrs);
+		return this;
 	}
 
 }
+
+export default Bone;
