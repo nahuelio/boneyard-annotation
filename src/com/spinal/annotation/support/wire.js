@@ -17,13 +17,23 @@ import Annotation from './annotation';
 class Wire extends Annotation {
 
 	/**
+	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
 	*	@return com.spinal.annotation.support.Wire
 	**/
-	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+	constructor(parameters = {}, context) {
+		return super(parameters, context);
+	}
+
+	/**
+	*	Injects Dependency by using the context
+	*	@public
+	*	@method inject
+	*	@return com.spinal.annotation.support.Wire
+	**/
+	inject() {
+		// TODO: Implement
 	}
 
 }

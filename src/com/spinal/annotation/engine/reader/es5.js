@@ -27,6 +27,33 @@ class Es5Reader extends Reader {
 		return this;
 	}
 
+	/**
+	*	Retrieves annotation context and stores a pointer to the specific position in
+	*	injections may ocurr later on.
+	*	@public
+	*	@override
+	*	@method getAnnotationContext
+	*	@param token {String} token reference
+	*	@return com.spinal.annotation.support.Context
+	**/
+	getAnnotationContext(token) {
+		// TODO: Specific for this Reader
+	}
+
+	/**
+	*	Annotation Contexts for this Reader
+	*	@static
+	*	@property Context
+	*	@type Object
+	**/
+	static get Context() {
+		return {
+			CLASS: [`var ${name} = function`, `function ${name}`],
+			METHOD: [`${name}()`, `${name}: function`],
+			PROPERTY: `${name}:`
+		};
+	}
+
 }
 
 export default Es5Reader;
