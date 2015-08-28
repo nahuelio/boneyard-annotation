@@ -15,7 +15,7 @@ import {EventEmitter} from 'events';
 *	@requires underscore
 *	@requires events.EventEmitter
 **/
-export default class Tokenizer extends EventEmitter {
+class Tokenizer extends EventEmitter {
 
 	/**
 	*	Constructor
@@ -25,6 +25,7 @@ export default class Tokenizer extends EventEmitter {
 	**/
 	constructor(input) {
 		super();
+		this.cur = -1;
 		return this.reset(input);
 	}
 
@@ -73,7 +74,7 @@ export default class Tokenizer extends EventEmitter {
 	*	@return Boolean
 	**/
 	hasNext() {
-		let r = (this.cur < (this.content.length-1));
+		var r = (this.cur < (this.content.length-1));
 		if(!r) this.rewind();
 		return r;
 	}
@@ -85,7 +86,7 @@ export default class Tokenizer extends EventEmitter {
 	*	@return String
 	**/
 	next() {
-		let token = this._output(this.content[++this.cur]);
+		var token = this._output(this.content[++this.cur]);
 		this.emit(Tokenizer.Events.next, token);
 		return token;
 	}
@@ -142,3 +143,5 @@ export default class Tokenizer extends EventEmitter {
 	}
 
 }
+
+export default Tokenizer;

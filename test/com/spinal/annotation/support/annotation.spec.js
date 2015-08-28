@@ -8,7 +8,7 @@ var Annotation = require(process.env.LIB_PATH + 'com/spinal/annotation/support/a
 describe('com.spinal.annotation.support.Annotation', function() {
 
 	before(function() {
-		this.annotation = `*	@wire({ key: "value" })`;
+		this.token = `*	@wire({ key: "value" })`;
 	});
 
 	describe('#constructor(attrs)', function() {
@@ -17,22 +17,6 @@ describe('com.spinal.annotation.support.Annotation', function() {
 			this.annotation = new Annotation();
 			expect(this.annotation).to.be.ok();
 		});
-
-	});
-
-	describe('#expression(expr)', function() {
-
-		it('Should extract the expression', function() {
-
-		});
-
-		it('Should return null when extracting an empty expression', function() {
-
-		});
-
-	});
-
-	describe('static#name(expr)', function() {
 
 	});
 

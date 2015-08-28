@@ -5,6 +5,7 @@
 **/
 
 import fs from 'fs-extra';
+import {resolve} from 'path';
 import Glob from 'glob';
 import _ from 'underscore';
 import {EventEmitter} from 'events';
@@ -16,6 +17,7 @@ import Es6Reader from '../reader/es6.js';
 *	@class com.spinal.annotation.engine.parser.Parser
 *
 *	@requires fs-extra
+*	@requires path
 *	@requires underscore
 *	@requires events.EventEmitter
 *	@requires com.spinal.annotation.engine.reader.Es6Reader
@@ -29,8 +31,9 @@ class Parser extends EventEmitter {
 	*	@param promise {Promise} promise as a result of loading reader's supported annotations
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	constructor(config, reader) {
+	constructor(config = {}, reader) {
 		super();
+		if(!reader) throw new Error('Parser requires an instance of a reader in order to work');
 		this.config = config;
 		this.reader = reader;
 		return this;
@@ -45,9 +48,10 @@ class Parser extends EventEmitter {
 	**/
 	beforeParse() {
 		if(!this.config.cwd || !this.config.target)
-			throw new Error(`Parser requires at least 2 parameters 'cwd' and 'target' in order to work.`);
+			throw new Error("Parser {{config}} requires parameter 'cwd' and 'target' in order to work.");
 		if(!this.config.ignore) this.config.ignore = [];
-		return this.emit(Parser.Events.start, this);
+		this.emit(Parser.Events.start, this);
+		return this;
 	}
 
 	/**
@@ -57,7 +61,7 @@ class Parser extends EventEmitter {
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
 	parse() {
-		console.log('Parsing Annotations...\n');
+		//console.log('Parsing Annotations...\n');
 		return this.beforeParse().load(Glob.sync(this.config.target, this.config)).afterParse();
 	}
 
@@ -70,8 +74,9 @@ class Parser extends EventEmitter {
 	**/
 	load(files = []) {
 		files.forEach(f => {
-			this.emit(Parser.Events.read, f);
-			this.reader.read(fs.readFileSync(f));
+			let filepath = resolve(this.config.cwd, f);
+			this.emit(Parser.Events.read, filepath);
+			this.reader.read(fs.readFileSync(filepath).toString('utf-8'));
 		});
 		return this;
 	}
@@ -95,8 +100,8 @@ class Parser extends EventEmitter {
 	*	@param reader {String} Reader Support
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
-	static from(config = {}, reader) {
-		let Reader = System.import('../reader/' + reader);
+	static from(config = {}, reader = 'es6') {
+		let Reader = require('../reader/' + reader);
 		return new Parser(config, Reader.new());
 	}
 
