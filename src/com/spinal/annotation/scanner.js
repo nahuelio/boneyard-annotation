@@ -41,7 +41,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onStart(parser) {
-		this.output('\033[1;36mConfiguration Detected\033[0m', config);
+		this.output('Configuration Detected', config);
 		return parser.on(Parser.Events.read, this.onRead);
 	}
 
@@ -76,7 +76,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onEnd() {
-		this.output(`\033[1;36m[DONE]\033[0m`);
+		this.output(`[DONE]`);
 		return this;
 	}
 

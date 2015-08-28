@@ -6,6 +6,7 @@
 
 import Tokenizer from '../parser/tokenizer';
 import Annotation from '../../support/annotation';
+import Context from '../../support/context';
 
 /**
 *	Class Reader
@@ -14,6 +15,7 @@ import Annotation from '../../support/annotation';
 *
 *	@requires com.spinal.annotation.parser.Tokenizer
 *	@requires com.spinal.annotation.support.Annotation
+*	@requires com.spinal.annotation.support.Context
 **/
 class Reader  {
 
@@ -24,9 +26,9 @@ class Reader  {
 	*	@return com.spinal.annotation.reader.Reader
 	**/
 	constructor(tokenizer) {
+		this.annotations = new Set();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, this.onToken);
-		this.annotations = [];
 		return this;
 	}
 
@@ -47,25 +49,50 @@ class Reader  {
 	*	@public
 	*	@method onToken
 	*	@param token {String} token to be analyzed
-	*	@return
+	*	@return com.spinal.annotation.support.Annotation
 	**/
 	onToken(token = "") {
-		let annotation = this.from(token);
-		if(annotation) this.annotations.push(annotation.process(token));
-		return this;
+		let Annotation = Reader.annotations[this.getAnnotationName(token)];
+		if(!Annotation) return null;
+		return this.annotations.set(new Annotation(this.getAnnotationParameters(token), this.getAnnotationContext(token)));
 	}
 
 	/**
-	*	Retrieves annotation by a given token
+	*	Retrieves annotation name given a token extracted from tokenizer
 	*	@public
-	*	@method from
+	*	@method getAnnotationName
 	*	@param token {String} token reference
-	*	@return com.spinal.annotation.support.Annotation
+	*	@return String
 	**/
-	from(token) {
-		if(token.length === 0 || token.indexOf(Annotation.Symbol) === -1) return null;
-		let name = Annotation.name(token);
-		return (Reader.annotations[name]) ? new Reader.annotations[name]() : null;
+	getAnnotationName(token) {
+		if(token.length === 0 || token.indexOf(Annotation.Symbol) === -1) return '';
+		return token.substring(token.indexOf(Annotation.Symbol), token.indexOf('('));
+	}
+
+	/**
+	*	Strategy to retrieve parameters from annotation
+	*	@public
+	*	@override
+	*	@method getAnnotationParameters
+	*	@param token {String} token reference
+	*	@return Object
+	**/
+	getAnnotationParameters(token) {
+		// TODO: Generic
+		return {};
+	}
+
+	/**
+	*	Retrieves annotation context and stores a pointer to the specific position in
+	*	injections may ocurr later on.
+	*	@public
+	*	@method getAnnotationContext
+	*	@param token {String} token reference
+	*	@return com.spinal.annotation.support.Context
+	**/
+	getAnnotationContext(token) {
+		// TODO: Generic
+		return {};
 	}
 
 	/**
