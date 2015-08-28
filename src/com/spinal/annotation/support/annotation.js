@@ -30,7 +30,8 @@ class Annotation extends EventEmitter {
 	**/
 	constructor(parameters = {}, context = Context.new()) {
 		super();
-		return _.extend(this, parameters, { context: context });
+		this.context = context;
+		return _.extend(this, parameters);
 	}
 
 	/**

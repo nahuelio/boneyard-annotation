@@ -28,7 +28,7 @@ class Reader  {
 	constructor(tokenizer) {
 		this.annotations = new Set();
 		this.tokenizer = tokenizer;
-		this.tokenizer.on(Tokenizer.Events.next, this.onToken);
+		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		return this;
 	}
 
@@ -37,7 +37,7 @@ class Reader  {
 	*	@public
 	*	@method read
 	*	@param content {String} file content to be read
-	*	@return com.spinal.annotation.reader.Reader
+	*	@return Array
 	**/
 	read(content = "") {
 		return this.tokenizer.reset(content).tokenize();
@@ -101,8 +101,8 @@ class Reader  {
 	*	@method new
 	*	@return com.spinal.annotation.reader.Reader
 	**/
-	static new() {
-		return new Reader(new Tokenizer());
+	static new() {;
+		return new this(new Tokenizer());
 	}
 
 	/**
@@ -113,9 +113,9 @@ class Reader  {
 	**/
 	static get annotations() {
 		return {
-			scan: System.import('../support/scan'),
-			bone: System.import('../support/bone'),
-			wire: System.import('../support/wire')
+			scan: require('../../support/scan'),
+			bone: require('../../support/bone'),
+			wire: require('../../support/wire')
 		};
 	}
 
