@@ -10,6 +10,7 @@ import Bower from 'bower';
 import Connect from 'connect';
 import BabelConnect from 'babel-connect';
 import StaticServe from 'serve-static';
+import Logger from '../util/logger';
 
 /**
 *	Class Examples
@@ -23,6 +24,7 @@ import StaticServe from 'serve-static';
 *	@requires connect
 *	@requires babel-connect
 *	@requires server-static
+*	@requires com.spinal.annotation.util.Logger
 **/
 class Examples {
 
@@ -45,7 +47,7 @@ class Examples {
 	*	@return com.spinal.annotation.commands.Examples
 	**/
 	initialize() {
-		console.log(this.program.version());
+		Logger.out(this.program.version());
 		return this;
 	}
 
@@ -69,7 +71,7 @@ class Examples {
 	*	@return com.spinal.annotation.commands.Examples
 	**/
 	install(callback = function() {}) {
-		console.log('Installing Dependencies...');
+		Logger.out('Installing Dependencies...', 'c');
 		Bower.commands.install(this.bowerDependencies, null, { cwd: this.baseUrl, directory: 'libraries' })
 			.on('end', _.bind(this.babel, this, callback));
 		return this;
@@ -98,7 +100,7 @@ class Examples {
 	*	@return Connect
 	**/
 	spinUp() {
-		console.log(`Server localhost listening on port ${this.port}...`);
+		Logger.out(`Server localhost listening on port ${this.port}...`, 'm');
 		Connect()
 			.use(BabelConnect(this.babelConnect))
 			.use(StaticServe((this.rootDir + '/dist')))

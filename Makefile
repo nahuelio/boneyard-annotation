@@ -20,7 +20,6 @@ clean-build:
 
 test:
 	@echo "\033[1;36m[Test Phase]\033[0m"
-	@make clean-test
 	@LIB_PATH=$(shell pwd)/src/ ./node_modules/.bin/_mocha --opts mocha.opts --watch
 
 test-examples:

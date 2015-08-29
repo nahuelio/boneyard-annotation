@@ -61,7 +61,7 @@ class Parser extends EventEmitter {
 	*	@return com.spinal.annotation.engine.parser.Parser
 	**/
 	parse() {
-		//console.log('Parsing Annotations...\n');
+		Logger.out('Parsing Annotations...\n', 'c');
 		return this.beforeParse().load(Glob.sync(this.config.target, this.config)).afterParse();
 	}
 
