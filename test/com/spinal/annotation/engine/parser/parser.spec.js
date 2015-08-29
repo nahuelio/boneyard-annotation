@@ -7,7 +7,7 @@ var Parser = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/parser
 	Es6Reader = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/reader/es6'),
 	Es5Reader = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/reader/es5');
 
-describe.only('com.spinal.annotation.engine.parser.Parser', function() {
+describe('com.spinal.annotation.engine.parser.Parser', function() {
 
 	before(function() {
 		this.config = {

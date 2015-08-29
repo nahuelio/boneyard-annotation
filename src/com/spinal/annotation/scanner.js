@@ -7,6 +7,7 @@
 import {EventEmitter} from 'events';
 import _ from 'underscore';
 import Parser from './engine/parser/parser';
+import Logger from './util/logger';
 
 /**
 *	Class Scanner
@@ -16,6 +17,7 @@ import Parser from './engine/parser/parser';
 *	@requires events.EventEmitter
 *	@requires underscore
 *	@requires com.spinal.annotation.engine.Parser
+*	@requires com.spinal.annotation.util.Logger
 **/
 class Scanner extends EventEmitter {
 
@@ -64,7 +66,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onRead(file) {
-		console.log(`File ${file.name}:\n`);
+		this.output('File ${file.name}:\n');
 		return this;
 	}
 
@@ -76,7 +78,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onEnd() {
-		this.output(`[DONE]`);
+		this.output('[DONE]');
 		return this;
 	}
 
@@ -89,8 +91,8 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	output(title, summary = {}) {
-		console.log(`${title}\n`);
-		_.each(summary, function(v, k) { console.log(`\t${k}: ${v}\n`); }, this);
+		Logger.out(`${title}\n`, 'c');
+		_.each(summary, function(v, k) { Logger.out(`\t${k}: ${v}\n`, 'y'); }, this);
 		return this;
 	}
 
