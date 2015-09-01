@@ -72,7 +72,7 @@ class Parser extends EventEmitter {
 	*	@param files {Array} list of files that matched glob pattern.
 	*	@return
 	**/
-	load(files = []) {
+	load(files) {
 		files.forEach(f => {
 			let filepath = resolve(this.config.cwd, f);
 			this.emit(Parser.Events.read, filepath);
