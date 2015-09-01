@@ -53,7 +53,7 @@ class Logger  {
 	*	Supported Table of colors
 	*	@static
 	*	@property colors
-	*	@return Object
+	*	@type Object
 	**/
 	static get colors() {
 		return {
@@ -71,8 +71,8 @@ class Logger  {
 	*	@static
 	*	@method out
 	*	@param [str] {String} string to output
-	*	@param [color] {String} color shortcut (check colors table)
-	*	@return Class
+	*	@param [color] {String} color shortcut - See {{#crossLink "com.spinal.annotation.util.Logger/colors:property"}}{{/crossLink}}
+	*	@return String
 	**/
 	static out(str, color) {
 		let output = null;
