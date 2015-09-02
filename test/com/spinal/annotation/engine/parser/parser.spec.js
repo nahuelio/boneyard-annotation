@@ -3,7 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-var Parser = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/parser/parser');
+var Parser = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/parser/parser'),
+	Es5Reader = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/reader/es5'),
+	Es6Reader = require(process.env.LIB_PATH + 'com/spinal/annotation/engine/reader/es6');
 
 describe('com.spinal.annotation.engine.parser.Parser', function() {
 
@@ -13,33 +15,13 @@ describe('com.spinal.annotation.engine.parser.Parser', function() {
 			target: '**/*.js',
 			nodir: true
 		};
-
-		this.readerInstanceMock = {
-			read: function(content = "") {
-				return ['/**', '*	@annotation()', '**/'];
-			}
-		};
-
-		this.readerClassMock = {
-			new: _.bind(function() {
-				return this.readerInstanceMock;
-			}, this)
-		};
-
-		mockery.enable();
-		mockery.registerMock('../reader/es6', this.readerClassMock);
-		mockery.registerMock('../reader/es5', this.readerClassMock);
-	});
-
-	after(function() {
-		mockery.deregisterAll();
-		mockery.disable();
+		this.reader = Es5Reader.new();
 	});
 
 	describe('#constructor', function() {
 
 		it('Should return an instance of Parser with parameters', function() {
-			let parser = new Parser(this.config, this.readerInstanceMock);
+			let parser = new Parser(this.config, this.reader);
 			expect(parser).to.be.ok();
 			expect(parser.config).to.be.ok();
 			expect(parser.reader).to.be.ok();
@@ -48,62 +30,82 @@ describe('com.spinal.annotation.engine.parser.Parser', function() {
 		});
 
 		it('Should throw an Error: if no parameters are passed to the constructor', function() {
-			expect(function() { new Parser(); }).to.throwException(function(e) {
-				expect(e.message).to.be('Parser requires an instance of a reader in order to work');
+			expect(function() {
+				new Parser();
+			}).to.throwException(function(e) {
+				expect(e).to.be.ok();
 			});
+		});
+
+	});
+
+	describe('#beforeParse', function() {
+
+		it('Should throw an Error: parser.config.cwd or parser.config.target are not defined', function() {
+
+			var parserNoConfig = Parser.from(),
+				parserOnlyCwd = Parser.from({ cwd: 'some/path/to/source' }),
+				parserOnlyTarget = Parser.from({ target: 'some/pattern/**/*.js' });
+
+			var noConfig = sinon.spy(parserNoConfig, 'beforeParse'),
+				onlyCwd = sinon.spy(parserOnlyCwd, 'beforeParse'),
+				onlyTarget = sinon.spy(parserOnlyTarget, 'beforeParse');
+
+			expect(function() {
+				parserNoConfig.beforeParse();
+			}).to.throwException(function(e) {
+				expect(noConfig.threw()).to.be(true);
+			});
+
+			expect(function() {
+				parserOnlyCwd.beforeParse()
+			}).to.throwException(function(e) {
+				expect(onlyCwd.threw()).to.be(true);
+			});
+
+			expect(function() {
+				parserOnlyTarget.beforeParse();
+			}).to.throwException(function(e) {
+				expect(onlyTarget.threw()).to.be(true);
+			});
+
+			noConfig.restore();
+			onlyCwd.restore();
+			onlyTarget.restore();
+
+		});
+
+		it('Should set default empty array ([]) for config.ignore if parameter not passed', function() {
+			let parser = Parser.from({ cwd: rootDir, target: '*.noext' }).beforeParse();
+			expect(parser.config).to.be.ok();
+			expect(parser.config.ignore).to.be.empty();
+		});
+
+		it('Should have a ignore list set by argument to the Parser constructor', function() {
+			let parser = Parser.from({ cwd: rootDir, target: '*.noext', ignore: ['**/*.js'] }).beforeParse();
+			expect(parser.config).to.be.ok();
+			expect(parser.config.ignore).not.to.be.empty();
+			expect(parser.config.ignore).to.have.length(1);
 		});
 
 	});
 
 	describe('#parse', function() {
 
-		it('#beforeParse should throw an Error: parser.config.cwd or parser.config.target are not defined', function() {
-
-			// No Config
-			expect(function() {
-				Parser.from().parse();
-			}).to.throwException(function(e) {
-				expect(e.message).to.be("Parser {{config}} requires parameter 'cwd' and 'target' in order to work.");
-			});
-
-			// Only config.cwd
-			expect(function() {
-				Parser.from({ cwd: 'some/path/to/source' }).parse();
-			}).to.throwException(function(e) {
-				expect(e.message).to.be("Parser {{config}} requires parameter 'cwd' and 'target' in order to work.");
-			});
-
-			// Only config.target
-			expect(function() {
-				Parser.from({ target: 'some/pattern/**/*.js' }).parse();
-			}).to.throwException(function(e) {
-				expect(e.message).to.be("Parser {{config}} requires parameter 'cwd' and 'target' in order to work.");
-			});
-
-		});
-
-		it('#beforeParser should set default empty array ([]) for config.ignore if parameter not passed', function() {
-			let parser = Parser.from({ cwd: rootDir, target: '*.noext' }).parse();
-			expect(parser.config).to.be.ok();
-			expect(parser.config.ignore).to.be.empty();
-		});
-
-		it('#beforeParser should have a ignore list set by argument to the Parser constructor', function() {
-			let parser = Parser.from({ cwd: rootDir, target: '*.noext', ignore: ['**/*.js'] }).parse();
-			expect(parser.config).to.be.ok();
-			expect(parser.config.ignore).not.to.be.empty();
-			expect(parser.config.ignore).to.have.length(1);
-		});
-
-		it('Should parse a list of files', function(done) {
+		it('Should parse a list of files', function() {
 			let parser = Parser.from(this.config);
+			let stubReader = sinon.stub(parser.reader, 'read').returns([]);
+
 			parser.on(Parser.Events.read, _.bind(function(file) {
 				expect(file).to.be.ok();
 				expect((file.indexOf('.js') !== -1)).to.be(true);
-				parser.removeAllListeners(Parser.Events.read);
-				done();
 			}));
 			parser.parse();
+
+			expect(stubReader.called).to.be(true);
+
+			stubReader.restore();
+			parser.removeAllListeners(Parser.Events.read);
 		});
 
 	});
