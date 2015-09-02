@@ -30,8 +30,8 @@ class Scanner extends EventEmitter {
 		super();
 		this.runner = runner;
 		this.parser = Parser.from(this.runner.config, reader)
-			.once(Parser.Events.start, this.onStart)
-			.once(Parser.Events.end, this.onEnd);
+			.once(Parser.Events.start, _.bind(this.onStart, this))
+			.once(Parser.Events.end, _.bind(this.onEnd, this));
 		return this;
 	}
 
@@ -43,8 +43,8 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onStart(parser) {
-		this.output('Configuration Detected', config);
-		return parser.on(Parser.Events.read, this.onRead);
+		this.output('Configuration Detected', parser.config);
+		return parser.on(Parser.Events.read, _.bind(this.onRead, this));
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	onRead(file) {
-		this.output('File ${file.name}:\n');
+		this.output(`File ${file.name}:\n`);
 		return this;
 	}
 
