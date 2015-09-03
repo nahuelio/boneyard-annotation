@@ -7,6 +7,7 @@
 import Tokenizer from '../parser/tokenizer';
 import Annotation from '../../support/annotation';
 import Context from '../../support/context';
+import Factory from '../../util/factory';
 
 /**
 *	Class Reader
@@ -16,6 +17,7 @@ import Context from '../../support/context';
 *	@requires com.spinal.annotation.parser.Tokenizer
 *	@requires com.spinal.annotation.support.Annotation
 *	@requires com.spinal.annotation.support.Context
+*	@requires com.spinal.annotation.util.Factory
 **/
 class Reader  {
 
@@ -29,7 +31,26 @@ class Reader  {
 		this.annotations = new Set();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
+		this.factory = new Factory('../support/');
 		return this;
+	}
+
+	/**
+	*	Returns true if token passed basic validation, otherwise false.
+	*	- A token must be a string
+	*	- A token must be have a length greater than 0.
+	*	- A token must startWith the symbol declared in Annotation base class
+	*	- A token must be defined inside a comment block
+	*	@public
+	*	@method isValid
+	*	@param token {String} token reference
+	*	@return Boolean
+	**/
+	isValid(token) {
+		return (typeof(token) !== 'string' ||
+			token.length > 0 ||
+			token.indexOf(Annotation.Symbol) !== -1 ||
+			this.tokenizer.inComment(token));
 	}
 
 	/**
@@ -52,25 +73,38 @@ class Reader  {
 	*	@return com.spinal.annotation.support.Annotation
 	**/
 	onToken(token = "") {
-		let Annotation = Reader.annotations[this.getAnnotationName(token)];
-		if(!Annotation) return null;
-		return this.annotations.set(new Annotation(this.getAnnotationParameters(token), this.getAnnotationContext(token)));
+		if(!this.isValid(token)) return this;
+		let annotation = this.getAnnotation(token);
+		if(annotation) this.annotations.add(annotation);
+		return this;
 	}
 
 	/**
-	*	Retrieves annotation name given a token extracted from tokenizer
+	*	Retrieves annotation class given a token extracted from tokenizer
+	*	@public
+	*	@method getAnnotation
+	*	@param token {String} token reference
+	*	@return com.spinal.annotation.support.Annotation
+	**/
+	getAnnotation(token) {
+		return this.factory.create(this.getAnnotationName(token),
+			this.getAnnotationParameters(token),
+			this.getAnnotationContext(token));
+	}
+
+	/**
+	*	Default retrieval strategy to get the annotation name given a token
 	*	@public
 	*	@method getAnnotationName
 	*	@param token {String} token reference
 	*	@return String
 	**/
 	getAnnotationName(token) {
-		if(token.length === 0 || token.indexOf(Annotation.Symbol) === -1) return '';
-		return token.substring(token.indexOf(Annotation.Symbol), token.indexOf('('));
+		return this.factory.register(Annotation.get(token));
 	}
 
 	/**
-	*	Strategy to retrieve parameters from annotation
+	*	Default retrieval of annotation's parameters from token
 	*	@public
 	*	@override
 	*	@method getAnnotationParameters
@@ -78,21 +112,18 @@ class Reader  {
 	*	@return Object
 	**/
 	getAnnotationParameters(token) {
-		// TODO: Generic
-		return {};
+		return Annotation.parameters(token);
 	}
 
 	/**
-	*	Retrieves annotation context and stores a pointer to the specific position in
-	*	injections may ocurr later on.
+	*	Default retrieval of annotation's context in which dependency injection may ocurr later on
 	*	@public
 	*	@method getAnnotationContext
 	*	@param token {String} token reference
 	*	@return com.spinal.annotation.support.Context
 	**/
 	getAnnotationContext(token) {
-		// TODO: Generic
-		return {};
+		return Context.new(this.tokenizer.block(token));
 	}
 
 	/**
@@ -101,22 +132,8 @@ class Reader  {
 	*	@method new
 	*	@return com.spinal.annotation.reader.Reader
 	**/
-	static new() {;
+	static new() {
 		return new this(new Tokenizer());
-	}
-
-	/**
-	*	Annotations Supported
-	*	@static
-	*	@property annotations
-	*	@type Array
-	**/
-	static get annotations() {
-		return {
-			scan: require('../../support/scan'),
-			bone: require('../../support/bone'),
-			wire: require('../../support/wire')
-		};
 	}
 
 }
