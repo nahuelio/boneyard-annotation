@@ -29,9 +29,7 @@ class Scanner extends EventEmitter {
 	constructor(runner, reader) {
 		super();
 		this.runner = runner;
-		this.parser = Parser.from(this.runner.config, reader)
-			.once(Parser.Events.start, _.bind(this.onStart, this))
-			.once(Parser.Events.end, _.bind(this.onEnd, this));
+		this.parser = Parser.from(this.runner.config, reader);
 		return this;
 	}
 
@@ -54,7 +52,10 @@ class Scanner extends EventEmitter {
 	*	@return com.spinal.annotation.Scanner
 	**/
 	scan() {
-		this.parser.parse();
+		this.parser
+			.once(Parser.Events.start, _.bind(this.onStart, this))
+			.once(Parser.Events.end, _.bind(this.onEnd, this))
+			.parse();
 		return this;
 	}
 
