@@ -28,7 +28,7 @@ program
 		return paths.split(',');
 	})
 	.action(_.bind(function(source, program) {
-		require('../src/com/spinal/annotation/commands/runner')(resolve(__dirname, '../', source), null, program.exclude, program);
+		require('../src/com/spinal/annotation/commands/runner').new(resolve(__dirname, '../', source), null, program.exclude, program);
 	}, this));
 
 /**
