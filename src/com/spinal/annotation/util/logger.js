@@ -67,6 +67,39 @@ class Logger  {
 	}
 
 	/**
+	*	Outputs a given string to the standard output as a warning (yellow color)
+	*	@static
+	*	@method warn
+	*	@param [str] {String} string to output
+	*	@return String
+	**/
+	static warn(str) {
+		return this.out(str, this.colors.y);
+	}
+
+	/**
+	*	Outputs a given string to the standard output as an error (red color)
+	*	@static
+	*	@method error
+	*	@param [str] {String} string to output
+	*	@return String
+	**/
+	static error(str) {
+		return this.out(str, this.colors.r);
+	}
+
+	/**
+	*	Outputs a given string to the standard output as a standard output (green color)
+	*	@static
+	*	@method log
+	*	@param [str] {String} string to output
+	*	@return String
+	**/
+	static log(str) {
+		return this.out(str, this.colors.s);
+	}
+
+	/**
 	*	Outputs a given string to the standard output by optionally providing a color.
 	*	@static
 	*	@method out

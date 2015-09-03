@@ -25,13 +25,36 @@ class Annotation extends EventEmitter {
 	*	@constructor
 	*	@param [parameters] {Object} annotation's parameters.
 	*	@param [context] {com.spinal.annotation.support.Context}
-	*		context in which annotation may perform operation into.
+	*		context in which annotation may perform operation to
 	*	@return com.spinal.annotation.support.Annotation
 	**/
 	constructor(parameters = {}, context = Context.new()) {
 		super();
 		this.context = context;
-		return _.extend(this, parameters);
+		this.parameters = parameters;
+		return this;
+	}
+
+	/**
+	*	Retrieves annotation name from a given expression
+	*	@static
+	*	@method get
+	*	@param expr {String} expression to evaluate
+	*	@return String
+	**/
+	static get(expr) {
+		// TODO: Implement
+	}
+
+	/**
+	*	Retrieves annotation parameters from a given expression if any exists
+	*	@static
+	*	@method get
+	*	@param expr {String} expression to evaluate
+	*	@return String
+	**/
+	static parameters(expr) {
+		// TODO: Implement
 	}
 
 	/**

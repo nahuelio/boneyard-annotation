@@ -120,6 +120,30 @@ class Tokenizer extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves block information in which the token was found.
+	*	@public
+	*	@method block
+	*	@param token {String} token reference
+	*	@return Object
+	**/
+	block(token) {
+		// TODO: Implement
+		return {};
+	}
+
+	/**
+	*	Returns true if the token was declared inside a comment block
+	*	@public
+	*	@method inComment
+	*	@param token {String} token to be evaluated
+	*	@return Boolean
+	**/
+	inComment(token) {
+		// TODO: Implement
+		return true;
+	}
+
+	/**
 	*	Returns RegExp that specifies the strategy trim tokens from the input
 	*	@static
 	*	@property delimiters
