@@ -11,7 +11,7 @@ describe('com.spinal.annotation.engine.reader.Reader', function() {
 
 	before(function() {
 		this.tokenizer = new Tokenizer();
-		this.result = ['/**', '*	@annotation1()', '**/', '// @annotation2()', '@annotation3()'];
+		this.result = ['/**', '// @annotation0', '*	@annotation1()', '**/', '// @annotation2({ key: "value", flag: false })', '@annotation3()'];
 		this.resultSet = new Set(this.result);
 		this.stubReset = sinon.stub(this.tokenizer, 'reset').returns(this.tokenizer);
 	});
@@ -87,24 +87,25 @@ describe('com.spinal.annotation.engine.reader.Reader', function() {
 			}, this));
 
 			let reader = new Reader(this.tokenizer);
-			let stubGetAnnotationName = sinon.stub(reader, 'getAnnotationName', Annotation.get);
-			let stubGetAnnotation = sinon.stub(reader, 'getAnnotation', function(name, token) { return new Annotation({ name: name }); });
+			let stubGetAnnotationMetadata = sinon.stub(reader, 'getAnnotationMetadata', Annotation.metadata);
+			let stubGetAnnotation = sinon.stub(reader, 'getAnnotation', function(metadata) { return new Annotation(metadata); });
 			let result = reader.read([...this.resultSet].join(''));
 
 			expect(result.annotations).to.be.ok();
 			expect(result.annotations).to.be.a(Map);
-			expect(result.annotations.size).to.be(2);
+			expect(result.annotations.size).to.be(3);
 
 			result.annotations.forEach((v, k) => {
 				expect(k).to.be.a('string');
 				expect(k).to.contain('annotation');
 				expect(v).to.be.an(Annotation);
 				expect(v.name).to.be.ok();
+				expect(v.token).to.be.ok();
 			});
 
 			stubTokenize.restore();
 			stubGetAnnotation.restore();
-			stubGetAnnotationName.restore();
+			stubGetAnnotationMetadata.restore();
 		});
 
 	});
@@ -140,18 +141,6 @@ describe('com.spinal.annotation.engine.reader.Reader', function() {
 		});
 
 		it('Should return null if no parameters were declared', function() {
-
-		});
-
-	});
-
-	describe('#getAnnotationContext', function() {
-
-		it('Should retrieve annotation context if annotation strategy requires it', function() {
-
-		});
-
-		it('Should return null if context are not part of the annotation strategy', function() {
 
 		});
 

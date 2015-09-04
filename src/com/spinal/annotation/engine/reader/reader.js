@@ -49,9 +49,7 @@ class Reader  {
 	*	@return Boolean
 	**/
 	isValid(token) {
-		return (typeof(token) === 'string' &&
-			token.length > 0 &&
-			new RegExp(("(\\*|\\/\\/)+\\s\*" + Annotation.Symbol), 'gi').test(token));
+		return (typeof(token) === 'string' && token.length > 0 && Annotation.regExp.test(token));
 	}
 
 	/**
@@ -74,57 +72,57 @@ class Reader  {
 	*	@param token {String} token to be analyzed
 	*	@return com.spinal.annotation.support.Annotation
 	**/
-	onToken(token = "") {
+	onToken(token) {
 		if(!this.isValid(token)) return this;
-		let name = this.getAnnotationName(token),
-			annotation = this.getAnnotation(name, token);
-		if(annotation) this.annotations.set(name, annotation);
+		let metadata = this.getAnnotationMetadata(token);
+		this.annotations.set(metadata.name, this.getAnnotation(metadata));
 		return this;
+	}
+
+	/**
+	*	Default retrieval strategy to get the annotation metadata given a token
+	*	@public
+	*	@method getAnnotationMetadata
+	*	@param token {String} token reference
+	*	@return Object
+	**/
+	getAnnotationMetadata(token) {
+		let metadata = Annotation.metadata(token);
+		this.factory.register(metadata.name);
+		return metadata;
 	}
 
 	/**
 	*	Retrieves annotation class given a token extracted from tokenizer
 	*	@public
 	*	@method getAnnotation
-	*	@param token {String} token reference
+	*	@param metadata {Object} annotation metadata
 	*	@return com.spinal.annotation.support.Annotation
 	**/
-	getAnnotation(name, token) {
-		return this.factory.create(name, this.getAnnotationParameters(token));
+	getAnnotation(metadata) {
+		return this.factory.create(metadata.name, this.getAnnotationParameters(metadata));
 	}
 
 	/**
-	*	Default retrieval strategy to get the annotation name given a token
-	*	@public
-	*	@method getAnnotationName
-	*	@param token {String} token reference
-	*	@return String
-	**/
-	getAnnotationName(name, token) {
-		return this.factory.register(Annotation.get(token));
-	}
-
-	/**
-	*	Default retrieval of annotation's parameters from token
-	*	@public
-	*	@override
-	*	@method getAnnotationParameters
-	*	@param token {String} token reference
-	*	@return Object
-	**/
-	getAnnotationParameters(token) {
-		return Annotation.parameters(token);
-	}
-
-	/**
-	*	Default retrieval of annotation's context in which dependency injection may ocurr later on
+	*	Default retrieval of annotation's context in which dependency injection may ocurr later on.
 	*	@public
 	*	@method getAnnotationContext
-	*	@param token {String} token reference
-	*	@return com.spinal.annotation.support.Context
+	*	@param metadata {Object} metadata reference
+	*	@return Object
 	**/
-	getAnnotationContext(annotation) {
-		return Context.new();
+	getAnnotationParameters(metadata) {
+		return _.extend(this.getAnnotationContext(metadata), metadata);
+	}
+
+	/**
+	*	Default retrieval of annotation's context in which dependency injection may ocurr later on.
+	*	@public
+	*	@method getAnnotationContext
+	*	@param metadata {Object} metadata reference
+	*	@return Object
+	**/
+	getAnnotationContext(metadata) {
+		return { context: Context.new() };
 	}
 
 	/**
