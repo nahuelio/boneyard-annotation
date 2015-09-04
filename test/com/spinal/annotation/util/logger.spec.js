@@ -55,6 +55,36 @@ describe('com.spinal.annotation.util.Logger', function() {
 
 	});
 
+	describe('static#log', function() {
+
+		it('Should output string with standard color', function() {
+			Logger.environment = Logger.environments.dev;
+			expect(Logger.log("\tStandard message")).to.be.ok();
+			Logger.environment = Logger.environments.test;
+		});
+
+	});
+
+	describe('static#warn', function() {
+
+		it('Should output string with yellow color', function() {
+			Logger.environment = Logger.environments.dev;
+			expect(Logger.warn("\tWarn message")).to.be.ok();
+			Logger.environment = Logger.environments.test;
+		});
+
+	});
+
+	describe('static#error', function() {
+
+		it('Should output string with red color', function() {
+			Logger.environment = Logger.environments.dev;
+			expect(Logger.error("\tError message")).to.be.ok();
+			Logger.environment = Logger.environments.test;
+		});
+
+	});
+
 	describe('static#out', function() {
 
 		it('Should NOT output to the stdout under test environment', function() {

@@ -24,15 +24,12 @@ class Annotation extends EventEmitter {
 	*	Constructor
 	*	@constructor
 	*	@param [parameters] {Object} annotation's parameters.
-	*	@param [context] {com.spinal.annotation.support.Context}
-	*		context in which annotation may perform operation to
 	*	@return com.spinal.annotation.support.Annotation
 	**/
-	constructor(parameters = {}, context = Context.new()) {
+	constructor(parameters = {}) {
 		super();
-		this.context = context;
-		this.parameters = parameters;
-		return this;
+		this.context = null;
+		return _.extend(this, parameters);
 	}
 
 	/**
@@ -42,8 +39,9 @@ class Annotation extends EventEmitter {
 	*	@param expr {String} expression to evaluate
 	*	@return String
 	**/
-	static get(expr) {
-		// TODO: Implement
+	static get(expr = "") {
+		let end = (expr.indexOf('(') !== -1) ? expr.indexOf('(') : expr.length;
+		return expr.substring(expr.indexOf(Annotation.Symbol) + 1, end);
 	}
 
 	/**
