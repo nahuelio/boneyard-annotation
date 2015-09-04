@@ -112,7 +112,7 @@ describe('com.spinal.annotation.engine.reader.Reader', function() {
 	describe('#getAnnotation', function() {
 
 		it('Should retrieve an instance of an annotation', function() {
-
+			let reader = new Reader(this.tokenizer);
 		});
 
 		it('Should NOT retrieve an instance of an annotation that its not supported', function() {

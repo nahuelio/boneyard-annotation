@@ -22,17 +22,20 @@ class Factory {
 	*	@constructor
 	*	@return com.spinal.annotation.util.Factory
 	**/
-	constructor(ns = '/') {
+	constructor(ns) {
 		this.factories = new Map();
 		this.namespace = ns;
 		return this;
 	}
 
 	/**
-	*	Sets a namespace fo
+	*	Sets a namespace in wich the factory will pull the factory classes
+	*	@public
+	*	@method namespace
+	*	@param [ns] {String} namespace
 	**/
-	set namespace(ns = '/') {
-		this.ns = path.resolve(__dirname, ns);
+	set namespace(ns = './') {
+		this.ns = path.resolve(process.cwd(), ns);
 	}
 
 	/**
@@ -44,13 +47,15 @@ class Factory {
 	*	@return String
 	**/
 	register(path = '') {
-		if(this.exists(path) || path === '') return this;
-		var fullpath = (this.ns + path);
+		if(path === '' || this.exists(path)) return path;
+		var fullpath = (this.ns + '/' + path);
 		try {
 			this.factories.set(path, require(fullpath));
 		} catch(ex) {
-			Logger.warn(`Path ${fullpath} to Factory class not found. [Factory not Registered]`);
-			return this;
+			Logger.error(`\tError ocurred while loading factory class with path:`);
+			Logger.warn(`\t\t${fullpath}`);
+			Logger.error(`\tMessage: "${ex.message}"`);
+			return null;
 		}
 		return path;
 	}
@@ -101,7 +106,9 @@ class Factory {
 	*	@return Object
 	**/
 	create(path, ...args) {
-		return this.exists(path) ? new this.get(path)(...args) : null;
+		if(!this.exists(path)) return null;
+		let FactoryClass = this.get(path);
+		return new FactoryClass(...args);
 	}
 
 }
