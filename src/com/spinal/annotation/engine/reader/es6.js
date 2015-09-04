@@ -46,7 +46,7 @@ class Es6Reader extends Reader {
 	*	@property Context
 	*	@type Object
 	**/
-	static get Context() {
+	static get Contexts() {
 		return {
 			CLASS: 'class <%= name %>',
 			METHOD: '<%= name %>()',

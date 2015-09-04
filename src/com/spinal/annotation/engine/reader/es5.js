@@ -46,7 +46,7 @@ class Es5Reader extends Reader {
 	*	@property Context
 	*	@type Object
 	**/
-	static get Context() {
+	static get Contexts() {
 		return {
 			CLASS: ['var <%= name %> = function()', 'function <%= name %>()'],
 			METHOD: ['<%= name %>()', '<%= name %>: function()'],
