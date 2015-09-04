@@ -110,48 +110,4 @@ describe('com.spinal.annotation.engine.reader.Reader', function() {
 
 	});
 
-	describe('#getAnnotation', function() {
-
-		it('Should retrieve an instance of an annotation', function() {
-			let reader = new Reader(this.tokenizer);
-		});
-
-		it('Should NOT retrieve an instance of an annotation that its not supported', function() {
-
-		});
-
-	});
-
-	describe('#getAnnotationName', function() {
-
-		it('Should retrieve annotation name if found', function() {
-
-		});
-
-		it('Should return null if none of the annotations supported are found', function() {
-
-		});
-
-	});
-
-	describe('#getAnnotationParameters', function() {
-
-		it('Should retrieve annotation parameters if any exist', function() {
-
-		});
-
-		it('Should return null if no parameters were declared', function() {
-
-		});
-
-	});
-
-	describe('static#new', function() {
-
-		it('Should retrieve an instance of a Reader (static constructor)', function() {
-
-		});
-
-	});
-
 });
