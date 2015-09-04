@@ -28,7 +28,7 @@ class Reader  {
 	*	@return com.spinal.annotation.reader.Reader
 	**/
 	constructor(tokenizer) {
-		this.annotations = new Set();
+		this.annotations = new Map();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		this.factory = new Factory('../support/');
@@ -36,21 +36,22 @@ class Reader  {
 	}
 
 	/**
-	*	Returns true if token passed basic validation, otherwise false.
-	*	- A token must be a string
-	*	- A token must be have a length greater than 0.
-	*	- A token must startWith the symbol declared in Annotation base class
-	*	- A token must be defined inside a comment block
+	*	Returns true if token passes basic validation, otherwise false.
+	*	Return true all the following conditions are met:
+	*	- A token is a string
+	*	- A token has length greater than 0.
+	*	- A token contains a symbol character declared in Annotation.Symbol.
+	*	- A token must be defined inside a comment block of any kind (multi line / single line).
+	*	- A token containing a symbol character must start with the symbol itself.
 	*	@public
 	*	@method isValid
 	*	@param token {String} token reference
 	*	@return Boolean
 	**/
 	isValid(token) {
-		return (typeof(token) !== 'string' ||
-			token.length > 0 ||
-			token.indexOf(Annotation.Symbol) !== -1 ||
-			this.tokenizer.inComment(token));
+		return (typeof(token) === 'string' &&
+			token.length > 0 &&
+			new RegExp(("(\\*|\\/\\/)+\\s\*" + Annotation.Symbol), 'gi').test(token));
 	}
 
 	/**
@@ -58,10 +59,11 @@ class Reader  {
 	*	@public
 	*	@method read
 	*	@param content {String} file content to be read
-	*	@return Array
+	*	@return com.spinal.annotation.reader.Reader
 	**/
 	read(content = "") {
-		return this.tokenizer.reset(content).tokenize();
+		this.tokenizer.reset(content).tokenize();
+		return this;
 	}
 
 	/**
@@ -74,8 +76,9 @@ class Reader  {
 	**/
 	onToken(token = "") {
 		if(!this.isValid(token)) return this;
-		let annotation = this.getAnnotation(token);
-		if(annotation) this.annotations.add(annotation);
+		let name = this.getAnnotationName(token),
+			annotation = this.getAnnotation(name, token);
+		if(annotation) this.annotations.set(name, annotation);
 		return this;
 	}
 
@@ -86,10 +89,8 @@ class Reader  {
 	*	@param token {String} token reference
 	*	@return com.spinal.annotation.support.Annotation
 	**/
-	getAnnotation(token) {
-		return this.factory.create(this.getAnnotationName(token),
-			this.getAnnotationParameters(token),
-			this.getAnnotationContext(token));
+	getAnnotation(name, token) {
+		return this.factory.create(name, this.getAnnotationParameters(token));
 	}
 
 	/**
@@ -99,7 +100,7 @@ class Reader  {
 	*	@param token {String} token reference
 	*	@return String
 	**/
-	getAnnotationName(token) {
+	getAnnotationName(name, token) {
 		return this.factory.register(Annotation.get(token));
 	}
 
@@ -122,8 +123,8 @@ class Reader  {
 	*	@param token {String} token reference
 	*	@return com.spinal.annotation.support.Context
 	**/
-	getAnnotationContext(token) {
-		return Context.new(this.tokenizer.block(token));
+	getAnnotationContext(annotation) {
+		return Context.new();
 	}
 
 	/**

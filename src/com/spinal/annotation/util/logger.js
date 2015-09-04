@@ -74,7 +74,7 @@ class Logger  {
 	*	@return String
 	**/
 	static warn(str) {
-		return this.out(str, this.colors.y);
+		return Logger.out(str, 'y');
 	}
 
 	/**
@@ -85,7 +85,7 @@ class Logger  {
 	*	@return String
 	**/
 	static error(str) {
-		return this.out(str, this.colors.r);
+		return Logger.out(str, 'r');
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Logger  {
 	*	@return String
 	**/
 	static log(str) {
-		return this.out(str, this.colors.s);
+		return Logger.out(str, 's');
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Logger  {
 		let output = null;
 		if(str && Logger.env === Logger.environments.dev) {
 			color = (color && Logger.colors[color]) ? Logger.colors[color] : Logger.colors['s'];
-			output = color + str + Logger.colors['s'];
+			output = color + str + Logger.colors.s;
 			console.log(output);
 		}
 		return output;
