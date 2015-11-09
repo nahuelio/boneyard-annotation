@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
-*	Spinal IOC Annotation CLI Tool
+*	Boneyard Annotation CLI Tool
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
@@ -15,7 +15,7 @@ var program = require('commander'),
 *	Version
 **/
 program
-	.version(('spioc@' + pkg.version + ' - Spinal IoC Annotation based CLI Tool\n'))
+	.version(('yard@' + pkg.version + ' - Boneyard Annotation CLI Tool\n'))
 	.usage('[command] [options]');
 
 /**
@@ -28,7 +28,7 @@ program
 		return paths.split(',');
 	})
 	.action(_.bind(function(source, program) {
-		require('../src/com/spinal/annotation/commands/runner').new(resolve(__dirname, '../', source), null, program.exclude, program);
+		require('../src/com/boneyard/annotation/commands/runner').new(resolve(__dirname, '../', source), null, program.exclude, program);
 	}, this));
 
 /**
@@ -38,7 +38,7 @@ program
 	.command('examples [port]')
 	.description('Spins up a simple http server to check examples results')
 	.action(_.bind(function(command, port) {
-		require('../src/com/spinal/annotation/commands/examples')((arguments.length === 3) ? port : undefined, program);
+		require('../src/com/boneyard/annotation/commands/examples')((arguments.length === 3) ? port : undefined, program);
 	}, this));
 
 /**
@@ -47,9 +47,9 @@ program
 program
 	.on('--help', _.bind(function() {
 		console.log('\tCommand Build usage example:\n');
-		console.log('\t\tspioc build ./src/**/*.js -e src/excludeme/**/*.js,src/other.js');
+		console.log('\t\tyard build ./src/**/*.js -e src/excludeme/**/*.js,src/other.js');
 		console.log('\n');
 		console.log('\tCommand Examples usage:\n');
-		console.log('\t\tspioc examples -p 9393');
+		console.log('\t\tyard examples -p 9393');
 		console.log('\n');
 	}, this)).parse(process.argv);

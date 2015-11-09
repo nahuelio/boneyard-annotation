@@ -1,7 +1,7 @@
 {
-    "name": "spioc",
+    "name": "boneyard-annotation",
     "version": "0.1.0",
-    "description": "Annotated IoC implementation for Spinal",
+    "description": "Boneyard Annotation Specs Instrumenter for Boneyard IoC package",
     "dependencies": {
         "babel": "5.8.x",
         "babel-connect": "6.0.2",
@@ -24,29 +24,32 @@
         "karma": "~0.13.9",
         "karma-babel-preprocessor": "5.2.x",
         "karma-mocha": "~0.1",
+        "karma-mocha-reporter": "0.2.2",
         "karma-expect": "*",
         "karma-requirejs": "~0.2.2",
         "karma-coverage": "~0.5.0",
         "karma-spec-reporter": "0.0.x",
-        "karma-htmlfile-reporter": "git+ssh://git@github.com:matthias-schuetz/karma-htmlfile-reporter.git#master",
+        "karma-nyan-reporter": "0.2.2",
+        "karma-html2js-preprocessor": "0.1.0",
         "karma-phantomjs-launcher": "^0.1.4"
     },
     "main": "index.js",
-    "bin": "./bin/spioc",
+    "bin": "./bin/yard",
     "scripts": {
         "test": "make test"
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/3dimention/spinal-ioc-annotation.git"
+        "url": "git://github.com/3dimention/boneyard-annotation.git"
     },
     "keywords": [
-        "spinal",
+        "boneyard",
+        "annotation"
         "ioc",
-        "annotations"
+        "instrumenter"
     ],
     "engines": {
-        "node": ">=0.8"
+        "node": ">0.10"
     },
     "author": "Patricio Ferreira <3dimentionar@gmail.com>",
     "license": "MIT"

@@ -1,5 +1,5 @@
 ##
-#	Make Targets Spinal IoC Annotation based Module
+#	Make Targets Boneyard Annotation
 ##
 
 clean:
@@ -41,10 +41,10 @@ docs:
 build:
 	@echo "\033[1;36m[Build Phase]\033[0m"
 	@make clean-build && mkdir bin
-	@cp -p ./index.js bin/spioc
+	@cp -p ./index.js bin/yard
 
 release:
-	@echo "\033[1;36m[Releasing Spinal IoC Annotation Tool]\n\033[0m"
+	@echo "\033[1;36m[Releasing Boneyard Annotation Tool]\n\033[0m"
 	@make coverage && make docs && make build
 	@echo "\n\033[1;36mRelease Completed.\033[0m"
 

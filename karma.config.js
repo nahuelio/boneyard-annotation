@@ -1,5 +1,5 @@
 /**
-*   Karma Configuration for Spinal Annotation
+*   Karma Configuration for Boneyard Annotation
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 module.exports = function(config) {
@@ -23,7 +23,7 @@ module.exports = function(config) {
             './test/examples/**/*.js': ['babel']
         },
 
-        reporters: ['progress', 'coverage'],
+        reporters: ['nyan', 'coverage'],
 
         babelPreprocessor: {
             options: {
@@ -37,13 +37,18 @@ module.exports = function(config) {
             }
         },
 
-        coverageReporter: { type : 'html', dir : 'examples-coverage' },
+        coverageReporter: {
+            reporters: [
+                { type: 'html', dir: 'coverage/' },
+                { type: 'lcov', dir: 'coverage/' }
+            ]
+        },
 
         port: 9876,
 
         colors: true,
 
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_ERROR,
 
         autoWatch: true,
 
