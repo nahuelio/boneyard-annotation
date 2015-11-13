@@ -1,5 +1,4 @@
 /**
-*	Boneyard Annotation module
 *	@module com.boneyard.annotation.commands
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
@@ -115,14 +114,7 @@ class Examples {
 	*	@type Array
 	**/
 	get bowerDependencies() {
-		return [
-			'git@github.com:jrburke/requirejs-bower.git#2.1.20',
-			'requirejs-text#2.0.14',
-			'bootstrap#3.3.5',
-			'jquery#2.1.4',
-			'backbone#1.2.2',
-			'underscore#1.8.3'
-		];
+		return ['boneyard#0.1.x'];
 	}
 
 	/**

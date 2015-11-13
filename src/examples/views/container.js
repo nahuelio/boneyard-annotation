@@ -37,7 +37,7 @@ class Container extends View {
 	*/
 	properties(attrs) {
 		if(this.parent) this.parent.$el.append(this.el);
-		return _.extend(this, { views: [] }, _.omit(attrs, _.keys(_.omit(this, _.functions(this))));
+		return _.extend(this, { views: [] }, _.omit(attrs, _.keys(_.omit(this, _.functions(this)))));
 	}
 
 	/**
@@ -48,7 +48,6 @@ class Container extends View {
 	*	@return examples.views.Container
 	*/
 	add(...views) {
-		// TODO:
 		this.views = this.views.concat(views);
 		return this;
 	}
@@ -75,7 +74,7 @@ class Container extends View {
 	*	@return Boolean
 	*/
 	exists(id) {
-		return this.find()
+		// return this.find();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 ##
-#	Make Targets Boneyard Annotation
+#	Makefile for Boneyard Annotation
 ##
 
 clean:
