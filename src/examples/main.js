@@ -1,5 +1,5 @@
 /**
-*	Spinal IoC annotation Require Config
+*	Boneyard Configuration
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
 requirejs.config({

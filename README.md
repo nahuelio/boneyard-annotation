@@ -1,4 +1,4 @@
-### Spinal IoC Annotation Tool
+### Boneyard Annotation
 
 ##### Introduction
 
@@ -10,7 +10,7 @@
 
 ##### Installation
 
-`npm install -g spioc`
+`npm install -g boneyard-annotation`
 
 ##### Quick Start
 

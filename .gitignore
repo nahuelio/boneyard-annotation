@@ -4,6 +4,7 @@
 /dist/
 /coverage/
 
+.DS_store
 *.log
 *.pid
 *.lock
