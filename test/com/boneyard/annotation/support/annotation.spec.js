@@ -3,7 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-var Annotation = require(process.env.LIB_PATH + 'com/boneyard/annotation/support/annotation');
+var Annotation = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/annotation/annotation');
 
 describe('com.boneyard.annotation.support.Annotation', function() {
 

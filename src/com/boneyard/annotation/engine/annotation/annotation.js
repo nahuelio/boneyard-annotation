@@ -4,9 +4,10 @@
 **/
 
 import _ from 'underscore';
+import _s from 'underscore.string';
 import {EventEmitter} from 'events';
 import Context from './context';
-import '../util/mixins';
+import '../../util/mixins';
 
 /**
 *	Class Annotation
@@ -15,6 +16,7 @@ import '../util/mixins';
 *	@extends events.EventEmitter
 *
 *	@requires underscore
+*	@requires underscore.string
 *	@requires events.EventEmitter
 *	@requires com.boneyard.annotation.support.Context
 *	@requires com.boneyard.annotation.util.mixins
@@ -40,7 +42,7 @@ class Annotation extends EventEmitter {
 	*	@return String
 	**/
 	static metadata(expr) {
-		return _.extend({ name: Annotation.get(expr), token: expr }, Annotation.parameters(expr));
+		return _.extend({ name: Annotation.get(expr).toLowerCase(), token: expr }, Annotation.parameters(expr));
 	}
 
 	/**
@@ -87,6 +89,16 @@ class Annotation extends EventEmitter {
 	**/
 	static get Symbol() {
 		return '@';
+	}
+
+	/**
+	*	Class Name
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static get NAME() {
+		return 'Annotation';
 	}
 
 }

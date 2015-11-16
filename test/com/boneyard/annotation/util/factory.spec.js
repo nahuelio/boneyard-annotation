@@ -54,7 +54,7 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should register a new factory class', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			expect(factory.register('class/bone')).to.be('class/bone');
+			expect(factory.register('bone')).to.be('bone');
 			expect(factory.factories.size).to.be(1);
 		});
 
@@ -65,14 +65,18 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should NOT register a new factory class if it is already registered', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
-			factory.register('class/bone');
+			factory.register('bone');
+			factory.register('bone');
 			expect(factory.factories.size).to.be(1);
 		});
 
-		it('Should NOT register a new factory class if the class cannot be found', function() {
+		it('Should throw an Error: Will not register a new factory class if the class cannot be found', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			expect(factory.register('class/not-existent')).not.be.ok();
+			expect(_.bind(function() {
+				factory.register('not-existent');
+			}, this)).to.throwException(function(e) {
+				expect(e).to.be.ok();
+			})
 		});
 
 	});
@@ -81,8 +85,8 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should unresgister an existing factory class', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
-			let result = factory.unregister('class/bone');
+			factory.register('bone');
+			let result = factory.unregister('bone');
 			expect(result).to.be.ok();
 			expect(result).to.be.a(Factory);
 			expect(result.factories.size).to.be(0);
@@ -90,7 +94,7 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should NOT unregister a factory class if path is undefined or an empty string', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
+			factory.register('bone');
 			let result = factory.unregister();
 			expect(result).to.be.ok();
 			expect(result).to.be.a(Factory);
@@ -102,8 +106,8 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should NOT unregister an unexisting factory class', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
-			let result = factory.unregister('class/spec');
+			factory.register('bone');
+			let result = factory.unregister('spec');
 			expect(result).to.be.ok();
 			expect(result).to.be.a(Factory);
 			expect(result.factories.size).to.be(1);
@@ -115,14 +119,14 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should return true if factory class exists', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
-			expect(factory.exists('class/bone')).to.be(true);
+			factory.register('bone');
+			expect(factory.exists('bone')).to.be(true);
 		});
 
 		it('Should return false if factory class doesn\'t exists', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('class/bone');
-			expect(factory.exists('class/spec')).to.be(false);
+			factory.register('bone');
+			expect(factory.exists('spec')).to.be(false);
 		});
 
 	});
@@ -130,10 +134,10 @@ describe('com.boneyard.annotation.util.Factory', function() {
 	describe('#get', function() {
 
 		it('Should retrieve a factory class', function() {
-			let Spec = require(process.env.LIB_PATH + 'com/boneyard/annotation/support/spec/spec');
+			let Spec = require(process.env.LIB_PATH + 'com/boneyard/annotation/support/spec');
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('spec/spec');
-			let result = factory.get('spec/spec');
+			factory.register('spec');
+			let result = factory.get('spec');
 
 			expect(result).to.be.ok();
 			expect(result).to.be(Spec);
@@ -141,7 +145,7 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should NOT retrieve a factory class that doesn\'t exists', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			let result = factory.get('spec/spec');
+			let result = factory.get('spec');
 			expect(result).not.be.ok();
 		});
 
@@ -151,21 +155,21 @@ describe('com.boneyard.annotation.util.Factory', function() {
 
 		it('Should return an instance of a registered factory (with or without parameters)', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			factory.register('spec/spec');
+			factory.register('spec');
 
 			// Without Parameters
-			let result = factory.create('spec/spec');
+			let result = factory.create('spec');
 			expect(result).to.be.ok();
-			expect(result).to.be.a(factory.get('spec/spec'));
+			expect(result).to.be.a(factory.get('spec'));
 
-			result = factory.create('spec/spec', { name: 'Spec' });
+			result = factory.create('spec', { name: 'Spec' });
 			expect(result).to.be.ok();
 			expect(result.name).to.be('Spec');
 		});
 
 		it('Should NOT return an instance of a non-existent factory class', function() {
 			let factory = new Factory('./src/com/boneyard/annotation/support');
-			expect(factory.create('spec/spec')).not.be.ok();
+			expect(factory.create('spec')).not.be.ok();
 		});
 
 	});

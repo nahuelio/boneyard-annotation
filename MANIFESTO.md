@@ -17,7 +17,7 @@ This document might be subjected to change.
 ### Supported Annotations
 ---
 
-#### @Scan
+#### @Scan (**review**)
 
 * Scope: Module
 * Parameters:
@@ -118,7 +118,7 @@ class UserService extends Service {
 ```
 
 ---
-#### @Inject (**Review**)
+#### @Wire (**Review**)
 
 * Scope: Method, Field, Setter
 * Parameters
@@ -130,7 +130,7 @@ Examples:
 ```js
 /**
 *	In method scope
-*	@Inject({ id: "myconfig", params: [{ configOption: true }])
+*	@Wire({ id: "myconfig", params: [{ configOption: true }])
 **/
 initialize: function(config) {
   ...
@@ -140,7 +140,7 @@ initialize: function(config) {
 ```js
 /**
 *	In a Field scope (ES5)
-*	@Inject({ id: "search" })
+*	@Wire({ id: "search" })
 **/
 search: null,
 
@@ -152,7 +152,7 @@ initialize: function(attrs) {
 ```js
 /**
 *	In a Setter scope (ES6)
-*	@Inject({ id: "mymodel", params: [{ defaults: { key: "value" } }] })
+*	@Wire({ id: "mymodel", params: [{ defaults: { key: "value" } }] })
 **/
 set value(model) {
   this.value = model.get('key');

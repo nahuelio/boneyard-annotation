@@ -3,34 +3,38 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import {resolve} from 'path';
 import Tokenizer from '../parser/tokenizer';
-import Annotation from '../../support/annotation';
-import Context from '../../support/context';
+import Annotation from '../annotation/annotation';
+import Context from '../annotation/context';
 import Factory from '../../util/factory';
+import Logger from '../../util/logger';
 
 /**
 *	Class Reader
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Reader
 *
+*	@requires path
 *	@requires com.boneyard.annotation.parser.Tokenizer
-*	@requires com.boneyard.annotation.support.Annotation
-*	@requires com.boneyard.annotation.support.Context
+*	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 *	@requires com.boneyard.annotation.util.Factory
+*	@requires com.boneyard.annotation.util.Logger
 **/
 class Reader  {
 
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param tokenizer {com.boneyard.annotation.parser.Tokenizer} tokenizer instance
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	constructor(tokenizer) {
 		this.annotations = new Map();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
-		this.factory = new Factory('../support/');
+		this.factory = new Factory(resolve(__dirname, '../../support/'));
 		return this;
 	}
 
@@ -69,13 +73,31 @@ class Reader  {
 	*	@public
 	*	@method onToken
 	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.support.Annotation
+	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	onToken(token) {
-		if(!this.isValid(token)) return this;
-		let metadata = this.getAnnotationMetadata(token);
-		this.annotations.set(metadata.name, this.getAnnotation(metadata));
+		if(!this.isValid(token)) return this.onContext(token);
+		try {
+			let metadata = this.getAnnotationMetadata(token);
+			this.annotations.set(metadata.name, this.getAnnotation(metadata));
+		} catch(ex) {
+			Logger.warn(token);
+			return this;
+		}
 		return this;
+	}
+
+	/**
+	*	Default Context Handler
+	*	Evaluates token to determine the context of the last annotation matched
+	*	@public
+	*	@method onContext
+	*	@param token {String} token to be analyzed
+	*	@return com.boneyard.annotation.support.Annotation
+	**/
+	onContext(token) {
+		if(this.annotations.size === 0) return this;
+		return Array.from(this.annotations.values()).pop();
 	}
 
 	/**
@@ -99,29 +121,7 @@ class Reader  {
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	getAnnotation(metadata) {
-		return this.factory.create(metadata.name, this.getAnnotationParameters(metadata));
-	}
-
-	/**
-	*	Default retrieval of annotation's context in which dependency injection may ocurr later on.
-	*	@public
-	*	@method getAnnotationContext
-	*	@param metadata {Object} metadata reference
-	*	@return Object
-	**/
-	getAnnotationParameters(metadata) {
-		return _.extend(this.getAnnotationContext(metadata), metadata);
-	}
-
-	/**
-	*	Default retrieval of annotation's context in which dependency injection may ocurr later on.
-	*	@public
-	*	@method getAnnotationContext
-	*	@param metadata {Object} metadata reference
-	*	@return Object
-	**/
-	getAnnotationContext(metadata) {
-		return { context: Context.new() };
+		return this.factory.create(metadata.name, metadata);
 	}
 
 	/**

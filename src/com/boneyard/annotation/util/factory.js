@@ -40,6 +40,7 @@ class Factory {
 	/**
 	*	Register a new factory by a given a path to the class file.
 	*	@public
+	*	@throws Error
 	*	@method register
 	*	@param name {String} factory name
 	*	@param path {String} file path to the class that will act as a constructor
@@ -48,14 +49,7 @@ class Factory {
 	register(path = '') {
 		if(path === '' || this.exists(path)) return path;
 		var fullpath = (this.ns + '/' + path);
-		try {
-			this.factories.set(path, require(fullpath));
-		} catch(ex) {
-			Logger.error(`\tError ocurred while loading factory class with path:`);
-			Logger.warn(`\t\t${fullpath}`);
-			Logger.error(`\tMessage: "${ex.message}"`);
-			return null;
-		}
+		this.factories.set(path, require(fullpath));
 		return path;
 	}
 
