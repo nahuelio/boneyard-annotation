@@ -13,7 +13,7 @@ import Backbone from 'backbone';
 *
 *	@requires Backbone.Model
 *
-*	@Bone({ id: "model", spec: "application" })
+*	@Bone({ id: "model", spec: "model" })
 */
 class Model extends Backbone.Model {
 
@@ -26,6 +26,17 @@ class Model extends Backbone.Model {
 	initialize(...args) {
 		return super.initialize(...args);
 	}
+
+	/**
+	*	Defaults
+	*	@public
+	*	@property defaults
+	*	@type Object
+	*
+	*	Scope: Field (Getter)
+	*	@Wire({ id: "scheme" })
+	**/
+	get defaults() {}
 
 	/**
 	*	@static

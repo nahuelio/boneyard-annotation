@@ -14,7 +14,7 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@Spec({ id: "application", include: ["header", "footer"] })
+*	@Spec({ id: "application", include: ["header", "footer", "model"] })
 *	@Bone({ id: "application", spec: "application" })
 */
 class Application extends Container {
