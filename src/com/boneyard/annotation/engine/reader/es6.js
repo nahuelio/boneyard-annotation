@@ -18,25 +18,37 @@ class Es6Reader extends Reader {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...args] {Arguments} constructor arguments
 	*	@return com.boneyard.annotation.reader.Es6Reader
 	**/
-	constructor(attrs = {}) {
-		super(attrs);
+	constructor(...args) {
+		super(...args);
 		return this;
 	}
 
 	/**
-	*	Retrieves annotation context and stores a pointer to the specific position in
-	*	injections may ocurr later on.
+	*	Evaluates token expression and decide which annotation will process the token
 	*	@public
 	*	@override
-	*	@method getAnnotationContext
-	*	@param token {String} token reference
-	*	@return com.boneyard.annotation.support.Context
+	*	@method onToken
+	*	@param token {String} token to be analyzed
+	*	@return com.boneyard.annotation.reader.Reader
 	**/
-	getAnnotationContext(token) {
-		// TODO: Specific for this Reader
+	onToken(token) {
+		// TODO: Implement for ES6
+		return super.onToken(token);
+	}
+
+	/**
+	*	Evaluates token to determine the context of the last annotation matched
+	*	@public
+	*	@method onContext
+	*	@param token {String} token to be analyzed
+	*	@return com.boneyard.annotation.support.Annotation
+	**/
+	onContext(token) {
+		// TODO: Implement for ES6
+		return super.onContext(token);
 	}
 
 	/**

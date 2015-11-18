@@ -10,6 +10,7 @@
         "connect": "3.4.x",
         "serve-static": "*",
         "underscore": "~1.8",
+        "underscore.string": "~3.2.x",
         "fs-extra": "0.23.x",
         "glob": "5.0.14"
     },

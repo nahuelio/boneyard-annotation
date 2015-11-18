@@ -4,14 +4,14 @@
 **/
 
 var Reader = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/reader/reader'),
-	Annotation = require(process.env.LIB_PATH + 'com/boneyard/annotation/support/annotation'),
+	Annotation = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/annotation/annotation'),
 	Tokenizer = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/parser/tokenizer');
 
 describe('com.boneyard.annotation.engine.reader.Reader', function() {
 
 	before(function() {
 		this.tokenizer = new Tokenizer();
-		this.result = ['/**', '// @annotation0', '*	@annotation1()', '**/', '// @annotation2({ key: "value", flag: false })', '@annotation3()'];
+		this.result = ['/**', '// @Wire0', '*	@Wire1()', '**/', '// @Wire({ key: "value", flag: false })', '@Wire3()'];
 		this.resultSet = new Set(this.result);
 		this.stubReset = sinon.stub(this.tokenizer, 'reset').returns(this.tokenizer);
 	});
@@ -97,7 +97,7 @@ describe('com.boneyard.annotation.engine.reader.Reader', function() {
 
 			result.annotations.forEach((v, k) => {
 				expect(k).to.be.a('string');
-				expect(k).to.contain('annotation');
+				expect(k).to.contain('wire');
 				expect(v).to.be.an(Annotation);
 				expect(v.name).to.be.ok();
 				expect(v.token).to.be.ok();
