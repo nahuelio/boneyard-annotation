@@ -84,6 +84,28 @@ class Es5Examples {
 	}
 
 	/**
+	*	Deploy Themes into deploypath
+	*	@public
+	*	@method themes
+	*	@return com.boneyard.annotation.commands.examples.Es5Examples
+	**/
+	themes() {
+		// TODO
+		return this;
+	}
+
+	/**
+	*	Deploy Templates into deploypath
+	*	@public
+	*	@method themes
+	*	@return com.boneyard.annotation.commands.examples.Es5Examples
+	**/
+	templates() {
+		// TODO
+		return this;
+	}
+
+	/**
 	*	Retrieves Es5 baseUrl
 	*	@public
 	*	@property baseUrl
