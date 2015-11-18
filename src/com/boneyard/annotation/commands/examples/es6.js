@@ -86,6 +86,28 @@ class Es6Examples {
 	}
 
 	/**
+	*	Deploy Themes into deploypath
+	*	@public
+	*	@method themes
+	*	@return com.boneyard.annotation.commands.examples.Es6Examples
+	**/
+	themes() {
+		// TODO
+		return this;
+	}
+
+	/**
+	*	Deploy Templates into deploypath
+	*	@public
+	*	@method themes
+	*	@return com.boneyard.annotation.commands.examples.Es6Examples
+	**/
+	templates() {
+		// TODO
+		return this;
+	}
+
+	/**
 	*	Install Babel Goodies (Helpers and Polyfill)
 	*	@public
 	*	@method babel
