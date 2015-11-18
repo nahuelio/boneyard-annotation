@@ -5,11 +5,13 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
-import Bower from 'bower';
+import async from 'async';
 import Connect from 'connect';
-import BabelConnect from 'babel-connect';
 import StaticServe from 'serve-static';
 import Logger from '../util/logger';
+
+import Es5Examples from './examples/es5';
+import Es6Examples from './examples/es6';
 
 /**
 *	Class Examples
@@ -19,9 +21,9 @@ import Logger from '../util/logger';
 *	@requires fs-extra
 *	@requires resolve
 *	@requires underscore
+*	@requires async
 *	@requires bower
 *	@requires connect
-*	@requires babel-connect
 *	@requires server-static
 *	@requires com.boneyard.annotation.util.Logger
 **/
@@ -36,7 +38,7 @@ class Examples {
 	constructor(port, program) {
 		this.port = port;
 		this.program = program;
-		return this.initialize().clean().install(_.bind(this.spinUp, this));
+		return this.initialize();
 	}
 
 	/**
@@ -47,48 +49,19 @@ class Examples {
 	**/
 	initialize() {
 		Logger.out(this.program.version());
-		return this;
+		this.es5 = new Es5Examples(this);
+		this.es6 = new Es6Examples(this);
+		return this.deploy();
 	}
 
 	/**
-	*	Clean Installed Dependencies
+	*	All Examples deployment
 	*	@public
-	*	@method clean
+	*	@method deploy
 	*	@return com.boneyard.annotation.commands.Examples
 	**/
-	clean() {
-		fs.removeSync(this.libraries);
-		fs.removeSync((this.rootDir + '/dist'));
-		return this;
-	}
-
-	/**
-	*	Install Dependencies via bower
-	*	@public
-	*	@method install
-	*	@param callback {Function} callback
-	*	@return com.boneyard.annotation.commands.Examples
-	**/
-	install(callback = function() {}) {
-		Logger.out('Installing Dependencies...', 'c');
-		Bower.commands.install(this.bowerDependencies, null, { cwd: this.baseUrl, directory: 'libraries' })
-			.on('end', _.bind(this.babel, this, callback));
-		return this;
-	}
-
-	/**
-	*	Install Babel Goodies (Helpers and Polyfill)
-	*	@public
-	*	@method babel
-	*	@return com.boneyard.annotation.commands.Examples
-	**/
-	babel(callback) {
-		if(fs.existsSync(this.rootDir + '/node_modules')) {
-			this.babelDependencies.forEach(d => {
-				fs.copySync(d.path + d.file, this.libraries + '/babel/' + d.file)
-			});
-		}
-		callback();
+	deploy() {
+		async.series([this.es5.run, this.es6.run], _.bind(this.spinUp, this));
 		return this;
 	}
 
@@ -100,52 +73,18 @@ class Examples {
 	**/
 	spinUp() {
 		Logger.out(`Server localhost listening on port ${this.port}...`, 'm');
-		Connect()
-			.use(BabelConnect(this.babelConnect))
-			.use(StaticServe((this.rootDir + '/dist')))
-			.use(StaticServe(this.baseUrl))
-			.listen(this.port);
+		Connect().use(StaticServe(this.baseUrl)).listen(this.port);
 		return this;
 	}
 
 	/**
+	*	Bower Dependencies
 	*	@public
-	*	@property bowerDependencies
+	*	@property dependencies
 	*	@type Array
 	**/
-	get bowerDependencies() {
+	get dependencies() {
 		return ['boneyard#0.1.x'];
-	}
-
-	/**
-	*	@public
-	*	@property bowerDependencies
-	*	@type Array
-	**/
-	get babelDependencies() {
-		let babelcorePath = '/node_modules/babel/node_modules/babel-core/';
-		return [
-			{ file: 'browser-polyfill.min.js', path: (this.rootDir + babelcorePath) },
-			{ file: 'external-helpers.min.js', path: (this.rootDir + babelcorePath) }
-		];
-	}
-
-	/**
-	*	Babel Connect Configuration
-	*	@public
-	*	@property babelConnect
-	*	@type Object
-	**/
-	get babelConnect() {
-		return {
-			options: {
-				modules: 'amd',
-				externalHelpers: true
-			},
-			src: this.baseUrl,
-			dest: (this.rootDir + '/dist'),
-			ignore: [/libraries/, 'main.js']
-		};
 	}
 
 	/**
@@ -155,15 +94,6 @@ class Examples {
 	**/
 	get baseUrl() {
 		return (this.rootDir + '/examples');
-	}
-
-	/**
-	*	@public
-	*	@property libraries
-	*	@type String
-	**/
-	get libraries() {
-		return (this.baseUrl + '/libraries');
 	}
 
 	/**
@@ -183,7 +113,7 @@ class Examples {
 	*	@param program {Object} program reference
 	*	@return com.boneyard.annotation.commands.Examples
 	**/
-	static run(port = 9393, program) {
+	static run(port = 9595, program) {
 		return new Examples(port, program);
 	}
 
