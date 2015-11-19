@@ -35,6 +35,36 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation name
+	*	@public
+	*	@property name
+	*	@type String
+	**/
+	get name() {
+		return this._name;
+	}
+
+	/**
+	*	Retrieves annotation token
+	*	@public
+	*	@property token
+	*	@type String
+	**/
+	get token() {
+		return this._token;
+	}
+
+	/**
+	*	Retrieves annotation params
+	*	@public
+	*	@property params
+	*	@type Object
+	**/
+	get params() {
+		return this._params;
+	}
+
+	/**
 	*	Retrieves annotation name from a given expression
 	*	@static
 	*	@method metadata
@@ -43,7 +73,7 @@ class Annotation extends EventEmitter {
 	**/
 	static metadata(expr) {
 		let name = Annotation.get(expr), params = Annotation.parameters(expr);
-		return (name && params) ? { name: name.toLowerCase(), token: expr, params: params } : null;
+		return (name && params) ? { _name: name.toLowerCase(), _token: expr, _params: params } : null;
 	}
 
 	/**

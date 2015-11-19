@@ -115,8 +115,8 @@ class Reader  {
 	onAnnotation(metadata) {
 		if(!metadata) return this;
 		try {
-			this.factory.register(metadata.name);
-			this.annotations.push({ name: metadata.name, annotation: this.getAnnotation(metadata) });
+			this.factory.register(metadata._name);
+			this.annotations.push({ name: metadata._name, annotation: this.getAnnotation(metadata) });
 		} catch(ex) {}
 		return this;
 	}
@@ -140,7 +140,7 @@ class Reader  {
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	getAnnotation(metadata) {
-		return this.factory.create(metadata.name, metadata);
+		return this.factory.create(metadata._name, metadata);
 	}
 
 	/**

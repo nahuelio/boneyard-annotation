@@ -8,7 +8,8 @@ import {resolve} from 'path';
 import Glob from 'glob';
 import _ from 'underscore';
 import {EventEmitter} from 'events';
-import Es6Reader from '../reader/es6.js';
+import Es6Reader from '../reader/es6';
+import Writer from '../writer/writer';
 
 /**
 *	Class Parser
@@ -20,6 +21,7 @@ import Es6Reader from '../reader/es6.js';
 *	@requires underscore
 *	@requires events.EventEmitter
 *	@requires com.boneyard.annotation.engine.reader.Es6Reader
+*	@requires com.boneyard.annotation.writer.Writer
 **/
 class Parser extends EventEmitter {
 
@@ -35,6 +37,7 @@ class Parser extends EventEmitter {
 		if(!reader) throw new Error('Parser requires an instance of a reader in order to work');
 		this.config = config;
 		this.reader = reader;
+		this.writer = new Writer();
 		return this;
 	}
 
@@ -87,6 +90,7 @@ class Parser extends EventEmitter {
 	*	@return com.boneyard.annotation.engine.parser.Parser
 	**/
 	afterParse() {
+		this.writer.write(this.reader.annotations);
 		this.emit(Parser.Events.end, this);
 		return this;
 	}

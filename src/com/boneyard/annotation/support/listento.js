@@ -3,17 +3,17 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Annotation from '../engine/annotation/annotation';
+import Action from './action';
 
 /**
 *	Class ListenTo
 *	@namespace com.boneyard.annotation.support
 *	@class com.boneyard.annotation.support.ListenTo
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@extends com.boneyard.annotation.support.Action
 *
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.support.Action
 **/
-class ListenTo extends Annotation {
+class ListenTo extends Action {
 
 	/**
 	*	Constructor

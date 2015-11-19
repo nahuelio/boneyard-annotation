@@ -6,20 +6,20 @@
 import Annotation from '../engine/annotation/annotation';
 
 /**
-*	Class Scan
+*	Class Ignore
 *	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Scan
+*	@class com.boneyard.annotation.support.Ignore
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
-class Scan extends Annotation {
+class Ignore extends Annotation {
 
 	/**
 	*	Constructor
 	*	@constructor
 	*	@param [attrs] {Object} attributes
-	*	@return com.boneyard.annotation.support.Scan
+	*	@return com.boneyard.annotation.support.Ignore
 	**/
 	constructor(attrs = {}) {
 		super(attrs);
@@ -33,9 +33,9 @@ class Scan extends Annotation {
 	*	@type String
 	**/
 	static get NAME() {
-		return 'Scan';
+		return 'Ignore';
 	}
 
 }
 
-export default Scan;
+export default Ignore;

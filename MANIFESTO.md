@@ -15,23 +15,6 @@ This document might be subjected to change.
 - Field
 
 ### Supported Annotations
----
-
-#### @scan (**review**)
-
-* Scope: `Module`
-* Parameters:
-	* `packages` {_Array_} **required** | Array of packages (folders) in which the scanner will parsed annotated source code for instrumentation.
-
-Examples:
-
-```js
-/**
-*	@scan({ packages: ["com.myproject.view", "com.myproject.model"] })
-**/
-import {Container} from "ui";
-...
-```
 
 ---
 #### @spec
@@ -321,6 +304,24 @@ Examples:
 *	@plugin({ name: "html", config: { basePath: "$bone!html_basepath", packages: "$bone!packages" } })
 **/
 import Container from 'ui/container';
+...
+```
+
+---
+#### @ignore (**review**)
+
+* Scope: `Module`
+* Parameters: No parameters
+
+Will ignore all annotations found in the current module.
+
+Examples:
+
+```js
+/**
+*	@ignore()
+**/
+import {Container} from "ui";
 ...
 ```
 
