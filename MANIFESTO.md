@@ -17,7 +17,7 @@ This document might be subjected to change.
 ### Supported Annotations
 ---
 
-#### @Scan (**review**)
+#### @scan (**review**)
 
 * Scope: `Module`
 * Parameters:
@@ -27,14 +27,14 @@ Examples:
 
 ```js
 /**
-*	@Scan({ packages: ["com.myproject.view", "com.myproject.model"] })
+*	@scan({ packages: ["com.myproject.view", "com.myproject.model"] })
 **/
 import {Container} from "ui";
 ...
 ```
 
 ---
-#### @Spec
+#### @spec
 
 * Scope: `Class`
 * Parameters:
@@ -45,7 +45,7 @@ Examples:
 
 ```js
 /**
-*	@Spec({ id: "configuration" })
+*	@spec({ id: "configuration" })
 **/
 class Configuration {
   ...
@@ -54,7 +54,7 @@ class Configuration {
 
 ```js
 /**
-*	@Spec({ id: "main", include: ["header", "footer", "body"]})
+*	@spec({ id: "main", include: ["header", "footer", "body"]})
 **/
 class ApplicationBootstrap extends Container {
   ...
@@ -62,7 +62,7 @@ class ApplicationBootstrap extends Container {
 ```
 
 ---
-#### @Bone
+#### @bone
 
 * Scope: `Class`
 * Parameters:
@@ -81,7 +81,7 @@ Examples:
 *	Note: Module path will be retrieved automatically based on the file location
 *	if not specified manually.
 *
-*	@Bone({ id: "account", spec: "main" })
+*	@bone({ id: "account", spec: "main" })
 **/
 class Account extends Backbone.Model {
   ...
@@ -95,7 +95,7 @@ class Account extends Backbone.Model {
 *	Belongs to Spec "account".
 *	Module is manually set to retrieve class constructor on specific location.
 *
-*	@Bone({ id: "addresses", spec: "account", module: "myproject/collections/addresses" })
+*	@bone({ id: "addresses", spec: "account", module: "myproject/collections/addresses" })
 **/
 class Addresses extends Backbone.Collection {
   ...
@@ -110,7 +110,7 @@ class Addresses extends Backbone.Collection {
 *	Module is manually set to retrieve class constructor on specific location.
 *	Flag class to resolve instanciation as a singleton (Multiple injects will reference same instance)
 *
-*	@Bone({ id: "userService", spec: "user", module: "myproject/service/user-service", singleton: true })
+*	@bone({ id: "userService", spec: "user", module: "myproject/service/user-service", singleton: true })
 **/
 class UserService extends Service {
   ...
@@ -118,7 +118,7 @@ class UserService extends Service {
 ```
 
 ---
-#### @Wire (**Review**)
+#### @wire (**Review**)
 
 **Note: This may affect $params special annotation when multiple params are passed**
 
@@ -126,7 +126,8 @@ class UserService extends Service {
 	* `Constructor`
 	* `Field`
 * Parameters
-	* `bone` {_String_} **required** | Bone identifier to inject
+	* `id` {_String_} **required** | Bone identifier, or
+	* `bones` {_String_} **required** | List of bones identifiers as string with format comma separated
 	* `on` {_String_} _optional_ | Will work for injections on constructors (Es5/Es6) and also in constructors/setters for Es6.
     **This parameter will be automatically wired on scope field for Es5.**
 	* `name` {_String_} _optional_ | Optionally specified the property name the bone will be passed as part of the `on` object name
@@ -138,7 +139,7 @@ Examples:
 ```js
 /**
 *	Scope: Constructor
-*	@Wire({ id: "myconfig", on: "config" })
+*	@wire({ id: "myconfig", on: "config" })
 **/
 constructor: function(config, other) {
   this.config = config;
@@ -148,9 +149,19 @@ constructor: function(config, other) {
 
 ```js
 /**
+*	Scope: Constructor (multiple bones)
+*	@wire({ bones: "header, footer", on: "attrs", name: "views" })
+**/
+constructor: function(attrs, other) {
+  return MyClass.apply(this, arguments);
+}
+```
+
+```js
+/**
 *	Scope: Field
 *	Will execute as @Action (Assignment)
-*	@Wire({ id: "search" })
+*	@wire({ id: "search" })
 **/
 search: null,
 
@@ -165,7 +176,7 @@ initialize: function(attrs) {
 ```js
 /**
 *	Scope: Constructor
-*	@Wire({ id: "mymodel", on: "attrs", name: "model" })
+*	@wire({ id: "mymodel", on: "attrs", name: "model" })
 **/
 constructor(attrs) {
   this.model = attrs.model; // <- "[on].[name]" -> mymodel"
@@ -175,9 +186,19 @@ constructor(attrs) {
 
 ```js
 /**
+*	Scope: Constructor (multiple bones)
+*	@wire({ bones: "header, footer", on: "attrs", name: "views" })
+**/
+constructor(attrs) {
+  return super(attrs);
+}
+```
+
+```js
+/**
 *	Scope: Field (Setter)
 *	Will execute as @Action (Assignment)
-*	@Wire({ id: "mymodel", on: "model" })
+*	@wire({ id: "mymodel", on: "model" })
 **/
 set value(model) {
   this.property = model.get('value');
@@ -185,7 +206,7 @@ set value(model) {
 ```
 
 ---
-#### @Action (**Review**)
+#### @action (**Review**)
 
 - Notes: Resolve multiple instances resolution in order to implement this
 
@@ -200,7 +221,7 @@ Examples:
 ```js
 /**
 *	Action Declaration to execute the method "fetch" on the bone "user"
-*	@Action({ bone: "user", method: "fetch" })
+*	@action({ bone: "user", method: "fetch" })
 **/
 class User extends Backbone.Model {
   ...
@@ -211,7 +232,7 @@ class User extends Backbone.Model {
 /**
 *	Action Declaration to execute the method "fetch" on the bone "user"
 *	with params passed to the method "render".
-*	@Action({ bone: "application", method: "render", params:[{ method: "after", target: "div.menu" }] })
+*	@action({ bone: "application", method: "render", params:[{ method: "after", target: "div.menu" }] })
 **/
 class Application extends Container {
   ...
@@ -219,7 +240,7 @@ class Application extends Container {
 ```
 
 ---
-#### @ListenTo (**Review**)
+#### @listenTo (**Review**)
 
 Specific use of annotation **@Action** to start listening for events on instances of a given class.
 
@@ -235,7 +256,7 @@ Examples:
 class Grid extends Table {
 
   /**
-  *	@Wire({ id: "elements", on: "attrs", name: "collection" })
+  *	@wire({ id: "elements", on: "attrs", name: "collection" })
   **/
   constructor(attrs) {
     // Backbone automatically assign attrs.collection to this.collection (Backbone.View)
@@ -244,7 +265,7 @@ class Grid extends Table {
 
   /**
   * Update Grid when add or remove event from Elements Backbone.Collection is fired
-  * @ListenTo({ events: "add,remove", from: "collection", handler: "update" })
+  * @listenTo({ events: "add,remove", from: "collection", handler: "update" })
   **/
   update() {
     this.collection.each(function(element) {
@@ -258,7 +279,7 @@ class Grid extends Table {
 ```
 
 ---
-#### @Json (**Review**)
+#### @json (**Review**)
 
 Specific use of annotation **@Bone** for objects that don't need to be instanciated.
 
@@ -272,7 +293,7 @@ Examples:
 ```js
 /**
 *	Similar to @Bone annotation
-*	@Json({ id: "myconfiguration", spec: "config" });
+*	@json({ id: "myconfiguration", spec: "config" });
 **/
 var MyConfiguration = {
   key1: "value1",
@@ -284,19 +305,20 @@ exports default MyConfiguation;
 ```
 
 ---
-#### @Plugin (**Review**)
+#### @plugin (**Review**)
 
 * Scope: `Module`
 * Parameters:
 	* `name` {_String_} **required** | Plugin name
 	* `config` {_Object_} **required** | Plugin configuration
+	* `spec` {_String_} **required** | Spec where the plugin should be used.
 
 Examples:
 
 ```js
 /**
-*	@Plugin({ name: "themes", config: "$bone!theme_config" })
-*	@Plugin({ name: "html", config: { basePath: "$bone!html_basepath", packages: "$bone!packages" } })
+*	@plugin({ name: "themes", config: "$bone!theme_config" })
+*	@plugin({ name: "html", config: { basePath: "$bone!html_basepath", packages: "$bone!packages" } })
 **/
 import Container from 'ui/container';
 ...
@@ -307,6 +329,6 @@ import Container from 'ui/container';
 
 _These set of featured annotation may affect boneyard-ioc core package._
 
-#### @Proxify
-#### @Factory
-#### @Decorate
+#### @proxify
+#### @factory
+#### @decorate

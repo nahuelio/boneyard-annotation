@@ -2,7 +2,10 @@
 *	Es6 Examples - Application Bootstrap
 *	@module examples.es6
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-*	@Scan({ packages = ["model", "view"] })
+*
+*	@scan({ packages = ["config", "model", "view"] })
+*	@plugin({ name: "html", config: "$bone!plugins.html" })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes" })
 */
 import Container from 'ui/container';
 
@@ -14,8 +17,8 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@Spec({ id: "application", include: ["header", "footer", "model"] })
-*	@Bone({ id: "application", spec: "application" })
+*	@spec({ id: "application", include: ["header", "footer", "model"] })
+*	@bone({ id: "application", spec: "application" })
 */
 class Application extends Container {
 
@@ -23,10 +26,12 @@ class Application extends Container {
 	*	Initialize
 	*	@public
 	*	@method initialize
+	*	@wire({ bones: "header,footer", on: "attrs", name: "views" })
+	*	@param attrs {Object} constructor attributes
 	*	@return examples.es6.Application
 	*/
-	initialize(...args) {
-		return super.initialize(...args);
+	constructor(attrs) {
+		return super(attrs);
 	}
 
 	/**
