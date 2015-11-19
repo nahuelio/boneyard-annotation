@@ -4,14 +4,16 @@
 **/
 
 import Reader from './reader';
+import Context from '../annotation/context';
 
 /**
 *	Class Es6Reader
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Es6Reader
-*	@extends com.boneyard.annotation.reader.Annotation
+*	@extends com.boneyard.annotation.reader.Reader
 *
-*	@requires com.boneyard.annotation.reader.Annotation
+*	@requires com.boneyard.annotation.reader.Reader
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Es6Reader extends Reader {
 
@@ -27,28 +29,16 @@ class Es6Reader extends Reader {
 	}
 
 	/**
-	*	Evaluates token expression and decide which annotation will process the token
+	*	Evaluates token to determine context on found annotations
 	*	@public
 	*	@override
-	*	@method onToken
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	onToken(token) {
-		// TODO: Implement for ES6
-		return super.onToken(token);
-	}
-
-	/**
-	*	Evaluates token to determine the context of the last annotation matched
-	*	@public
 	*	@method onContext
 	*	@param token {String} token to be analyzed
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	onContext(token) {
 		// TODO: Implement for ES6
-		return super.onContext(token);
+		return super.context(token);
 	}
 
 	/**

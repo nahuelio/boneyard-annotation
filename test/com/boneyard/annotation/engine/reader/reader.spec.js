@@ -27,7 +27,7 @@ describe('com.boneyard.annotation.engine.reader.Reader', function() {
 			expect(reader).to.be.ok();
 			expect(reader.tokenizer).to.be.ok();
 			expect(reader.annotations).to.be.ok();
-			expect(reader.annotations.size).to.be(0);
+			expect(reader.annotations.length).to.be(0);
 			expect(reader.factory).to.be.ok();
 		});
 
@@ -87,13 +87,13 @@ describe('com.boneyard.annotation.engine.reader.Reader', function() {
 			}, this));
 
 			let reader = new Reader(this.tokenizer);
-			let stubGetAnnotationMetadata = sinon.stub(reader, 'getAnnotationMetadata', Annotation.metadata);
-			let stubGetAnnotation = sinon.stub(reader, 'getAnnotation', function(metadata) { return new Annotation(metadata); });
+			let stubOnAnnotation = sinon.stub(reader, 'onAnnotation', function(metadata) { return new Annotation(metadata); });
+			let stubAnnotationMetadata = sinon.stub(Annotation, 'metadata', reader);
 			let result = reader.read([...this.resultSet].join(''));
 
 			expect(result.annotations).to.be.ok();
-			expect(result.annotations).to.be.a(Map);
-			expect(result.annotations.size).to.be(3);
+			expect(result.annotations).to.be.a(Array);
+			expect(result.annotations.length).to.be(3);
 
 			result.annotations.forEach((v, k) => {
 				expect(k).to.be.a('string');
@@ -104,7 +104,7 @@ describe('com.boneyard.annotation.engine.reader.Reader', function() {
 			});
 
 			stubTokenize.restore();
-			stubGetAnnotation.restore();
+			stubOnAnnotation.restore();
 			stubGetAnnotationMetadata.restore();
 		});
 

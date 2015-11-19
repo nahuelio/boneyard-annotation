@@ -9,11 +9,11 @@ describe('com.boneyard.annotation.support.Annotation', function() {
 
 	before(function() {
 		// Valid
-		this.sample = `*	@wire`;
 		this.sampleSingle = `//		@bone()`
 		this.sampleObj = `*	@spec({ key: "value" })`;
 		this.sampleArr = `//	@scan({ arr: ["value", 1, true] })`;
 		// Non Valid
+		this.sample = `*	@wire`;
 		this.sampleNotSymbol = `non-annotation()`;
 		this.sampleSymbolWrongPos = `annot@tion(@)`;
 		// Parameters
@@ -53,13 +53,9 @@ describe('com.boneyard.annotation.support.Annotation', function() {
 	describe('static#get', function() {
 
 		it('Should return the annotation name given a sample token', function() {
-			let simple = Annotation.get(this.sample);
 			let single = Annotation.get(this.sampleSingle);
 			let withObj = Annotation.get(this.sampleObj);
 			let withArr = Annotation.get(this.sampleArr);
-
-			expect(simple).to.be.ok();
-			expect(simple).to.be('wire');
 
 			expect(single).to.be.ok();
 			expect(single).to.be('bone');
@@ -72,6 +68,7 @@ describe('com.boneyard.annotation.support.Annotation', function() {
 		});
 
 		it('Should NOT return the annotation name given a sample token', function() {
+			expect(Annotation.get(this.sample)).not.be.ok();
 			expect(Annotation.get(this.sampleNotSymbol)).not.be.ok()
 			expect(Annotation.get(this.sampleSymbolWrongPos)).not.be.ok();
 		});

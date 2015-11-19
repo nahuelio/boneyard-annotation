@@ -3,7 +3,7 @@
 *	@module examples.es6
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@scan({ packages = ["config", "model", "view"] })
+*	@scan({ packages: ["config", "model", "view"] })
 *	@plugin({ name: "html", config: "$bone!plugins.html" })
 *	@plugin({ name: "themes", config: "$bone!plugins.themes" })
 */

@@ -4,14 +4,16 @@
 **/
 
 import Reader from './reader';
+import Context from '../annotation/context';
 
 /**
 *	Class Es5Reader
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Es5Reader
-*	@extends com.boneyard.annotation.reader.Annotation
+*	@extends com.boneyard.annotation.reader.Reader
 *
-*	@requires com.boneyard.annotation.reader.Annotation
+*	@requires com.boneyard.annotation.reader.Reader
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Es5Reader extends Reader {
 
@@ -21,34 +23,80 @@ class Es5Reader extends Reader {
 	*	@param [attrs] {Object} attributes
 	*	@return com.boneyard.annotation.reader.Es5Reader
 	**/
-	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+	constructor(...args) {
+		return super(...args);
 	}
 
 	/**
-	*	Evaluates token expression and decide which annotation will process the token
+	*	Evaluates token to determine the annotation contexts
 	*	@public
 	*	@override
-	*	@method onToken
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	onToken(token) {
-		// TODO: Implement for ES5
-		return super.onToken(token);
-	}
-
-	/**
-	*	Evaluates token to determine the context of the last annotation matched
-	*	@public
-	*	@method onContext
+	*	@method context
 	*	@param token {String} token to be analyzed
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	onContext(token) {
-		// TODO: Implement for ES5
-		return super.onContext(token);
+		super.onContext(token);
+		//Array.from(this.annotations.pop()
+		return this;
+	}
+
+	/**
+	*	Resolves context resolution
+	*	@public
+	*	@override
+	*	@method resolve
+	*	@param token {String} token to evaluate
+	*	@return com.boneyard.annotation.support.Es5Reader
+	**/
+	resolve(token) {
+		super.resolve(token);
+		// TODO: Assign new context to the annotations
+		return this;
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onModule(token) {
+		return Context.MODULE.test(token);
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onClass(token) {
+		return _.some(_.invoke(Context.CLASS, 'test', token));
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onConstructor(token) {
+		return Context.CONSTRUCTOR.test(token);
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onField(token) {
+		return Context.FIELD.test(token);
 	}
 
 	/**
@@ -57,11 +105,16 @@ class Es5Reader extends Reader {
 	*	@property Context
 	*	@type Object
 	**/
-	static get Contexts() {
+	static get Context() {
 		return {
-			CLASS: ['var <%= name %> = function()', 'function <%= name %>()'],
-			METHOD: ['<%= name %>()', '<%= name %>: function()'],
-			PROPERTY: '<%= name %>:'
+			MODULE: /^define/i,
+			CLASS: [
+				/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\s*function\s*\(.*\)\s*{/i, // > <v> = function() {
+				/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
+				/^\s*function\s+.+\s*{$/i // > function <v>() {
+			],
+			CONSTRUCTOR: /^constructor:/i,
+			FIELD: /^\w+\:\s*(?!function\b)\w+,$/i
 		};
 	}
 

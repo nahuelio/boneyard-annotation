@@ -41,7 +41,7 @@ class Es5Examples {
 	*	@param callback {Function} callback reference
 	*	@return com.boneyard.annotation.commands.examples.Es5Examples
 	**/
-	run: function(callback) {
+	run(callback) {
 		Logger.out(`[${this.ns} Examples] Start Deploy...`, 'c');
 		return this.clean().install(callback);
 	}
@@ -52,7 +52,7 @@ class Es5Examples {
 	*	@method clean
 	*	@return com.boneyard.annotation.commands.examples.Es5Examples
 	**/
-	clean: function() {
+	clean() {
 		fs.removeSync(this.baseUrl + '/libraries');
 		fs.removeSync(this.deployPath);
 		return this;

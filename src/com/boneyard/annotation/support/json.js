@@ -3,17 +3,17 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Annotation from '../engine/annotation/annotation';
+import Bone from './bone';
 
 /**
 *	Class Json
 *	@namespace com.boneyard.annotation.support
 *	@class com.boneyard.annotation.support.Json
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@extends com.boneyard.annotation.support.Bone
 *
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.support.Bone
 **/
-class Json extends Annotation {
+class Json extends Bone {
 
 	/**
 	*	Constructor

@@ -35,6 +35,36 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation name
+	*	@public
+	*	@property name
+	*	@type String
+	**/
+	get name() {
+		return this._name;
+	}
+
+	/**
+	*	Retrieves annotation token
+	*	@public
+	*	@property token
+	*	@type String
+	**/
+	get token() {
+		return this._token;
+	}
+
+	/**
+	*	Retrieves annotation params
+	*	@public
+	*	@property params
+	*	@type Object
+	**/
+	get params() {
+		return this._params;
+	}
+
+	/**
 	*	Retrieves annotation name from a given expression
 	*	@static
 	*	@method metadata
@@ -42,7 +72,8 @@ class Annotation extends EventEmitter {
 	*	@return String
 	**/
 	static metadata(expr) {
-		return _.extend({ name: Annotation.get(expr).toLowerCase(), token: expr }, Annotation.parameters(expr));
+		let name = Annotation.get(expr), params = Annotation.parameters(expr);
+		return (name && params) ? { _name: name.toLowerCase(), _token: expr, _params: params } : null;
 	}
 
 	/**
@@ -53,9 +84,9 @@ class Annotation extends EventEmitter {
 	*	@return String
 	**/
 	static get(expr) {
-		if(!Annotation.regExp.test(expr)) return null;
-		let token = _.clean(expr), end = token.indexOf('(');
-		return token.substring(token.indexOf(Annotation.Symbol) + 1, (end !== -1) ? end : token.length);
+		if(!Annotation.regExp.test(expr) || expr.indexOf('(') === -1) return null;
+		let token = _.clean(expr);
+		return _s.strRight(_s.strLeft(token, '('), '@');
 	}
 
 	/**
@@ -66,9 +97,9 @@ class Annotation extends EventEmitter {
 	*	@return Object
 	**/
 	static parameters(expr) {
-		if(!Annotation.regExp.test(expr) || expr.indexOf('(') === -1) return {};
-		let token = _.clean(expr), ps = token.substring(token.indexOf('(') + 1, token.indexOf(')'));
-		return eval('[' + ps + ']')[0];
+		if(!Annotation.regExp.test(expr) || expr.indexOf('(') === -1) return null;
+		let token = _.clean(expr);
+		return eval('[' + _s.strLeft(_s.strRight(token, '('), ')') + ']')[0];
 	}
 
 	/**
@@ -78,7 +109,7 @@ class Annotation extends EventEmitter {
 	*	@type RegExp
 	**/
 	static get regExp() {
-		return new RegExp(("(\\*|\\/\\/)+\\s\*" + Annotation.Symbol), 'gi');
+		return new RegExp(("(\\*|\\/\\/|\\/\\*\\*)(\\s|\\w)*" + Annotation.Symbol + '\\w+'), 'gi');
 	}
 
 	/**

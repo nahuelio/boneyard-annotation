@@ -35,7 +35,7 @@ class Tokenizer extends EventEmitter {
 	*	@return String
 	**/
 	_output(token) {
-		return token.replace(/(\n|\r\n|\t)/gm, '');
+		return token.replace(/(\n|\r|\t)/gm, '');
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Tokenizer extends EventEmitter {
 		var out = [];
 		while(this.hasNext()) {
 			let token = this.next();
-			if(token.length > 0) out.push(token);
+			if(token.length > 0) out.push(token.trim());
 		}
 		return out;
 	}
@@ -125,7 +125,7 @@ class Tokenizer extends EventEmitter {
 	*	@type RegExp
 	**/
 	static get delimiters() {
-		return /(\n|{|})/gm;
+		return /\n/g;
 	}
 
 	/**

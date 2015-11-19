@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
 import Bower from 'bower';
-import Babel from 'babel-core';
+import Babel from 'babel';
 import Logger from '../../util/logger';
 
 /**
@@ -18,7 +18,7 @@ import Logger from '../../util/logger';
 *	@requires resolve
 *	@requires underscore
 *	@requires bower
-*	@requires babel-core
+*	@requires babel
 *	@requires com.boneyard.annotation.util.Logger
 *	@requires com.boneyard.annotation.util.Logger
 **/
@@ -43,7 +43,7 @@ class Es6Examples {
 	*	@param callback {Function} callback reference
 	*	@return com.boneyard.annotation.commands.examples.Es6Examples
 	**/
-	run: function(callback) {
+	run(callback) {
 		Logger.out(`[${this.ns} Examples] Start Deploy...`, 'c');
 		return this.clean().install(callback);
 	}
@@ -54,7 +54,7 @@ class Es6Examples {
 	*	@method clean
 	*	@return com.boneyard.annotation.commands.examples.Es6Examples
 	**/
-	clean: function() {
+	clean() {
 		fs.removeSync(this.baseUrl + '/libraries');
 		fs.removeSync(this.deployPath);
 		return this;
