@@ -4,9 +4,9 @@
 **/
 
 import {resolve} from 'path';
+import _s from 'underscore.string';
 import Tokenizer from '../parser/tokenizer';
 import Annotation from '../annotation/annotation';
-import Context from '../annotation/context';
 import Factory from '../../util/factory';
 import Logger from '../../util/logger';
 
@@ -16,6 +16,7 @@ import Logger from '../../util/logger';
 *	@class com.boneyard.annotation.reader.Reader
 *
 *	@requires path
+*	@requires underscore.string
 *	@requires com.boneyard.annotation.parser.Tokenizer
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 *	@requires com.boneyard.annotation.engine.annotation.Context
@@ -31,7 +32,7 @@ class Reader  {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	constructor(tokenizer) {
-		this.annotations = new Map();
+		this.annotations = new Array();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		this.factory = new Factory(resolve(__dirname, '../../support/'));
@@ -56,13 +57,25 @@ class Reader  {
 	}
 
 	/**
+	*	Returns true if the content of a given token is a comment, otherwise returns false.
+	*	@public
+	*	@method inComment
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	inComment(token) {
+		return _s.startsWith(token, '*') || _s.startsWith(token, '//') || _s.startsWith(token, '/*');
+	}
+
+	/**
 	*	Default Annotation Read Strategy
 	*	@public
 	*	@method read
+	*	@param path {String} current file to read contents from
 	*	@param content {String} file content to be read
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
-	read(content = "") {
+	read(path, content = "") {
 		this.tokenizer.reset(content).tokenize();
 		return this;
 	}
@@ -73,44 +86,50 @@ class Reader  {
 	*	@public
 	*	@method onToken
 	*	@param token {String} token to be analyzed
+	*	@param [predicate] {Function} predicate operation
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	onToken(token) {
-		if(!this.isValid(token)) return this.onContext(token);
+		return this.isValid(token) ? this.onAnnotation(Annotation.metadata(token)) : this.resolve(token);
+	}
+
+	/**
+	*	Default Non-annotation resolution strategy
+	*	@public
+	*	@method resolve
+	*	@param token {String} token to be analyzed
+	*	@return com.boneyard.annotation.support.Annotation
+	**/
+	resolve(token) {
+		if(this.inComment(token)) return this;
+		return this.onContext(token);
+	}
+
+	/**
+	*	Default Annotation resolution strategy
+	*	@public
+	*	@method onAnnotation
+	*	@param metadata {Object} annotation metadata
+	*	@return com.boneyard.annotation.reader.Reader
+	**/
+	onAnnotation(metadata) {
+		if(!metadata) return this;
 		try {
-			let metadata = this.getAnnotationMetadata(token);
-			this.annotations.set(metadata.name, this.getAnnotation(metadata));
-		} catch(ex) {
-			Logger.warn(token);
-			return this;
-		}
+			this.factory.register(metadata.name);
+			this.annotations.push({ name: metadata.name, annotation: this.getAnnotation(metadata) });
+		} catch(ex) {}
 		return this;
 	}
 
 	/**
-	*	Default Context Handler
-	*	Evaluates token to determine the context of the last annotation matched
+	*	Default Context resolution strategy
 	*	@public
 	*	@method onContext
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.support.Annotation
+	*	@param token {String} token not in comment used to determine annotation context
+	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	onContext(token) {
-		if(this.annotations.size === 0) return this;
-		return Array.from(this.annotations.values()).pop();
-	}
-
-	/**
-	*	Default retrieval strategy to get the annotation metadata given a token
-	*	@public
-	*	@method getAnnotationMetadata
-	*	@param token {String} token reference
-	*	@return Object
-	**/
-	getAnnotationMetadata(token) {
-		let metadata = Annotation.metadata(token);
-		this.factory.register(metadata.name);
-		return metadata;
+		return this;
 	}
 
 	/**

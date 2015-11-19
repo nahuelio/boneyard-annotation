@@ -4,14 +4,16 @@
 **/
 
 import Reader from './reader';
+import Context from '../annotation/context';
 
 /**
 *	Class Es5Reader
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Es5Reader
-*	@extends com.boneyard.annotation.reader.Annotation
+*	@extends com.boneyard.annotation.reader.Reader
 *
-*	@requires com.boneyard.annotation.reader.Annotation
+*	@requires com.boneyard.annotation.reader.Reader
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Es5Reader extends Reader {
 
@@ -21,34 +23,22 @@ class Es5Reader extends Reader {
 	*	@param [attrs] {Object} attributes
 	*	@return com.boneyard.annotation.reader.Es5Reader
 	**/
-	constructor(attrs = {}) {
-		super(attrs);
-		return this;
-	}
-
-	/**
-	*	Evaluates token expression and decide which annotation will process the token
-	*	@public
-	*	@override
-	*	@method onToken
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	onToken(token) {
-		// TODO: Implement for ES5
-		return super.onToken(token);
+	constructor(...args) {
+		return super(...args);
 	}
 
 	/**
 	*	Evaluates token to determine the context of the last annotation matched
 	*	@public
-	*	@method onContext
+	*	@override
+	*	@method context
 	*	@param token {String} token to be analyzed
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	onContext(token) {
-		// TODO: Implement for ES5
-		return super.onContext(token);
+		super.onContext(token);
+		//Array.from(this.annotations.pop()
+		return this;
 	}
 
 	/**
