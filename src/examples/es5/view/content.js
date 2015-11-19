@@ -13,18 +13,42 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@Bone({ id: "content", spec: "application" })
+	*	@bone({ id: "content", spec: "application" })
 	*/
 	var Content = Boneyard.namespace('examples.es5.view.Content', Container.inherit({
+
+		/**
+		*	Model
+		*	@public
+		*	@wire({ id: "model" })
+		*	@property model
+		*	@type Backbone.Model
+		**/
+		model: null,
 
 		/**
 		*	Initialize
 		*	@public
 		*	@method initialize
-		*	@return examples.es5.view.Container
+		*	@return examples.es5.view.Content
 		*/
-		initialize() {
+		initialize: function() {
 			return Content.__super__.initialize.apply(this, arguments);
+		},
+
+		/**
+		*	Update View
+		*	@public
+		*	@override
+		*	@method update
+		*	@listenTo({ events: "change", from: "model", handler: "update" })
+		*	@param model {Backbone.Model} model reference
+		*	@return examples.es5.view.Content
+		**/
+		update: function(model) {
+			Content.__super__.update.apply(this, arguments);
+			// TODO
+			return this;
 		}
 
 	}, {

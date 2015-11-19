@@ -2,7 +2,10 @@
 *	Es5 Examples - Application Bootstrap
 *	@module examples.es5
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
-*	@Scan({ packages = ["model", "view"] })
+*
+*	@scan({ packages = ["config", "model", "view"] })
+*	@plugin({ name: "html", config: "$bone!plugins.html" })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes" })
 */
 define(['ui/container'], function(Container) {
 
@@ -14,18 +17,20 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@Spec({ id: "application", include: ["header", "footer", "model"] })
-	*	@Bone({ id: "application", spec: "application" })
+	*	@spec({ id: "application", include: ["header", "footer", "model"] })
+	*	@bone({ id: "application", spec: "application" })
 	*/
 	var Application = Boneyard.namespace('examples.es5.Application', Container.inherit({
 
 		/**
-		*	Initialize
-		*	@method initialize
+		*	Constructor
+		*	@constructor
+		*	@wire({ bones: "header,footer", on: "attrs", name: "views" })
+		*	@param attrs {Object} constructor attributes
 		*	@return examples.es5.Application
-		*/
-		initialize: function() {
-			return Application.__super__.initialize.apply(this, arguments);
+		**/
+		constructor: function(attrs) {
+			return Application.apply(this, arguments);
 		}
 
 	}, {

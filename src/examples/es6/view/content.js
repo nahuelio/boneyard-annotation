@@ -13,7 +13,7 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@Bone({ id: "content", spec: "application" })
+*	@bone({ id: "content", spec: "application" })
 */
 class Content extends Container {
 
@@ -25,6 +25,32 @@ class Content extends Container {
 	*/
 	initialize(...args) {
 		return super.initialize(...args);
+	}
+
+	/**
+	*	Model Setter
+	*	@public
+	*	@wire({ id: "model", on: "model" })
+	*	@property model
+	*	@type Backbone.Model
+	**/
+	set _model(model) {
+		this.model = model;
+	}
+
+	/**
+	*	Update View
+	*	@public
+	*	@override
+	*	@method update
+	*	@listenTo({ events: "change", from: "model", handler: "update" })
+	*	@param model {Backbone.Model} model reference
+	*	@return examples.es6.view.Content
+	**/
+	update(...args) {
+		super.update(...args);
+		// TODO
+		return this;
 	}
 
 	/**

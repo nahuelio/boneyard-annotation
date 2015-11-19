@@ -13,8 +13,8 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@Spec({ id: "footer" })
-*	@Bone({ id: "footer", spec: "footer" })
+*	@spec({ id: "footer" })
+*	@bone({ id: "footer", spec: "footer" })
 */
 class Footer extends Container {
 

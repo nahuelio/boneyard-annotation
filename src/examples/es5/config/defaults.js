@@ -1,15 +1,18 @@
 /**
-*	Es5 Examples - Scheme
-*	@module examples.es5.scheme
+*	Es5 Examples - Defaults
+*	@module examples.es5.config
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
 defined([], function() {
 
 	/**
-	*	Model Scheme
-	*	@Json({ id: "scheme", spec: "model" })
+	*	Defaults
+	*	@public
+	*	@json({ id: "defaults", spec: "model" })
+	*	@property Defaults
+	*	@type Object
 	**/
-	var Scheme = {
+	var Defaults = {
 
 		/**
 		*	Title
@@ -29,6 +32,6 @@ defined([], function() {
 
 	};
 
-	return Scheme;
+	return Defaults;
 
 });

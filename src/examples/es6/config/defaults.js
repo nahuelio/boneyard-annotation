@@ -1,14 +1,17 @@
 /**
-*	Es5 Examples - Scheme
-*	@module examples.es5.scheme
+*	Es6 Examples - Defaults
+*	@module examples.es6.config
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
 
 /**
-*	Model Scheme
-*	@Json({ id: "scheme", spec: "model" })
+*	Defaults
+*	@public
+*	@json({ id: "defaults", spec: "model" })
+*	@property Defaults
+*	@type Object
 **/
-var Scheme = {
+var Defaults = {
 
 	/**
 	*	Title
@@ -28,4 +31,4 @@ var Scheme = {
 
 };
 
-export default Scheme;
+export default Defaults;

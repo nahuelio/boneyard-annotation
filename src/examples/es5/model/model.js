@@ -13,19 +13,17 @@ defined(['backbone'], function(Backbone) {
 	*
 	*	@requires Backbone.Model
 	*
-	*	@Spec({ id: "model" })
-	*	@Bone({ id: "model", spec: "model" })
+	*	@spec({ id: "model" })
+	*	@bone({ id: "model", spec: "model" })
 	*/
 	var Model = Boneyard.namespace('examples.es5.model.Model', Model.inherit({
 
 		/**
 		*	Defaults
 		*	@public
+		*	@wire({ id: "defaults" })
 		*	@property defaults
 		*	@type Object
-		*
-		*	Scope: Field
-		*	@Wire({ id: 'scheme' })
 		**/
 		defaults: {},
 
@@ -35,8 +33,8 @@ defined(['backbone'], function(Backbone) {
 		*	@method initialize
 		*	@return examples.es5.model.Model
 		*/
-		initialize(...args) {
-			return super.initialize(...args);
+		initialize: function() {
+			return Model.__super__.initialize.apply(this, arguments);
 		}
 
 	}, {
