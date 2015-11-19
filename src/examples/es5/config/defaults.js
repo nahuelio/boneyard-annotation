@@ -3,7 +3,7 @@
 *	@module examples.es5.config
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
-defined([], function() {
+define([], function() {
 
 	/**
 	*	Defaults

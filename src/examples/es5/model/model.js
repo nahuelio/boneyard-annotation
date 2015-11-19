@@ -3,7 +3,7 @@
 *	@module examples.es5.model
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 */
-defined(['backbone'], function(Backbone) {
+define(['backbone'], function(Backbone) {
 
 	/**
 	*	Class Model

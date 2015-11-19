@@ -6,7 +6,7 @@
 var Es5Reader = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/reader/es5'),
 	Tokenizer = require(process.env.LIB_PATH + 'com/boneyard/annotation/engine/parser/tokenizer');
 
-describe('com.boneyard.annotation.engine.reader.Es5Reader', function() {
+describe.only('com.boneyard.annotation.engine.reader.Es5Reader', function() {
 
 	var reader, tokenizer, applicationPath, application;
 

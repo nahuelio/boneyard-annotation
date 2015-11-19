@@ -28,7 +28,7 @@ class Es5Reader extends Reader {
 	}
 
 	/**
-	*	Evaluates token to determine the context of the last annotation matched
+	*	Evaluates token to determine the annotation contexts
 	*	@public
 	*	@override
 	*	@method context
@@ -42,16 +42,79 @@ class Es5Reader extends Reader {
 	}
 
 	/**
+	*	Resolves context resolution
+	*	@public
+	*	@override
+	*	@method resolve
+	*	@param token {String} token to evaluate
+	*	@return com.boneyard.annotation.support.Es5Reader
+	**/
+	resolve(token) {
+		super.resolve(token);
+		// TODO: Assign new context to the annotations
+		return this;
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onModule(token) {
+		return Context.MODULE.test(token);
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onClass(token) {
+		return _.some(_.invoke(Context.CLASS, 'test', token));
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onConstructor(token) {
+		return Context.CONSTRUCTOR.test(token);
+	}
+
+	/**
+	*	Returns true if token is on module declaration
+	*	@public
+	*	@method onModule
+	*	@param token {String} token to evaluate
+	*	@return Boolean
+	**/
+	onField(token) {
+		return Context.FIELD.test(token);
+	}
+
+	/**
 	*	Annotation Contexts for this Reader
 	*	@static
 	*	@property Context
 	*	@type Object
 	**/
-	static get Contexts() {
+	static get Context() {
 		return {
-			CLASS: ['var <%= name %> = function()', 'function <%= name %>()'],
-			METHOD: ['<%= name %>()', '<%= name %>: function()'],
-			PROPERTY: '<%= name %>:'
+			MODULE: /^define/i,
+			CLASS: [
+				/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\s*function\s*\(.*\)\s*{/i, // > <v> = function() {
+				/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
+				/^\s*function\s+.+\s*{$/i // > function <v>() {
+			],
+			CONSTRUCTOR: /^constructor:/i,
+			FIELD: /^\w+\:\s*(?!function\b)\w+,$/i
 		};
 	}
 
