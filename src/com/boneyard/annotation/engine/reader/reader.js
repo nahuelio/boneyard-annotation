@@ -4,8 +4,10 @@
 **/
 
 import {resolve} from 'path';
+import _ from 'underscore';
 import _s from 'underscore.string';
 import Tokenizer from '../parser/tokenizer';
+import Parser from '../parser/parser';
 import Annotation from '../annotation/annotation';
 import Factory from '../../util/factory';
 import Logger from '../../util/logger';
@@ -16,8 +18,10 @@ import Logger from '../../util/logger';
 *	@class com.boneyard.annotation.reader.Reader
 *
 *	@requires path
+*	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.parser.Tokenizer
+*	@requires com.boneyard.annotation.parser.Parser
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 *	@requires com.boneyard.annotation.engine.annotation.Context
 *	@requires com.boneyard.annotation.util.Factory
@@ -32,11 +36,31 @@ class Reader  {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	constructor(tokenizer) {
-		this.annotations = new Array();
+		this.annotations = new Map();
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		this.factory = new Factory(resolve(__dirname, '../../support/'));
 		return this;
+	}
+
+	/**
+	*	Sets Current file being analyzed by this reader
+	*	@public
+	*	@property current
+	*	@type String
+	**/
+	set current(path) {
+		this._current = path;
+	}
+
+	/**
+	*	Retrieves current file path being analyzed by this reader
+	*	@public
+	*	@property current
+	*	@type String
+	**/
+	get current() {
+		return this._current;
 	}
 
 	/**
@@ -68,6 +92,18 @@ class Reader  {
 	}
 
 	/**
+	*	Resolves relative path to the current file being read
+	*	@public
+	*	@method resolvePath
+	*	@param path {String} current file to read contents from
+	*	@return String
+	**/
+	resolvePath(path) {
+		if(!path) return null;
+		return _s.replaceAll(path, Parser.config.cwd + '/', '')
+	}
+
+	/**
 	*	Default Annotation Read Strategy
 	*	@public
 	*	@method read
@@ -76,6 +112,9 @@ class Reader  {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	read(path, content = "") {
+		if(!(this.current = this.resolvePath(path))) return this;
+		Logger.out(`Reading ${this.current}...`, 'm');
+		this.annotations.set(this.current, new Array());
 		this.tokenizer.reset(content).tokenize();
 		return this;
 	}
@@ -115,8 +154,8 @@ class Reader  {
 	onAnnotation(metadata) {
 		if(!metadata) return this;
 		try {
-			this.factory.register(metadata._name);
-			this.annotations.push({ name: metadata._name, annotation: this.getAnnotation(metadata) });
+			this.factory.register(metadata._name.toLowerCase());
+			this.annotations.get(this.current).push(this.getAnnotation(metadata));
 		} catch(ex) {}
 		return this;
 	}
@@ -140,7 +179,10 @@ class Reader  {
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	getAnnotation(metadata) {
-		return this.factory.create(metadata._name, metadata);
+		return this.factory.create(metadata._name.toLowerCase(), _.extend({
+			_path: this.current,
+			_config: Parser.config
+		}, metadata));
 	}
 
 	/**

@@ -28,14 +28,12 @@ class Parser extends EventEmitter {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param config {Object} config used to load files
-	*	@param promise {Promise} promise as a result of loading reader's supported annotations
+	*	@param reader {com.boneyard.annotation.engine.reader.Reader} Reader reference
 	*	@return com.boneyard.annotation.engine.parser.Parser
 	**/
-	constructor(config = {}, reader) {
+	constructor(reader) {
 		super();
 		if(!reader) throw new Error('Parser requires an instance of a reader in order to work');
-		this.config = config;
 		this.reader = reader;
 		this.writer = new Writer();
 		return this;
@@ -49,9 +47,9 @@ class Parser extends EventEmitter {
 	*	@return com.boneyard.annotation.engine.parser.Parser
 	**/
 	beforeParse() {
-		if(!this.config.cwd || !this.config.target)
+		if(!Parser.config.cwd || !Parser.config.target)
 			throw new Error("Parser {{config}} requires parameter 'cwd' and 'target' in order to work.");
-		if(!this.config.ignore) this.config.ignore = [];
+		if(!Parser.config.ignore) Parser.config.ignore = [];
 		this.emit(Parser.Events.start, this);
 		return this;
 	}
@@ -64,7 +62,7 @@ class Parser extends EventEmitter {
 	**/
 	parse() {
 		Logger.out('Parsing Annotations...\n', 'c');
-		return this.beforeParse().load(Glob.sync(this.config.target, this.config)).afterParse();
+		return this.beforeParse().load(Glob.sync(Parser.config.target, Parser.config)).afterParse();
 	}
 
 	/**
@@ -76,9 +74,9 @@ class Parser extends EventEmitter {
 	**/
 	load(files) {
 		files.forEach(f => {
-			let filepath = resolve(this.config.cwd, f);
+			let filepath = resolve(Parser.config.cwd, f);
 			this.emit(Parser.Events.read, filepath);
-			this.reader.read(fs.readFileSync(filepath).toString('utf-8'));
+			this.reader.read(filepath, fs.readFileSync(filepath).toString('utf-8'));
 		});
 		return this;
 	}
@@ -105,7 +103,28 @@ class Parser extends EventEmitter {
 	**/
 	static from(config = {}, reader = 'es6') {
 		let Reader = require('../reader/' + reader);
-		return new Parser(config, Reader.new());
+		Parser.config = config;
+		return new Parser(Reader.new());
+	}
+
+	/**
+	*	Sets Scanner Config
+	*	@static
+	*	@property config
+	*	@type Object
+	**/
+	static set config(config) {
+		Parser._config = config;
+	}
+
+	/**
+	*	Retrieves Scanner Config
+	*	@static
+	*	@property config
+	*	@type Object
+	**/
+	static get config() {
+		return Parser._config;
 	}
 
 	/**

@@ -3,7 +3,6 @@
 *	@module examples.es5
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@scan({ packages: ["config", "model", "view"] })
 *	@plugin({ name: "html", config: "$bone!plugins.html" })
 *	@plugin({ name: "themes", config: "$bone!plugins.themes" })
 */
@@ -18,7 +17,7 @@ define(['ui/container'], function(Container) {
 	*	@requires ui.Container
 	*
 	*	@spec({ id: "application", include: ["header", "footer", "model"] })
-	*	@bone({ id: "application", spec: "application" })
+	*	@bone({ id: "application", spec: "application", module: "examples.es5.application" })
 	**/
 	var Application = Boneyard.namespace('examples.es5.Application', Container.inherit({
 

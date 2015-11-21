@@ -60,12 +60,26 @@ class Writer extends EventEmitter {
 	*	Default Write strategy using annotations read by the parser reader
 	*	@public
 	*	@method write
-	*	@param annotations {Array} annotation collection reference
+	*	@param files {Map} files collection reference
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	write(annotations = []) {
-		// TODO
+	write(files) {
+		if(files.size === 0) return this;
+		for(let [file, annotations] of files) {
+			annotations.forEach((a) => this.annotation(a));
+		}
 		return this;
+	}
+
+	/**
+	*	Writes Annotation
+	*	@public
+	*	@method annotation
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	annotation(annotation) {
+		return this['on' + _s.capitalize(annotation.name)](annotation);
 	}
 
 	/**
@@ -76,7 +90,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onSpec(annotation) {
-		// TODO
+		Logger.out(`Writing @spec ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -88,7 +102,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onBone(annotation) {
-		// TODO
+		Logger.out(`Writing @bone: ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -100,7 +114,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onJson(annotation) {
-		// TODO
+		Logger.out(`Writing @json ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -112,7 +126,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onWire(annotation) {
-		// TODO
+		Logger.out(`Writing @wire ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -123,8 +137,8 @@ class Writer extends EventEmitter {
 	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	onAction(annotation) {
-		// TODO
+	onAction(annotation) {``
+		Logger.out(`Writing @action ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -136,7 +150,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onListenTo(annotation) {
-		// TODO
+		Logger.out(`Writing @listenTo ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -148,7 +162,7 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onPlugin(annotation) {
-		// TODO
+		Logger.out(`Writing @plugin ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -166,4 +180,4 @@ class Writer extends EventEmitter {
 
 }
 
-export default Write;
+export default Writer;

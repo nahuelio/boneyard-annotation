@@ -11,7 +11,7 @@ describe('com.boneyard.annotation.support.Annotation', function() {
 		// Valid
 		this.sampleSingle = `//		@bone()`
 		this.sampleObj = `*	@spec({ key: "value" })`;
-		this.sampleArr = `//	@scan({ arr: ["value", 1, true] })`;
+		this.sampleArr = `//	@ignore({ arr: ["value", 1, true] })`;
 		// Non Valid
 		this.sample = `*	@wire`;
 		this.sampleNotSymbol = `non-annotation()`;

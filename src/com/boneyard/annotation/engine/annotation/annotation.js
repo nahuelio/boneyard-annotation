@@ -30,7 +30,7 @@ class Annotation extends EventEmitter {
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	constructor(parameters = {}) {
-		super();
+		super(parameters);
 		return _.extend(this, parameters);
 	}
 
@@ -65,6 +65,56 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation context
+	*	@public
+	*	@property context
+	*	@type com.boneyard.annotation.engine.annotation.Context
+	**/
+	get context() {
+		return this._context;
+	}
+
+	/**
+	*	Sets the annotation context
+	*	@public
+	*	@property context
+	*	@type com.boneyard.annotation.engine.annotation.Context
+	**/
+	set context(context) {
+		this._context = context;
+	}
+
+	/**
+	*	Retrieves absolute filepath in which this annotation was found
+	*	@public
+	*	@property path
+	*	@type String
+	**/
+	get path() {
+		return this._path;
+	}
+
+	/**
+	*	Retrieves Parser config associated on this annotation
+	*	@public
+	*	@property config
+	*	@type Object
+	**/
+	get config() {
+		return this._config;
+	}
+
+	/**
+	*	Default annotation serialization
+	*	@public
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return { [this.name]: this.params };
+	}
+
+	/**
 	*	Retrieves annotation name from a given expression
 	*	@static
 	*	@method metadata
@@ -73,7 +123,7 @@ class Annotation extends EventEmitter {
 	**/
 	static metadata(expr) {
 		let name = Annotation.get(expr), params = Annotation.parameters(expr);
-		return (name && params) ? { _name: name.toLowerCase(), _token: expr, _params: params } : null;
+		return (name && params) ? { _name: name, _token: expr, _params: params } : null;
 	}
 
 	/**

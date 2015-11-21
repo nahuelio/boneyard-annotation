@@ -3,6 +3,8 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
+import _s from 'underscore.string';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -11,6 +13,8 @@ import Annotation from '../engine/annotation/annotation';
 *	@class com.boneyard.annotation.support.Bone
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
+*	@requires underscore
+*	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
 class Bone extends Annotation {
@@ -22,8 +26,33 @@ class Bone extends Annotation {
 	*	@return com.boneyard.annotation.support.Bone
 	**/
 	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+		return super(attrs);
+	}
+
+	/**
+	*	Resolves bone module path
+	*	@public
+	*	@property module
+	*	@type String
+	**/
+	get module() {
+		return _s.replaceAll(this.path, this.config.cwd + '/', '');
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return {
+			[this.params.id]: {
+				$module: this.module,
+				$params: _.omit(this.params, 'id', 'spec', 'module')
+			}
+		};
 	}
 
 	/**
