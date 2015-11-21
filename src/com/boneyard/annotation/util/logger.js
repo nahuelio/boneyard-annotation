@@ -57,11 +57,11 @@ class Logger  {
 	static get colors() {
 		return {
 			s: '\x1b[0m', // standard
-			y: '\x1b[1;33m', // yellow
-			m: '\x1b[1;35m', // magenta
-			c: '\x1b[1;36m', // cyan
+			y: '\x1b[0;33m', // yellow
+			m: '\x1b[0;35m', // magenta
+			c: '\x1b[0;36m', // cyan
 			r: '\x1b[0;31m', // red
-			g: '\x1b[1;32m', // green
+			g: '\x1b[0;32m', // green
 		}
 	}
 

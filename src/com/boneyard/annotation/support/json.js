@@ -27,6 +27,17 @@ class Json extends Bone {
 	}
 
 	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return { [this.params.id]: { $module: this.module, $params: {} } };
+	}
+
+	/**
 	*	Class Name
 	*	@static
 	*	@property NAME
