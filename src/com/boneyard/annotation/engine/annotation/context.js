@@ -19,6 +19,18 @@ class Context {
 	constructor(attrs = {}) {
 		return this;
 	}
+	/**
+	*	Returns true if token is
+	*	@static
+	*	@method validate
+	*	@param token {String} token to evaluates
+	*	@param contexts {Array} list of context used to evaluate token against
+	*	@return com.boneyard.annotation.support.Context
+	**/
+	static validate(token, contexts) {
+		// FIXME: !!!
+		return _.some(_.invoke(Context.CLASS, 'test', token));
+	}
 
 	/**
 	*	Static Constructor

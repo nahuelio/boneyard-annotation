@@ -193,7 +193,9 @@ set value(model) {
 
 - Notes: Resolve multiple instances resolution in order to implement this
 
-* Scope: `Method`
+* Scope:
+	* `Class`
+	* `Method`
 * Parameters:
 	* `bone` {_String_} **required** | Bone Identifier
 	* `method` {_String_} **required** | Bone method to be invoke
@@ -202,22 +204,34 @@ set value(model) {
 Examples:
 
 ```js
-/**
-*	Action Declaration to execute the method "fetch" on the bone "user"
-*	@action({ bone: "user", method: "fetch" })
-**/
 class User extends Backbone.Model {
+  ...
+
+  /**
+  *	Action Declaration to execute the method "fetch" on the bone "user"
+  *	@action({ bone: "user", method: "fetch" })
+  **/
+  fetch() {
+
+  }
+
   ...
 }
 ```
 
 ```js
-/**
-*	Action Declaration to execute the method "fetch" on the bone "user"
-*	with params passed to the method "render".
-*	@action({ bone: "application", method: "render", params:[{ method: "after", target: "div.menu" }] })
-**/
 class Application extends Container {
+  ...
+
+  /**
+  *	Action Declaration to execute the method "fetch" on the bone "user"
+  *	with params passed to the method "render".
+  *	@action({ bone: "application", method: "render", params:[{ method: "after", target: "div.menu" }] })
+  **/
+  render() {
+
+  }
+
   ...
 }
 ```
@@ -227,7 +241,9 @@ class Application extends Container {
 
 Specific use of annotation **@Action** to start listening for events on instances of a given class.
 
-* Scope: `Method`
+* Scope:
+	* `Class`
+	* `Method`
 * Parameters:
 	* `events` {_String_} **required** | list of events
 	* `from` {_String_} **required** | source on which the event is being fire
@@ -266,7 +282,7 @@ class Grid extends Table {
 
 Specific use of annotation **@Bone** for objects that don't need to be instanciated.
 
-* Scope: `Module`
+* Scope: `Class`
 * Parameters:
 	* `id` {_String_} **required** | Bone Identifier
 	* `spec` {_String_} **required** | Spec id in which the bone belongs to.

@@ -37,7 +37,6 @@ class Es5Reader extends Reader {
 	**/
 	onContext(token) {
 		super.onContext(token);
-		//Array.from(this.annotations.pop()
 		return this;
 	}
 
@@ -56,66 +55,57 @@ class Es5Reader extends Reader {
 	}
 
 	/**
-	*	Returns true if token is on module declaration
+	*	Retrieves a list of RegExps used to calculate module context
 	*	@public
-	*	@method onModule
-	*	@param token {String} token to evaluate
-	*	@return Boolean
+	*	@property __module
+	*	@type Array
 	**/
-	onModule(token) {
-		return Context.MODULE.test(token);
+	get __module() {
+		return [/^define/i];
 	}
 
 	/**
-	*	Returns true if token is on module declaration
+	*	Retrieves a list of RegExps used to calculate class context
 	*	@public
-	*	@method onModule
-	*	@param token {String} token to evaluate
-	*	@return Boolean
+	*	@property __module
+	*	@type Array
 	**/
-	onClass(token) {
-		return _.some(_.invoke(Context.CLASS, 'test', token));
+	get __class() {
+		return [
+			/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\s*function\s*\(.*\)\s*{/i, // > <v> = function() {
+			/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
+			/^\s*function\s+.+\s*{$/i // > function <v>() {
+		];
 	}
 
 	/**
-	*	Returns true if token is on module declaration
+	*	Retrieves a list of RegExps used to calculate constructor context
 	*	@public
-	*	@method onModule
-	*	@param token {String} token to evaluate
-	*	@return Boolean
+	*	@property __module
+	*	@type Array
 	**/
-	onConstructor(token) {
-		return Context.CONSTRUCTOR.test(token);
+	get __constructor() {
+		return [/^constructor:/i];
 	}
 
 	/**
-	*	Returns true if token is on module declaration
+	*	Retrieves a list of RegExps used to calculate field context
 	*	@public
-	*	@method onModule
-	*	@param token {String} token to evaluate
-	*	@return Boolean
+	*	@property __module
+	*	@type Array
 	**/
-	onField(token) {
-		return Context.FIELD.test(token);
+	get __field() {
+		return [/^\w+\:\s*(?!function\b)\w+,$/i];
 	}
 
 	/**
-	*	Annotation Contexts for this Reader
-	*	@static
-	*	@property Context
-	*	@type Object
+	*	Retrieves a list of RegExps used to calculate method context
+	*	@public
+	*	@property __module
+	*	@type Array
 	**/
-	static get Context() {
-		return {
-			MODULE: /^define/i,
-			CLASS: [
-				/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\s*function\s*\(.*\)\s*{/i, // > <v> = function() {
-				/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
-				/^\s*function\s+.+\s*{$/i // > function <v>() {
-			],
-			CONSTRUCTOR: /^constructor:/i,
-			FIELD: /^\w+\:\s*(?!function\b)\w+,$/i
-		};
+	get __method() {
+		return [/\todo/i];
 	}
 
 }
