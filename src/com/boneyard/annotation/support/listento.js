@@ -36,6 +36,16 @@ class ListenTo extends Action {
 		return 'ListenTo';
 	}
 
+	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@static
+	*	@property inContext
+	*	@type Array
+	**/
+	static get inContext() {
+		return ['__class', '__method'];
+	}
+
 }
 
 export default ListenTo;

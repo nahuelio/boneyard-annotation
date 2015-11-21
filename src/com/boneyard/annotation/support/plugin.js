@@ -36,6 +36,16 @@ class Plugin extends Annotation {
 		return 'Plugin';
 	}
 
+	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@static
+	*	@property inContext
+	*	@type Array
+	**/
+	static get inContext() {
+		return ['__module'];
+	}
+
 }
 
 export default Plugin;

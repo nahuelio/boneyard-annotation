@@ -47,6 +47,16 @@ class Json extends Bone {
 		return 'Json';
 	}
 
+	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@static
+	*	@property inContext
+	*	@type Array
+	**/
+	static get inContext() {
+		return ['__class'];
+	}
+
 }
 
 export default Json;

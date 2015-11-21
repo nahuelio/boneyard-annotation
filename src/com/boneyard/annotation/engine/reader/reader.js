@@ -64,6 +64,16 @@ class Reader  {
 	}
 
 	/**
+	*	Retrieves annotation registry for the current file being read
+	*	@public
+	*	@property registry
+	*	@type Array
+	**/
+	get registry() {
+		return this.annotations.get(this.current);
+	}
+
+	/**
 	*	Returns true if token passes basic validation, otherwise false.
 	*	Return true all the following conditions are met:
 	*	- A token is a string
@@ -155,7 +165,7 @@ class Reader  {
 		if(!metadata) return this;
 		try {
 			this.factory.register(metadata._name.toLowerCase());
-			this.annotations.get(this.current).push(this.getAnnotation(metadata));
+			this.registry.push(this.getAnnotation(metadata));
 		} catch(ex) {}
 		return this;
 	}

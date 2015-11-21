@@ -30,7 +30,7 @@ class Annotation extends EventEmitter {
 	*	@return com.boneyard.annotation.support.Annotation
 	**/
 	constructor(parameters = {}) {
-		super(parameters);
+		super();
 		return _.extend(this, parameters);
 	}
 

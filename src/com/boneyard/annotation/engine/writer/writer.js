@@ -167,6 +167,13 @@ class Writer extends EventEmitter {
 	}
 
 	/**
+	*	Comment
+	**/
+	onIgnore(annotation) {
+		return this;
+	}
+
+	/**
 	*	Writes out final spec template into a file.
 	*	@public
 	*	@method toFile
