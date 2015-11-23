@@ -167,9 +167,14 @@ class Writer extends EventEmitter {
 	}
 
 	/**
-	*	Comment
+	*	Flags a set of annotations found in the current file to ignore in the final output.
+	*	@public
+	*	@method onIgnore
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	onIgnore(annotation) {
+		Logger.out(`Checking @ignore ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
