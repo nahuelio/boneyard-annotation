@@ -28,30 +28,41 @@ class Es5Reader extends Reader {
 	}
 
 	/**
-	*	Evaluates token to determine the annotation contexts
+	*	Retrieves annotation list of contexts
 	*	@public
-	*	@override
-	*	@method context
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.support.Annotation
+	*	@method contexts
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return Array
 	**/
-	onContext(token) {
-		super.onContext(token);
-		return this;
+	contexts(annotation) {
+		return _.flatten(annotation.contexts.map((ctx) => { return this[ctx]; }));
 	}
 
 	/**
-	*	Resolves context resolution
+	*	Context Handler
 	*	@public
 	*	@override
 	*	@method resolve
 	*	@param token {String} token to evaluate
 	*	@return com.boneyard.annotation.support.Es5Reader
 	**/
-	resolve(token) {
-		super.resolve(token);
-		// TODO: Assign new context to the annotations
-		return this;
+	onContext(token) {
+		let annotations = super.onContext(token);
+		return annotations.map((a) => { this.resolve(a, token); });
+	}
+
+	/**
+	*	Resolves annotation context when valid, otherwise this method will throw an exception.
+	*	@public
+	*	@method resolve
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@param token {String} token reference
+	*	@return com.boneyard.annotation.engine.annotation.Annotation
+	**/
+	resolve(annotation, token) {
+		if(!Context.validate(token, this.contexts(annotation))) return annotation;
+		annotation.context = Context.new({ token: token, annotation: annotation });
+		return annotation;
 	}
 
 	/**
@@ -72,7 +83,7 @@ class Es5Reader extends Reader {
 	**/
 	get __class() {
 		return [
-			/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\s*function\s*\(.*\)\s*{/i, // > <v> = function() {
+			/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\w*/i, // > var <v> =
 			/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
 			/^\s*function\s+.+\s*{$/i // > function <v>() {
 		];
@@ -95,7 +106,7 @@ class Es5Reader extends Reader {
 	*	@type Array
 	**/
 	get __field() {
-		return [/^\w+\:\s*(?!function\b)\w+,$/i];
+		return [/^\w+\:\s*(?!function\b)[a-zA-Z0-9\W]+,$/i];
 	}
 
 	/**
@@ -105,7 +116,7 @@ class Es5Reader extends Reader {
 	*	@type Array
 	**/
 	get __method() {
-		return [/\todo/i];
+		return [/^\w+\:\s*function\s*\(.*\)\s*{$/i];
 	}
 
 }

@@ -27,6 +27,16 @@ class Plugin extends Annotation {
 	}
 
 	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@public
+	*	@property contexts
+	*	@type Array
+	**/
+	get contexts() {
+		return ['__module'];
+	}
+
+	/**
 	*	Class Name
 	*	@static
 	*	@property NAME
@@ -34,16 +44,6 @@ class Plugin extends Annotation {
 	**/
 	static get NAME() {
 		return 'Plugin';
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@static
-	*	@property inContext
-	*	@type Array
-	**/
-	static get inContext() {
-		return ['__module'];
 	}
 
 }

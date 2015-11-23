@@ -30,13 +30,23 @@ class Bone extends Annotation {
 	}
 
 	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@public
+	*	@property contexts
+	*	@type Array
+	**/
+	get contexts() {
+		return ['__class'];
+	}
+
+	/**
 	*	Resolves bone module path
 	*	@public
 	*	@property module
 	*	@type String
 	**/
 	get module() {
-		return _s.replaceAll(this.path, this.config.cwd + '/', '');
+		return !this.params.module ? _s.replaceAll(this.path, this.config.cwd + '/', '') : this.params.module;
 	}
 
 	/**
@@ -63,16 +73,6 @@ class Bone extends Annotation {
 	**/
 	static get NAME() {
 		return 'Bone';
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@static
-	*	@property inContext
-	*	@type Array
-	**/
-	static get inContext() {
-		return ['__class'];
 	}
 
 }

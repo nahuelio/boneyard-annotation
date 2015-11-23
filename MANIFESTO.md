@@ -110,10 +110,10 @@ class UserService extends Service {
 	* `Field`
 * Parameters
 	* `id` {_String_} **required** | Bone identifier, or
-	* `bones` {_String_} **required** | List of bones identifiers as string with format comma separated
 	* `on` {_String_} _optional_ | Will work for injections on constructors (Es5/Es6) and also in constructors/setters for Es6.
     **This parameter will be automatically wired on scope field for Es5.**
 	* `name` {_String_} _optional_ | Optionally specified the property name the bone will be passed as part of the `on` object name
+	* `params` {_Array_} _optional_ | Optional parameters to pass to the bone instanciatation at the moment of injection.
 
 Examples:
 
@@ -132,8 +132,9 @@ constructor: function(config, other) {
 
 ```js
 /**
-*	Scope: Constructor (multiple bones)
-*	@wire({ bones: "header, footer", on: "attrs", name: "views" })
+*	Scope: Constructor (multiple bones to be injected in the same parameter attribute)
+*	@wire({ id: "header", on: "attrs", name: "views", params: [{ cls: 'myheader', autoId: true }] })
+*	@wire({ id: "footer", on: "attrs", name: "views" })
 **/
 constructor: function(attrs, other) {
   return MyClass.apply(this, arguments);
