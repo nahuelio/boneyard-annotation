@@ -115,6 +115,16 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Returns true if annotation has a context
+	*	@public
+	*	@method hasContext
+	*	@return Boolean
+	**/
+	hasContext() {
+		return !this.context;
+	}
+
+	/**
 	*	Retrieves annotation name from a given expression
 	*	@static
 	*	@method metadata

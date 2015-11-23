@@ -27,6 +27,16 @@ class Json extends Bone {
 	}
 
 	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@public
+	*	@property contexts
+	*	@type Array
+	**/
+	get contexts() {
+		return ['__class'];
+	}
+
+	/**
 	*	Serialization
 	*	@public
 	*	@override
@@ -34,7 +44,7 @@ class Json extends Bone {
 	*	@return Object
 	**/
 	serialize() {
-		return { [this.params.id]: { $module: this.module, $params: {} } };
+		return { [this.params.id]: { $module: this.module, json: true } };
 	}
 
 	/**
@@ -45,16 +55,6 @@ class Json extends Bone {
 	**/
 	static get NAME() {
 		return 'Json';
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@static
-	*	@property inContext
-	*	@type Array
-	**/
-	static get inContext() {
-		return ['__class'];
 	}
 
 }

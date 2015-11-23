@@ -27,6 +27,16 @@ class ListenTo extends Action {
 	}
 
 	/**
+	*	Retrieves list of context in which this annotation should be found
+	*	@static
+	*	@property contexts
+	*	@type Array
+	**/
+	get contexts() {
+		return ['__class', '__method'];
+	}
+
+	/**
 	*	Class Name
 	*	@static
 	*	@property NAME
@@ -34,16 +44,6 @@ class ListenTo extends Action {
 	**/
 	static get NAME() {
 		return 'ListenTo';
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@static
-	*	@property inContext
-	*	@type Array
-	**/
-	static get inContext() {
-		return ['__class', '__method'];
 	}
 
 }

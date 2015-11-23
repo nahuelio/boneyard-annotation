@@ -130,6 +130,16 @@ class Reader  {
 	}
 
 	/**
+	*	Returns a list of annotations that have not resolved their contexts by this reader.
+	*	@public
+	*	@method annotationsWithNoContext
+	*	@return Array
+	**/
+	annotationsWithNoContext() {
+		return _.compact(this.registry.map((a) => { return a.hasContext() ? a : null }));
+	}
+
+	/**
 	*	Default Token Handler
 	*	Evaluates token expression and decide which annotation will process the token
 	*	@public
@@ -139,19 +149,7 @@ class Reader  {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	onToken(token) {
-		return this.isValid(token) ? this.onAnnotation(Annotation.metadata(token)) : this.resolve(token);
-	}
-
-	/**
-	*	Default Non-annotation resolution strategy
-	*	@public
-	*	@method resolve
-	*	@param token {String} token to be analyzed
-	*	@return com.boneyard.annotation.support.Annotation
-	**/
-	resolve(token) {
-		if(this.inComment(token)) return this;
-		return this.onContext(token);
+		return this.isValid(token) ? this.onAnnotation(Annotation.metadata(token)) : this.onContext(token);
 	}
 
 	/**
@@ -175,10 +173,11 @@ class Reader  {
 	*	@public
 	*	@method onContext
 	*	@param token {String} token not in comment used to determine annotation context
-	*	@return com.boneyard.annotation.reader.Reader
+	*	@return Array
 	**/
 	onContext(token) {
-		return this;
+		if(this.inComment(token)) return [];
+		return this.annotationsWithNoContext();
 	}
 
 	/**
