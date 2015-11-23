@@ -133,7 +133,7 @@ class Annotation extends EventEmitter {
 	**/
 	static metadata(expr) {
 		let name = Annotation.get(expr), params = Annotation.parameters(expr);
-		return (name && params) ? { _name: name, _token: expr, _params: params } : null;
+		return (name) ? { _name: name, _token: expr, _params: params } : null;
 	}
 
 	/**

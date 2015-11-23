@@ -27,6 +27,16 @@ class Ignore extends Annotation {
 	}
 
 	/**
+	*	Serialization
+	*	@public
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return { [this.name]: { file: this.path } };
+	}
+
+	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
