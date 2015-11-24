@@ -2,11 +2,15 @@
 *	@module com.boneyard.annotation.support
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
+import _ from 'underscore';
+import _s from 'underscore.string';
 
 /**
 *	Class Context
 *	@namespace com.boneyard.annotation.support
 *	@class com.boneyard.annotation.support.Context
+*
+*	@requires underscore
 **/
 class Context {
 
@@ -28,13 +32,14 @@ class Context {
 	*	@throws Error
 	*	@method validate
 	*	@param token {String} token to evaluates
-	*	@param contexts {Array} list of context used to evaluate token against
+	*	@param cxts {Array} list of context used to evaluate token against
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.support.Context
 	**/
-	static validate(token, contexts) {
-		if(!_.some(_.invoke(contexts, 'test', token)))
-			throw new Error("Context resolution couldn't be resolved for ... [list of annotations]");
-		return true;
+	static validate(token, cxts, annotation) {
+		var context = _.find(cxts, function(ctx) { return _.some(_.invoke(ctx.re, 'test', token)) ? ctx : null; }, this);
+		if(!context) throw new Error(Context.exception(annotation));
+		return context;
 	}
 
 	/**
@@ -46,6 +51,18 @@ class Context {
 	**/
 	static new(...params) {
 		return new Context(...params);
+	}
+
+	/**
+	*	Retrieves Exception Message for Context Resolution on a given annotation.
+	*	@static
+	*	@property exception
+	*	@type String
+	**/
+	static exception(annotation) {
+		return `Context couldn't be resolved for @${annotation.name} located in ${annotation.path}.
+			 Annotation @${annotation.name} supports the following scopes:
+			 ${_s.trim(annotation.contexts.join(','), '_')}`.replace(/(\n|\t)/gi, '');
 	}
 
 }

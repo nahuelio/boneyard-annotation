@@ -35,7 +35,7 @@ class Es5Reader extends Reader {
 	*	@return Array
 	**/
 	contexts(annotation) {
-		return _.flatten(annotation.contexts.map((ctx) => { return this[ctx]; }));
+		return _.flatten(annotation.contexts.map((ctx) => { return { name: ctx, re: this[ctx] }; }));
 	}
 
 	/**
@@ -60,8 +60,9 @@ class Es5Reader extends Reader {
 	*	@return com.boneyard.annotation.engine.annotation.Annotation
 	**/
 	resolve(annotation, token) {
-		if(!Context.validate(token, this.contexts(annotation))) return annotation;
-		annotation.context = Context.new({ token: token, annotation: annotation });
+		let ctx = null;
+		if(!(ctx = Context.validate(token, this.contexts(annotation), annotation))) return annotation;
+		annotation.context = Context.new(_.extend(ctx, { token: token, annotation: annotation }));
 		return annotation;
 	}
 
