@@ -33,7 +33,7 @@ class Instrumenter extends EventEmitter {
 		super();
 		this._writer = writer;
 		this._factory = new Factory(resolve(__dirname, './templates'));
-		return this;
+		return this.registerAll('spec.tpl', 'bone.tpl', 'action.tpl', 'plugin.tpl');
 	}
 
 	/**
@@ -57,52 +57,64 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Registers Factory template
+	*	Registers a list of template inside the factory
 	*	@public
-	*	@method register
-	*	@param path {String} template path
+	*	@method registerAll
+	*	@param paths {Array} array of template paths
 	*	@return com.boneyard.annotation.engine.writer.Instrumenter
 	**/
-	register(path = "") {
-		if(!path || path === "" || !this.factory.exists(path)) return this;
-		this.factory.register(path);
+	registerAll(paths = []) {
+		if(!paths || !_.isArray(paths) || !this.factory.exists(paths)) return this;
+		paths.forEach((p) => { this.factory.register(p); });
 		return this;
+	}
+
+	/**
+	*	Filters out all annotations on all files read.
+	*	@public
+	*	@method all
+	*	@param files {Map} source files
+	*	@return Array
+	**/
+	all(files) {
+		return _.flatten(Array.from(files, (a, f) => { return a; }));
 	}
 
 	/**
 	*	Generator Strategy that defines instrumentation order on all annotations pulled by the writer.
 	*	@public
 	*	@method instrument
-	*	@param files {Array} source files
+	*	@param files {Map} source files
 	*	@return Iterator
 	**/
-	instrument* (files = []) {
-		yield this.ignore(files);
-		yield this.specs(files);
-		yield this.plugins(files);
-		yield this.bones(files);
-		yield this.actions(files);
+	*instrument(files = []) {
+		let annotations = this.all(files);
+		yield this.ignore(annotations);
+		yield this.specs(annotations);
+		yield this.plugins(annotations);
+		yield this.bones(annotations);
+		yield this.actions(annotations);
 	}
 
 	/**
 	*	Filters out ignore annotations from annotations list
 	*	@public
-	*	@property ignore
-	*	@type Array
+	*	@method ignore
+	*	@param annotations {array} list of annotations
+	*	@return Array
 	**/
-	ignore(files) {
-		// TODO: Just @ignore
+	ignore(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'ignore'); });
 	}
 
 	/**
-	*	Filters out spec annotations from annotations list
+	*	Registers templateFilters out spec annotations from annotations list
 	*	@public
 	*	@property specs
 	*	@type Array
 	**/
-	specs(files) {
-		this.register('spec.tpl');
-		// TODO: Just @spec
+	specs(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'spec'); });
 	}
 
 	/**
@@ -111,9 +123,8 @@ class Instrumenter extends EventEmitter {
 	*	@property bones
 	*	@type Array
 	**/
-	bones() {
-		this.register('bone.tpl');
-		// TODO: @json, @bone and @wire
+	bones(annotations) {
+		return _.filter(annotations, (a) => { return _.contains(['bone', 'json', 'wire'], a.name); });
 	}
 
 	/**
@@ -122,9 +133,8 @@ class Instrumenter extends EventEmitter {
 	*	@property actions
 	*	@type Array
 	**/
-	actions(files) {
-		this.register('action.tpl');
-		// TODO: @action and @listenTo
+	actions(annotations) {
+		return _.filter(annotations, (a) => { return _.contains(['action', 'listenTo'], a.name); });
 	}
 
 	/**
@@ -133,8 +143,8 @@ class Instrumenter extends EventEmitter {
 	*	@property plugins
 	*	@type Array
 	**/
-	plugins(files) {
-		// TODO: Just @plugin
+	plugins(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'plugin'); });
 	}
 
 }

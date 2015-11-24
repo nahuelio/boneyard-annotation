@@ -7,7 +7,7 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import instrumenter from './instrumenter';
+import Instrumenter from './instrumenter';
 import Logger from '../../util/logger';
 
 /**
@@ -19,6 +19,7 @@ import Logger from '../../util/logger';
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.engine.writer.Instrumenter
 *	@requires com.boneyard.annotation.util.Logger
 **/
 class Writer extends EventEmitter {
@@ -35,6 +36,16 @@ class Writer extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves Writer instrumenter
+	*	@public
+	*	@property instrumenter
+	*	@type com.boneyard.annotation.engine.writer.Instrumenter
+	**/
+	get instrumenter() {
+		return this._instrumenter;
+	}
+
+	/**
 	*	Default Write strategy using annotations read by the parser reader
 	*	@public
 	*	@method write
@@ -43,18 +54,10 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		return this.annotation(this.instrumenter(files));
-	}
-
-	/**
-	*	Writes Annotation
-	*	@public
-	*	@method annotation
-	*	@param iterator {Iterator}
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	annotation(iterator) {
-		// TODO
+		for(let annotations of this.instrumenter.instrument(files)) {
+			// console.log(_.invoke(annotations, 'serialize'));
+		}
+		return this;
 	}
 
 	/**
