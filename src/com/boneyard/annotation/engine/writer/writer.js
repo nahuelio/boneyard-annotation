@@ -77,7 +77,7 @@ class Writer extends EventEmitter {
 	write(files) {
 		if(files.size === 0) return this;
 		for(let list of this.instrumenter.instrument(files)) {
-			list.annotations.forEach((a) => { this[list.type](a.serialize()); });
+			list.annotations.forEach((a) => { this[list.type](a); });
 		}
 		return this;
 	}
@@ -90,8 +90,9 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	ignore(annotation) {
-		Logger.out(`Blacklist detected: ${annotation.ignore.file}`, 'r');
-		this.blacklist.push(annotation.ignore.file);
+		let meta = annotation.serialize();
+		Logger.out(`Blacklist detected: ${meta.ignore.file}`, 'r');
+		this.blacklist.push(meta.ignore.file);
 		return this;
 	}
 
@@ -104,7 +105,9 @@ class Writer extends EventEmitter {
 	**/
 	spec(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @spec ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @spec: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -117,7 +120,9 @@ class Writer extends EventEmitter {
 	**/
 	bone(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @bone: ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @bone: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -130,7 +135,9 @@ class Writer extends EventEmitter {
 	**/
 	json(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @json ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @json: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -143,7 +150,9 @@ class Writer extends EventEmitter {
 	**/
 	wire(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @wire ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @wire: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -154,8 +163,11 @@ class Writer extends EventEmitter {
 	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	action(annotation) {``
-		Logger.out(`Writing @action ${JSON.stringify(annotation)}`, 'c');
+	action(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @action: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -168,7 +180,9 @@ class Writer extends EventEmitter {
 	**/
 	listenTo(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @listenTo ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @listenTo: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 
@@ -181,7 +195,9 @@ class Writer extends EventEmitter {
 	**/
 	plugin(annotation) {
 		if(this.isIgnore(annotation)) return this;
-		Logger.out(`Writing @plugin ${JSON.stringify(annotation)}`, 'c');
+		let meta = _.omit(annotation.serialize(), 'context');
+		Logger.out(`Writing @plugin: `, 'c');
+		Logger.out(`${JSON.stringify(meta)}`, 'y');
 		return this;
 	}
 

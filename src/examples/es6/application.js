@@ -18,6 +18,7 @@ import Container from 'ui/container';
 *
 *	@spec({ id: "application", include: ["header", "footer", "model"] })
 *	@bone({ id: "application", spec: "application" })
+*	@action({ bone: "application", method: "render" })
 */
 class Application extends Container {
 
