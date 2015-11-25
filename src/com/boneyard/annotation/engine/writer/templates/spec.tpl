@@ -1,10 +1,10 @@
 /**
-*	<%= project %> - Spec <%= name %>
+*	Spec <%= name %><%= (obj.author) ? "\n*\t@author " + obj.author : "" %>
 **/
-define([<%= dependencies %>], function(<%= dependencyNames %>) {
+define([<%= paths %>], function(<%= dependencies %>) {
 	$id: '<%= id %>',
-	$specs: [<%= parent %>],
-	<%= bones %>,
-	$actions: [<%= actions %>],
-	<%= plugins %>
+	$specs: [<%= parent %>]
+	<%= (obj.bones) ? "," + obj.bones : "" %>
+	<%= (obj.actions) ? ",$actions: [ " + obj.actions + " ]" : "" %>
+	<%= (obj.plugins) ? ",$plugins: { " + obj.plugins + " }" : "" %>
 });

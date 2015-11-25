@@ -93,7 +93,9 @@ class Instrumenter extends EventEmitter {
 		yield { type: 'spec', annotations: this.specs(annotations) };
 		yield { type: 'plugin', annotations: this.plugins(annotations) };
 		yield { type: 'bone', annotations: this.bones(annotations) };
+		yield { type: 'wire', annotations: this.wires(annotations) };
 		yield { type: 'action', annotations: this.actions(annotations) };
+		yield { type: 'listenTo', annotations: this.listens(annotations) };
 	}
 
 	/**
@@ -108,7 +110,7 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Registers templateFilters out spec annotations from annotations list
+	*	Filters out spec annotations from annotations list
 	*	@public
 	*	@property specs
 	*	@type Array
@@ -118,13 +120,23 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Filters out bones annotations from annotations list
+	*	Filters out bone annotations from annotations list
 	*	@public
 	*	@property bones
 	*	@type Array
 	**/
 	bones(annotations) {
-		return _.filter(annotations, (a) => { return _.contains(['bone', 'json', 'wire'], a.name); });
+		return _.filter(annotations, (a) => { return _.contains(['bone', 'json'], a.name); });
+	}
+
+	/**
+	*	Filters out wire annotations from annotations list
+	*	@public
+	*	@property wires
+	*	@type Array
+	**/
+	wires(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'wire'); });
 	}
 
 	/**
@@ -134,7 +146,17 @@ class Instrumenter extends EventEmitter {
 	*	@type Array
 	**/
 	actions(annotations) {
-		return _.filter(annotations, (a) => { return _.contains(['action', 'listenTo'], a.name); });
+		return _.filter(annotations, (a) => { return (a.name === 'action'); });
+	}
+
+	/**
+	*	Filters out listenTo annotations from annotations list
+	*	@public
+	*	@property listens
+	*	@type Array
+	**/
+	listens(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'listenTo'); });
 	}
 
 	/**
