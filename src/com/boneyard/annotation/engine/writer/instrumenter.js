@@ -70,7 +70,7 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Filters out all annotations on all files read.
+	*	Filters out all annotations on all files read
 	*	@public
 	*	@method all
 	*	@param files {Map} source files
@@ -89,15 +89,15 @@ class Instrumenter extends EventEmitter {
 	**/
 	*instrument(files = []) {
 		let annotations = this.all(files);
-		yield this.ignore(annotations);
-		yield this.specs(annotations);
-		yield this.plugins(annotations);
-		yield this.bones(annotations);
-		yield this.actions(annotations);
+		yield { type: 'ignore', annotations: this.ignore(annotations) };
+		yield { type: 'spec', annotations: this.specs(annotations) };
+		yield { type: 'plugin', annotations: this.plugins(annotations) };
+		yield { type: 'bone', annotations: this.bones(annotations) };
+		yield { type: 'action', annotations: this.actions(annotations) };
 	}
 
 	/**
-	*	Filters out ignore annotations from annotations list
+	*	Removes files that were flagged from the whitelist.
 	*	@public
 	*	@method ignore
 	*	@param annotations {array} list of annotations

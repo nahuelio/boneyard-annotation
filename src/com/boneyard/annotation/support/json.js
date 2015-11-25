@@ -44,7 +44,12 @@ class Json extends Bone {
 	*	@return Object
 	**/
 	serialize() {
-		return { [this.params.id]: { $module: this.module, json: true } };
+		return _.extend({
+			id: this.params.id,
+			$module: this.module,
+			$params: _.omit(this.params, 'id', 'spec', 'module'),
+			json: true
+		}, super.serialize());
 	}
 
 	/**

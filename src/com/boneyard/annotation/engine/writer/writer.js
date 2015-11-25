@@ -31,8 +31,19 @@ class Writer extends EventEmitter {
 	**/
 	constructor(...args) {
 		super();
-		this._instrumenter = new Instrumenter();
+		this.instrumenter = new Instrumenter();
+		this.blacklist = [];
 		return this;
+	}
+
+	/**
+	*	Sets instrumenter
+	*	@public
+	*	@property instrumenter
+	*	@type com.boneyard.annotation.engine.writer.Instrumenter
+	**/
+	set instrumenter(instrumenter) {
+		this._instrumenter = instrumenter;
 	}
 
 	/**
@@ -46,6 +57,17 @@ class Writer extends EventEmitter {
 	}
 
 	/**
+	*	Returns true if the annotation found in a file was blacklisted to not parse annotations
+	*	@public
+	*	@method isIgnore
+	*	@param annotation {Object} annotation metadata
+	*	@return Boolean
+	**/
+	isIgnore(annotation) {
+		return _.contains(this.blacklist, annotation.file);
+	}
+
+	/**
 	*	Default Write strategy using annotations read by the parser reader
 	*	@public
 	*	@method write
@@ -54,93 +76,9 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		for(let annotations of this.instrumenter.instrument(files)) {
-			// console.log(_.invoke(annotations, 'serialize'));
+		for(let list of this.instrumenter.instrument(files)) {
+			list.annotations.forEach((a) => { this[list.type](a.serialize()); });
 		}
-		return this;
-	}
-
-	/**
-	*	Builds and store a string representation of a spec template inside the spec map
-	*	@public
-	*	@method onSpec
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onSpec(annotation) {
-		Logger.out(`Writing @spec ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a bone template.
-	*	@public
-	*	@method onBone
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onBone(annotation) {
-		Logger.out(`Writing @bone: ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a json template.
-	*	@public
-	*	@method onJson
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onJson(annotation) {
-		Logger.out(`Writing @json ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a json template.
-	*	@public
-	*	@method onWire
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onWire(annotation) {
-		Logger.out(`Writing @wire ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a action template.
-	*	@public
-	*	@method onAction
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onAction(annotation) {``
-		Logger.out(`Writing @action ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a listenTo template.
-	*	@public
-	*	@method onListenTo
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onListenTo(annotation) {
-		Logger.out(`Writing @listenTo ${JSON.stringify(annotation.serialize())}`, 'c');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a plugin template.
-	*	@public
-	*	@method onPlugin
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	onPlugin(annotation) {
-		Logger.out(`Writing @plugin ${JSON.stringify(annotation.serialize())}`, 'c');
 		return this;
 	}
 
@@ -151,8 +89,99 @@ class Writer extends EventEmitter {
 	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	onIgnore(annotation) {
-		Logger.out(`Checking @ignore ${JSON.stringify(annotation.serialize())}`, 'c');
+	ignore(annotation) {
+		Logger.out(`Blacklist detected: ${annotation.ignore.file}`, 'r');
+		this.blacklist.push(annotation.ignore.file);
+		return this;
+	}
+
+	/**
+	*	Builds and store a string representation of a spec template inside the spec map
+	*	@public
+	*	@method onSpec
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	spec(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @spec ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a bone template.
+	*	@public
+	*	@method onBone
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	bone(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @bone: ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a json template.
+	*	@public
+	*	@method onJson
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	json(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @json ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a json template.
+	*	@public
+	*	@method onWire
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	wire(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @wire ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a action template.
+	*	@public
+	*	@method onAction
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	action(annotation) {``
+		Logger.out(`Writing @action ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a listenTo template.
+	*	@public
+	*	@method onListenTo
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	listenTo(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @listenTo ${JSON.stringify(annotation)}`, 'c');
+		return this;
+	}
+
+	/**
+	*	Builds and retrieves string representation of a plugin template.
+	*	@public
+	*	@method onPlugin
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return com.boneyard.annotation.writer.Writer
+	**/
+	plugin(annotation) {
+		if(this.isIgnore(annotation)) return this;
+		Logger.out(`Writing @plugin ${JSON.stringify(annotation)}`, 'c');
 		return this;
 	}
 
