@@ -111,7 +111,12 @@ class Annotation extends EventEmitter {
 	*	@return Object
 	**/
 	serialize() {
-		return { [this.name]: this.params };
+		return {
+			file: this.path,
+			type: this.name,
+			context: _.omit(this.context, 'annotation', 're'),
+			params: this.params
+		};
 	}
 
 	/**

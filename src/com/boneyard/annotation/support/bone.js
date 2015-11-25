@@ -57,12 +57,11 @@ class Bone extends Annotation {
 	*	@return Object
 	**/
 	serialize() {
-		return {
-			[this.params.id]: {
-				$module: this.module,
-				$params: _.omit(this.params, 'id', 'spec', 'module')
-			}
-		};
+		return _.extend({
+			id: this.params.id,
+			$module: this.module,
+			$params: _.omit(this.params, 'id', 'spec', 'module')
+		}, super.serialize());
 	}
 
 	/**

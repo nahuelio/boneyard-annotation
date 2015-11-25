@@ -71,11 +71,11 @@ class Factory {
 	*	Returns true if a factory exists given the path name, otherwise returns false
 	*	@public
 	*	@method exists
-	*	@param path {String} path name
+	*	@param [...path] {String} list of paths
 	*	@return Boolean
 	**/
-	exists(path) {
-		return this.factories.has(path);
+	exists(...path) {
+		return _.every(path.map((p) => { return this.factories.has(p); }));
 	}
 
 	/**
