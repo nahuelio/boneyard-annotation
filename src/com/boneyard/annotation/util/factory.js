@@ -3,6 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import fs from 'fs-extra';
 import {resolve} from 'path';
 import Logger from './logger';
 
@@ -42,8 +43,8 @@ class Factory {
 	*	@public
 	*	@throws Error
 	*	@method register
-	*	@param name {String} factory name
-	*	@param path {String} file path to the class that will act as a constructor
+	*	@param path {String} file path to the resource
+	*	@param [asString] {Boolean} load file as string
 	*	@return String
 	**/
 	register(path = '') {

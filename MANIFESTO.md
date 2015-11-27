@@ -283,12 +283,12 @@ class Grid extends Table {
 ---
 #### @json (**Review**)
 
-Specific use of annotation **@Bone** for objects that don't need to be instanciated.
+Specific use of annotation **@bone** for objects that don't need to be instanciated.
 
 * Scope: `Class`
 * Parameters:
 	* `id` {_String_} **required** | Bone Identifier
-	* `spec` {_String_} **required** | Spec id in which the bone belongs to.
+	* `spec` {_String_} **required** | Spec id in which this json bone will be declared.
 
 Examples:
 
@@ -309,18 +309,20 @@ exports default MyConfiguation;
 ---
 #### @plugin (**Review**)
 
-* Scope: `Module`
+* Scope:
+	* `Module`
+	* `Class`
 * Parameters:
 	* `name` {_String_} **required** | Plugin name
 	* `config` {_Object_} **required** | Plugin configuration
-	* `spec` {_String_} **required** | Spec where the plugin should be used.
+	* `spec` {_String_} **required** | Spec id in which this plugin will be used.
 
 Examples:
 
 ```js
 /**
 *	@plugin({ name: "themes", config: "$bone!theme_config" })
-*	@plugin({ name: "html", config: { basePath: "$bone!html_basepath", packages: "$bone!packages" } })
+*	@plugin({ name: "html", config: { basePath: "$bone!html_basepath", mypackage: 'templates/mypackage' } })
 **/
 import Container from 'ui/container';
 ...

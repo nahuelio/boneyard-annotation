@@ -64,22 +64,8 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		this.instrumenter.instrument(files).forEach((spec) => { this.spec(spec); });
+		this.instrumenter.instrument(files).forEach((spec) => { this.toFile(spec.write(spec.serialize())); });
 		return this;
-	}
-
-	/**
-	*	Builds and store a string representation of a spec template inside the spec map
-	*	@public
-	*	@method spec
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	spec(annotation) {
-		let spec = annotation.serialize();
-		console.log(spec);
-		Logger.out('----------------------', 'y');
-		return this; //this.toFile(annotation.write(spec));
 	}
 
 	/**

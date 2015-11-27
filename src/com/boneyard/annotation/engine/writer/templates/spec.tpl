@@ -1,7 +1,7 @@
 /**
 *	Spec <%= id %><%= (obj.author) ? "\n*\t@author " + obj.author : "" %>
 **/
-define([<%= paths %>], function(<%= dependencies %>) {
+define(<%= paths %>, function(<%= dependencies %>) {
 	$id: '<%= id %>',
 	$specs: [<%= specs %>]
 	<%= (obj.bones) ? "," + obj.bones : "" %>

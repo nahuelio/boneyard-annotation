@@ -3,8 +3,8 @@
 *	@module examples.es6
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "application" })
-*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "application" })
+*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "specs/application" })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "specs/application" })
 */
 import Container from 'ui/container';
 
@@ -16,9 +16,9 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@spec({ id: "application", include: ["header", "footer", "model"] })
-*	@bone({ id: "application", spec: "application" })
-*	@action({ bone: "application", method: "render", spec: "application" })
+*	@spec({ id: "specs/application", include: ["specs/common/header", "specs/common/footer", "specs/model/model"] })
+*	@bone({ id: "application", spec: "specs/application" })
+*	@action({ bone: "application", method: "render", spec: "specs/application" })
 */
 class Application extends Container {
 

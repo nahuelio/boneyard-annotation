@@ -3,6 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import fs from 'fs-extra';
 import _ from 'underscore';
 
 _.mixin({
@@ -30,3 +31,10 @@ _.mixin({
 	}
 
 });
+
+/**
+*	Template aggregation parsing added to require node strategy
+**/
+require.extensions['.tpl'] = function(module, filename) {
+    module.exports = fs.readFileSync(filename, 'utf8');
+};

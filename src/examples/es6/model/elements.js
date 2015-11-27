@@ -14,7 +14,7 @@ import Backbone from 'backbone';
 *
 *	@requires Backbone.Collection
 *
-*	@bone({ id: "elements", spec: "model" })
+*	@bone({ id: "elements", spec: "specs/model/model" })
 */
 class Elements extends Backbone.Collection {
 

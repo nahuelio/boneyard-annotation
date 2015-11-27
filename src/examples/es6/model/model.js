@@ -13,7 +13,7 @@ import Backbone from 'backbone';
 *
 *	@requires Backbone.Model
 *
-*	@bone({ id: "model", spec: "model" })
+*	@bone({ id: "model", spec: "specs/model/model" })
 */
 class Model extends Backbone.Model {
 
