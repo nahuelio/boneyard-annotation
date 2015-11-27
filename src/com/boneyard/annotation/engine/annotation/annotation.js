@@ -105,6 +105,28 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation ignored
+	*	@public
+	*	@property ignored
+	*	@type Boolean
+	**/
+	get ignored() {
+		return this._ignored;
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return _.defined(metadata);
+	}
+
+	/**
 	*	Default annotation serialization
 	*	@public
 	*	@method serialize
@@ -114,9 +136,20 @@ class Annotation extends EventEmitter {
 		return {
 			file: this.path,
 			type: this.name,
-			context: _.omit(this.context, 'annotation', 're'),
 			params: this.params
 		};
+	}
+
+	/**
+	*	Default strategy that projects serialized annotation metadata into a template and returns the result as a string.
+	*	@public
+	*	@method write
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return String
+	**/
+	write(metadata) {
+		if(!this.validate(metadata) || !this.template) throw new Error(``);
+		return this.template(metadata);
 	}
 
 	/**

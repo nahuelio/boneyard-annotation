@@ -32,7 +32,6 @@ class Writer extends EventEmitter {
 	constructor(...args) {
 		super();
 		this.instrumenter = new Instrumenter();
-		this.blacklist = [];
 		return this;
 	}
 
@@ -57,17 +56,6 @@ class Writer extends EventEmitter {
 	}
 
 	/**
-	*	Returns true if the annotation found in a file was blacklisted to not parse annotations
-	*	@public
-	*	@method isIgnore
-	*	@param annotation {Object} annotation metadata
-	*	@return Boolean
-	**/
-	isIgnore(annotation) {
-		return _.contains(this.blacklist, annotation.file);
-	}
-
-	/**
 	*	Default Write strategy using annotations read by the parser reader
 	*	@public
 	*	@method write
@@ -76,140 +64,34 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		for(let list of this.instrumenter.instrument(files)) {
-			list.annotations.forEach((a) => { this[list.type](a); });
-		}
-		return this;
-	}
-
-	/**
-	*	Flags a set of annotations found in the current file to ignore in the final output.
-	*	@public
-	*	@method onIgnore
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	ignore(annotation) {
-		let meta = annotation.serialize();
-		Logger.out(`Blacklist detected: ${meta.ignore.file}`, 'r');
-		this.blacklist.push(meta.ignore.file);
+		this.instrumenter.instrument(files).forEach((spec) => { this.spec(spec); });
 		return this;
 	}
 
 	/**
 	*	Builds and store a string representation of a spec template inside the spec map
 	*	@public
-	*	@method onSpec
+	*	@method spec
 	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	spec(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @spec: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a bone template.
-	*	@public
-	*	@method onBone
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	bone(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @bone: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a json template.
-	*	@public
-	*	@method onJson
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	json(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @json: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a json template.
-	*	@public
-	*	@method onWire
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	wire(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @wire: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a action template.
-	*	@public
-	*	@method onAction
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	action(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @action: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a listenTo template.
-	*	@public
-	*	@method onListenTo
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	listenTo(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @listenTo: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
-	}
-
-	/**
-	*	Builds and retrieves string representation of a plugin template.
-	*	@public
-	*	@method onPlugin
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return com.boneyard.annotation.writer.Writer
-	**/
-	plugin(annotation) {
-		if(this.isIgnore(annotation)) return this;
-		let meta = _.omit(annotation.serialize(), 'context');
-		Logger.out(`Writing @plugin: `, 'c');
-		Logger.out(`${JSON.stringify(meta)}`, 'y');
-		return this;
+		let spec = annotation.serialize();
+		console.log(spec);
+		Logger.out('----------------------', 'y');
+		return this; //this.toFile(annotation.write(spec));
 	}
 
 	/**
 	*	Writes out final spec template into a file.
 	*	@public
 	*	@method toFile
-	*	@param spec {String} string representation of a final spec
+	*	@param template {String} string representation of a final spec
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	toFile() {
-		// TODO
+	toFile(template) {
+		Logger.out(`${template}`, 'y');
+		// TODO Export to file
 		return this;
 	}
 

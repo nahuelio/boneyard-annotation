@@ -20,7 +20,7 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Model
 		*	@public
-		*	@wire({ id: "model" })
+		*	@wire({ bones: ["model"] })
 		*	@property model
 		*	@type Backbone.Model
 		**/
@@ -41,7 +41,7 @@ define(['ui/container'], function(Container) {
 		*	@public
 		*	@override
 		*	@method update
-		*	@listenTo({ events: "change", from: "model", handler: "update" })
+		*	@listenTo({ spec: "application", events: "change", from: "model", handler: "update" })
 		*	@param model {Backbone.Model} model reference
 		*	@return examples.es5.view.Content
 		**/

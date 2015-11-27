@@ -30,7 +30,7 @@ class Content extends Container {
 	/**
 	*	Model Setter
 	*	@public
-	*	@wire({ id: "model", on: "model" })
+	*	@wire({ bones: ["model"], on: "model" })
 	*	@property model
 	*	@type Backbone.Model
 	**/
@@ -43,7 +43,7 @@ class Content extends Container {
 	*	@public
 	*	@override
 	*	@method update
-	*	@listenTo({ events: "change", from: "model", handler: "update" })
+	*	@listenTo({ spec: "application", events: "change", from: "model", handler: "update" })
 	*	@param model {Backbone.Model} model reference
 	*	@return examples.es6.view.Content
 	**/

@@ -19,7 +19,6 @@ import Logger from '../../util/logger';
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
-*	@requires com.boneyard.annotation.util.Factory
 *	@requires com.boneyard.annotation.util.Logger
 **/
 class Instrumenter extends EventEmitter {
@@ -32,8 +31,7 @@ class Instrumenter extends EventEmitter {
 	constructor(writer) {
 		super();
 		this._writer = writer;
-		this._factory = new Factory(resolve(__dirname, './templates'));
-		return this.registerAll('spec.tpl', 'bone.tpl', 'action.tpl', 'plugin.tpl');
+		return this;
 	}
 
 	/**
@@ -70,14 +68,14 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Filters out all annotations on all files read
+	*	Filters out all annotations on all files read except annotations blacklisted
 	*	@public
 	*	@method all
 	*	@param files {Map} source files
 	*	@return Array
 	**/
 	all(files) {
-		return _.flatten(Array.from(files, (a, f) => { return a; }));
+		return _.compact(_.flatten(Array.from(files, (a, f) => { return !a.ignored ? a : null; })));
 	}
 
 	/**
@@ -87,26 +85,17 @@ class Instrumenter extends EventEmitter {
 	*	@param files {Map} source files
 	*	@return Iterator
 	**/
-	*instrument(files = []) {
+	instrument(files = []) {
 		let annotations = this.all(files);
-		yield { type: 'ignore', annotations: this.ignore(annotations) };
-		yield { type: 'spec', annotations: this.specs(annotations) };
-		yield { type: 'plugin', annotations: this.plugins(annotations) };
-		yield { type: 'bone', annotations: this.bones(annotations) };
-		yield { type: 'wire', annotations: this.wires(annotations) };
-		yield { type: 'action', annotations: this.actions(annotations) };
-		yield { type: 'listenTo', annotations: this.listens(annotations) };
-	}
-
-	/**
-	*	Removes files that were flagged from the whitelist.
-	*	@public
-	*	@method ignore
-	*	@param annotations {array} list of annotations
-	*	@return Array
-	**/
-	ignore(annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'ignore'); });
+		return this.specs(annotations).map((spec) => {
+			spec.plugins = this.plugins(spec, annotations);
+			spec.bones = this.bones(spec, annotations).map((bone) => {
+				bone.wire = this.wires(bone, annotations);
+				return bone;
+			});
+			spec.actions = this.actions(spec, annotations);
+			return spec;
+		});
 	}
 
 	/**
@@ -120,53 +109,53 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Filters out bone annotations from annotations list
+	*	Filters out bone annotations from annotations list by spec
 	*	@public
-	*	@property bones
-	*	@type Array
+	*	@method bones
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
+	*	@param annotations {array} list of annotations
+	*	@return Array
 	**/
-	bones(annotations) {
-		return _.filter(annotations, (a) => { return _.contains(['bone', 'json'], a.name); });
+	bones(spec, annotations) {
+		return _.filter(annotations, (a) => {
+			return (_.contains(['bone', 'json'], a.name) && spec.id === a.spec);
+		});
 	}
 
 	/**
-	*	Filters out wire annotations from annotations list
+	*	Filters out wire annotations from annotations list by bone
 	*	@public
-	*	@property wires
-	*	@type Array
+	*	@method wires
+	*	@param bone {com.boneyard.annotation.support.Bone} current bone
+	*	@param annotations {array} list of annotations
+	*	@return Array
 	**/
-	wires(annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'wire'); });
+	wires(bone, annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'wire' && a.id === bone.id); });
 	}
 
 	/**
-	*	Filters out actions annotations from annotations list
+	*	Filters out actions annotations from annotations list by spec
 	*	@public
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
 	*	@property actions
 	*	@type Array
 	**/
-	actions(annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'action'); });
+	actions(spec, annotations) {
+		return _.filter(annotations, (a) => {
+			return (_.contains(['action', 'listenTo'], a.name) && spec.id === a.spec);
+		});
 	}
 
 	/**
-	*	Filters out listenTo annotations from annotations list
+	*	Filters out plugins annotations from annotations list by spec
 	*	@public
-	*	@property listens
-	*	@type Array
-	**/
-	listens(annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'listenTo'); });
-	}
-
-	/**
-	*	Filters out plugins annotations from annotations list
-	*	@public
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
 	*	@property plugins
 	*	@type Array
 	**/
-	plugins(annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'plugin'); });
+	plugins(spec, annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'plugin' && spec.id === a.spec); });
 	}
 
 }

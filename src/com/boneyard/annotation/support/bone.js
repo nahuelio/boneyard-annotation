@@ -30,6 +30,46 @@ class Bone extends Annotation {
 	}
 
 	/**
+	*	Retrieves bone id
+	*	@public
+	*	@property id
+	*	@type String
+	**/
+	get id() {
+		return this.params.id;
+	}
+
+	/**
+	*	Retrieves spec id in which this bone belongs to
+	*	@public
+	*	@property spec
+	*	@type String
+	**/
+	get spec() {
+		return this.params.spec;
+	}
+
+	/**
+	*	Sets bone wire annotation
+	*	@public
+	*	@property wire
+	*	@type com.boneyard.annotation.support.Wire
+	**/
+	set wire(wire) {
+		this._wire = wire;
+	}
+
+	/**
+	*	Retrieves bone wire annotation
+	*	@public
+	*	@property wire
+	*	@type com.boneyard.annotation.support.Wire
+	**/
+	get wire() {
+		return this._wire;
+	}
+
+	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
@@ -45,8 +85,21 @@ class Bone extends Annotation {
 	*	@property module
 	*	@type String
 	**/
-	get module() {
+	get modulePath() {
 		return !this.params.module ? _s.replaceAll(this.path, this.config.cwd + '/', '') : this.params.module;
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) && _.defined(metadata.id) && _.defined(metadata.module);
 	}
 
 	/**
@@ -57,11 +110,21 @@ class Bone extends Annotation {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend({
-			id: this.params.id,
-			$module: this.module,
+		return _.extend({ id: this.id, module: this.module() }, super.serialize());
+	}
+
+	/**
+	*	Resolves module data structure.
+	*	@public
+	*	@method module
+	*	@return Array
+	**/
+	module() {
+		// TODO: Work on @wire annotation aggregation for $params (merge strategy)
+		return {
+			$module: this.modulePath,
 			$params: _.omit(this.params, 'id', 'spec', 'module')
-		}, super.serialize());
+		};
 	}
 
 	/**

@@ -27,6 +27,16 @@ class Action extends Annotation {
 	}
 
 	/**
+	*	Retrieves spec id in which this action belongs to
+	*	@public
+	*	@property spec
+	*	@type String
+	**/
+	get spec() {
+		return this.params.spec;
+	}
+
+	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
