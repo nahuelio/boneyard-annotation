@@ -30,11 +30,13 @@ class Model extends Backbone.Model {
 	/**
 	*	Defaults
 	*	@public
-	*	@wire({ id: "defaults" })
+	*	@wire({ bones: ["defaults"], on: "defaults" })
 	*	@property defaults
 	*	@type Object
 	**/
-	get defaults() {}
+	set _defaults(defaults) {
+		this.defaults = defaults;
+	}
 
 	/**
 	*	@static

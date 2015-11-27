@@ -8,6 +8,17 @@ import _ from 'underscore';
 _.mixin({
 
 	/**
+	*	Returns true if a given object is not null nor undefined
+	*	@public
+	*	@method defined
+	*	@param o {Object} object reference
+	*	@return Boolean
+	**/
+	defined(o) {
+		return (!_.isUndefined(o) && !_.isNull(o));
+	},
+
+	/**
 	*	Clean up expression from comments blocks, white spaces and tabs
 	*	@static
 	*	@method clean

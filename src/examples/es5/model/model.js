@@ -21,7 +21,7 @@ define(['backbone'], function(Backbone) {
 		/**
 		*	Defaults
 		*	@public
-		*	@wire({ id: "defaults" })
+		*	@wire({ bones: ["defaults"] })
 		*	@property defaults
 		*	@type Object
 		**/

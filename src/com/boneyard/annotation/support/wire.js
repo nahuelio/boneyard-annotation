@@ -21,8 +21,18 @@ class Wire extends Annotation {
 	*	@param [attrs] {Object} attributes
 	*	@return com.boneyard.annotation.support.Wire
 	**/
-	constructor(parameters = {}, context) {
-		return super(parameters, context);
+	constructor(attrs = {}) {
+		return super(attrs);
+	}
+
+	/**
+	*	Retrieves bone id
+	*	@public
+	*	@property id
+	*	@type String
+	**/
+	get id() {
+		return this.params.id;
 	}
 
 	/**

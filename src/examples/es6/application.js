@@ -3,8 +3,8 @@
 *	@module examples.es6
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@plugin({ name: "html", config: "$bone!plugins.html" })
-*	@plugin({ name: "themes", config: "$bone!plugins.themes" })
+*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "application" })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "application" })
 */
 import Container from 'ui/container';
 
@@ -18,7 +18,7 @@ import Container from 'ui/container';
 *
 *	@spec({ id: "application", include: ["header", "footer", "model"] })
 *	@bone({ id: "application", spec: "application" })
-*	@action({ bone: "application", method: "render" })
+*	@action({ bone: "application", method: "render", spec: "application" })
 */
 class Application extends Container {
 
@@ -26,7 +26,7 @@ class Application extends Container {
 	*	Initialize
 	*	@public
 	*	@method initialize
-	*	@wire({ bones: "header,footer", on: "attrs", name: "views" })
+	*	@wire({ bones: ["header", "content", "footer"], on: "attrs", name: "views" })
 	*	@param attrs {Object} constructor attributes
 	*	@return examples.es6.Application
 	*/

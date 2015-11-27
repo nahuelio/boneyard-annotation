@@ -200,6 +200,7 @@ set value(model) {
 * Parameters:
 	* `bone` {_String_} **required** | Bone Identifier
 	* `method` {_String_} **required** | Bone method to be invoke
+	* `spec` {_String_} **required** | Spec identifier in which this action belongs to
 	* `params` {_Array_} _optional_ | Optional parameters to be passed to the method invocation.
 
 Examples:
@@ -246,6 +247,7 @@ Specific use of annotation **@Action** to start listening for events on instance
 	* `Class`
 	* `Method`
 * Parameters:
+	* `spec` {_String_} **required** | Spec identifier in which this action belongs to
 	* `events` {_String_} **required** | list of events
 	* `from` {_String_} **required** | source on which the event is being fire
 	* `handler` {_String_} **required** | name of the current instance method that will handle the event.
