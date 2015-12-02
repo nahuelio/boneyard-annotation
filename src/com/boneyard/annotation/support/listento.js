@@ -22,8 +22,71 @@ class ListenTo extends Action {
 	*	@return com.boneyard.annotation.support.ListenTo
 	**/
 	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+		return super(attrs);
+	}
+
+	/**
+	*	Retrieves target bone on this Action
+	*	FIXME: Resolve Bone by using what???
+	*	@public
+	*	@override
+	*	@property bone
+	*	@type String
+	**/
+	get bone() {
+		// TODO
+		return 'TODO';
+	}
+
+	/**
+	*	Retrieves target bone method to call on this Action
+	*	@public
+	*	@override
+	*	@property method
+	*	@type String
+	**/
+	get method() {
+		return 'listenTo';
+	}
+
+	/**
+	*	Resolves ListenTo handler
+	*	FIXME: Resolve Handler by using Context
+	*	@public
+	*	@property handler
+	*	@type String
+	**/
+	get handler() {
+		return _.defined(this.params.handler) ? this.params.handler : '';
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) &&
+			_.defined(metadata.target) && _.isString(metadata.target) &&
+			_.defined(metadata.params) && _.isString(metadata.params);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return {
+			target: `$bone!${this.bone}.${this.method}`,
+			params: JSON.stringify([this.params.from, this.params.events, this.handler])
+		};
 	}
 
 	/**

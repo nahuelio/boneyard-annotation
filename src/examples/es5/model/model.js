@@ -13,8 +13,8 @@ define(['backbone'], function(Backbone) {
 	*
 	*	@requires Backbone.Model
 	*
-	*	@spec({ id: "model" })
-	*	@bone({ id: "model", spec: "model" })
+	*	@spec({ id: "specs/model/model" })
+	*	@bone({ id: "model", spec: "specs/model/model" })
 	*/
 	var Model = Boneyard.namespace('examples.es5.model.Model', Backbone.Model.inherit({
 

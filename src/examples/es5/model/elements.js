@@ -14,7 +14,7 @@ define(['backbone'], function(Backbone) {
 	*
 	*	@requires Backbone.Collection
 	*
-	*	@bone({ id: "elements", spec: "model" })
+	*	@bone({ id: "elements", spec: "specs/model/model" })
 	*/
 	var Elements = Boneyard.namespace('examples.es5.model.Elements', Backbone.Collection.inherit({
 

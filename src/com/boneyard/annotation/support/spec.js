@@ -3,6 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
+import _s from 'underscore.string';
+import template from '../engine/writer/templates/spec.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -11,6 +14,9 @@ import Annotation from '../engine/annotation/annotation';
 *	@class com.boneyard.annotation.support.Spec
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
+*	@requires underscore
+*	@requires underscore.string
+*	@requires com.boneyard.annotation.engine.writer.templates.specTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
 class Spec extends Annotation {
@@ -22,7 +28,7 @@ class Spec extends Annotation {
 	*	@return com.boneyard.annotation.support.Spec
 	**/
 	constructor(attrs = {}) {
-		return super(attrs);
+		return super(_.extend(attrs, { _template: _.template(template) }));
 	}
 
 	/**
@@ -140,10 +146,10 @@ class Spec extends Annotation {
 			id: this.id,
 			paths: this.paths(),
 			dependencies: this.dependencies(),
-			specs: this.specs.join(','),
-			bones: _.invoke(this.bones, 'serialize'),
-			actions: _.invoke(this.actions, 'serialize'),
-			plugins: _.invoke(this.plugins, 'serialize')
+			specs: this.parent(),
+			bones: this.writeBones(),
+			actions: this.writeActions(),
+			plugins: this.writePlugins()
 		}, this.author(), super.serialize());
 	}
 
@@ -154,8 +160,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	paths() {
-		// TODO
-		return '';
+		return (_.defined(this.specs) && this.specs.length > 0) ? _s.quote(this.specs.join("','"), "'") : "";
 	}
 
 	/**
@@ -165,8 +170,47 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	dependencies() {
-		// TODO
-		return '';
+		return this.parent();
+	}
+
+	/**
+	*	Resolves parent specs decorators (parents) if declared and returns them
+	*	@public
+	*	@method dependencies
+	*	@return String
+	**/
+	parent() {
+		return this.specs.map((s) => { return _s.strRightBack(s, '/'); }).join(', ');
+	}
+
+	/**
+	*	Resolves bones serialization associated with this spec
+	*	@public
+	*	@method writeBones
+	*	@return String
+	**/
+	writeBones() {
+		return _.invoke(this.bones, 'write').join(', ').replace(/\n/g, '');
+	}
+
+	/**
+	*	Resolves actions serialization associated with this spec
+	*	@public
+	*	@method writeActions
+	*	@return String
+	**/
+	writeActions() {
+		return _.invoke(this.actions, 'write').join(', ').replace(/\n/g, '');
+	}
+
+	/**
+	*	Resolves plugins serialization associated with this spec
+	*	@public
+	*	@method writePlugins
+	*	@return String
+	**/
+	writePlugins() {
+		return _.invoke(this.plugins, 'write').join(', ').replace(/\n/g, '');
 	}
 
 	/**

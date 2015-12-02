@@ -5,6 +5,7 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
+import template from '../engine/writer/templates/bone.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -15,6 +16,7 @@ import Annotation from '../engine/annotation/annotation';
 *
 *	@requires underscore
 *	@requires underscore.string
+*	@requires com.boneyard.annotation.engine.writer.templates.boneTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
 class Bone extends Annotation {
@@ -26,7 +28,7 @@ class Bone extends Annotation {
 	*	@return com.boneyard.annotation.support.Bone
 	**/
 	constructor(attrs = {}) {
-		return super(attrs);
+		return super(_.extend(attrs, { _template: _.template(template) }));
 	}
 
 	/**
@@ -47,6 +49,16 @@ class Bone extends Annotation {
 	**/
 	get spec() {
 		return this.params.spec;
+	}
+
+	/**
+	*	Retrieves singleton flag
+	*	@public
+	*	@property singleton
+	*	@type Boolean
+	**/
+	get singleton() {
+		return this.params.singleton;
 	}
 
 	/**
@@ -110,7 +122,7 @@ class Bone extends Annotation {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend({ id: this.id, module: this.module() }, super.serialize());
+		return _.extend({ id: this.id, module: JSON.stringify(this.module()) }, super.serialize());
 	}
 
 	/**
@@ -120,7 +132,6 @@ class Bone extends Annotation {
 	*	@return Array
 	**/
 	module() {
-		// TODO: Work on @wire annotation aggregation for $params (merge strategy)
 		return {
 			$module: this.modulePath,
 			$params: _.omit(this.params, 'id', 'spec', 'module')

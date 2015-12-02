@@ -65,26 +65,6 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
-	*	Retrieves annotation context
-	*	@public
-	*	@property context
-	*	@type com.boneyard.annotation.engine.annotation.Context
-	**/
-	get context() {
-		return this._context;
-	}
-
-	/**
-	*	Sets the annotation context
-	*	@public
-	*	@property context
-	*	@type com.boneyard.annotation.engine.annotation.Context
-	**/
-	set context(context) {
-		this._context = context;
-	}
-
-	/**
 	*	Retrieves absolute filepath in which this annotation was found
 	*	@public
 	*	@property path
@@ -115,6 +95,46 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation context
+	*	@public
+	*	@property context
+	*	@type com.boneyard.annotation.engine.annotation.Context
+	**/
+	get context() {
+		return this._context;
+	}
+
+	/**
+	*	Sets the annotation context
+	*	@public
+	*	@property context
+	*	@type com.boneyard.annotation.engine.annotation.Context
+	**/
+	set context(context) {
+		this._context = context;
+	}
+
+	/**
+	*	Retrieves annotation template
+	*	@public
+	*	@property template
+	*	@type Function
+	**/
+	get template() {
+		return this._template;
+	}
+
+	/**
+	*	Sets the annotation template
+	*	@public
+	*	@property template
+	*	@type Function
+	**/
+	set template(template) {
+		this._template = template;
+	}
+
+	/**
 	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
 	*	otherwise returns false.
 	*	@public
@@ -133,22 +153,20 @@ class Annotation extends EventEmitter {
 	*	@return Object
 	**/
 	serialize() {
-		return {
-			file: this.path,
-			type: this.name,
-			params: this.params
-		};
+		return {};
 	}
 
 	/**
 	*	Default strategy that projects serialized annotation metadata into a template and returns the result as a string.
 	*	@public
+	*	@throws Error
 	*	@method write
-	*	@param metadata {Object} metadata retrieved by serialization strategy
 	*	@return String
 	**/
-	write(metadata) {
-		if(!this.validate(metadata) || !this.template) throw new Error(``);
+	write() {
+		let metadata = this.serialize();
+		if(!this.validate(metadata) || !this.template)
+			throw new Error(`Annotation ${this.name} is not valid with metadata ${JSON.stringify(metadata)}`);
 		return this.template(metadata);
 	}
 

@@ -3,6 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
+import _s from 'underscore.string';
+import template from '../engine/writer/templates/plugin.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -11,6 +14,9 @@ import Annotation from '../engine/annotation/annotation';
 *	@class com.boneyard.annotation.support.Plugin
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
+*	@requires underscore
+*	@requires underscore.string
+*	@requires com.boneyard.annotation.engine.writer.templates.pluginTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
 class Plugin extends Annotation {
@@ -22,8 +28,7 @@ class Plugin extends Annotation {
 	*	@return com.boneyard.annotation.support.Plugin
 	**/
 	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+		return super(_.extend(attrs, { _template: _.template(template) }));
 	}
 
 	/**
@@ -43,7 +48,35 @@ class Plugin extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__module'];
+		return ['__module', '__class'];
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) &&
+			_.defined(metadata.name) && _.isString(metadata.name) && _.defined(metadata.config);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return String
+	**/
+	serialize() {
+		return {
+			name: this.params.name,
+			config: JSON.stringify(this.params.config)
+		};
 	}
 
 	/**

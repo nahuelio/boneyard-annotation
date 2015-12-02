@@ -7,7 +7,6 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import Factory from '../../util/factory';
 import Logger from '../../util/logger';
 
 /**
@@ -45,37 +44,14 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
-	*	Retrieves Writer Factory
-	*	@public
-	*	@property factory
-	*	@type com.boneyard.annotation.util.Factory
-	**/
-	get factory() {
-		return this._factory;
-	}
-
-	/**
-	*	Registers a list of template inside the factory
-	*	@public
-	*	@method registerAll
-	*	@param paths {Array} array of template paths
-	*	@return com.boneyard.annotation.engine.writer.Instrumenter
-	**/
-	registerAll(paths = []) {
-		if(!paths || !_.isArray(paths) || !this.factory.exists(paths)) return this;
-		paths.forEach((p) => { this.factory.register(p); });
-		return this;
-	}
-
-	/**
-	*	Filters out all annotations on all files read except annotations blacklisted
+	*	Setup all annotations of all specs to be processed by this instrumenter
 	*	@public
 	*	@method all
 	*	@param files {Map} source files
 	*	@return Array
 	**/
 	all(files) {
-		return _.compact(_.flatten(Array.from(files, (a, f) => { return !a.ignored ? a : null; })));
+		return _.compact(_.flatten(Array.from(files, (a) => { return this.ignore(a[1]); })));
 	}
 
 	/**
@@ -99,10 +75,22 @@ class Instrumenter extends EventEmitter {
 	}
 
 	/**
+	*	Filters out annotation flagged with a ignore annotation
+	*	@public
+	*	@method ignore
+	*	@param annotations {array} list of annotations
+	*	@return
+	**/
+	ignore(annotations) {
+		return annotations.map((a) => { return !a.ignored ? a : null; });
+	}
+
+	/**
 	*	Filters out spec annotations from annotations list
 	*	@public
-	*	@property specs
-	*	@type Array
+	*	@method specs
+	*	@param annotations {array} list of annotations
+	*	@return Array
 	**/
 	specs(annotations) {
 		return _.filter(annotations, (a) => { return (a.name === 'spec'); });

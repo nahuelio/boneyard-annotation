@@ -8,7 +8,7 @@ define([], function() {
 	/**
 	*	Plugins Configuration
 	*	@public
-	*	@json({ id: "plugins", spec: "application" })
+	*	@json({ id: "plugins", spec: "specs/application" })
 	*	@property plugins
 	*	@type Object
 	**/

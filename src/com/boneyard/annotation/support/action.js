@@ -3,6 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
+import _s from 'underscore.string';
+import template from '../engine/writer/templates/action.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -11,6 +14,9 @@ import Annotation from '../engine/annotation/annotation';
 *	@class com.boneyard.annotation.support.Action
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
+*	@requires underscore
+*	@requires underscore.string
+*	@requires com.boneyard.annotation.engine.writer.templates.actionTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 **/
 class Action extends Annotation {
@@ -22,8 +28,27 @@ class Action extends Annotation {
 	*	@return com.boneyard.annotation.support.Action
 	**/
 	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+		return super(_.extend(attrs, { _template: _.template(template) }));
+	}
+
+	/**
+	*	Retrieves target bone on this Action
+	*	@public
+	*	@property bone
+	*	@type String
+	**/
+	get bone() {
+		return this.params.bone;
+	}
+
+	/**
+	*	Retrieves target bone method to call on this Action
+	*	@public
+	*	@property method
+	*	@type String
+	**/
+	get method() {
+		return this.params.method;
 	}
 
 	/**
@@ -34,6 +59,30 @@ class Action extends Annotation {
 	**/
 	get spec() {
 		return this.params.spec;
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) && _.defined(metadata.target) && _.isString(metadata.target);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return { target: `$bone!${this.bone}.${this.method}`, params: JSON.stringify(this.params.params) };
 	}
 
 	/**

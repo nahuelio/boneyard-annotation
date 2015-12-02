@@ -3,7 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import fs from 'fs-extra';
 import _ from 'underscore';
+import _s from 'underscore.string';
 
 _.mixin({
 
@@ -27,6 +29,24 @@ _.mixin({
 	**/
 	clean(expr = "") {
 		return expr.replace(/[\*|\\|\s|\t]+/gi, '');
+	},
+
+	/**
+	*	Clean up empty lines from a given String
+	*	@static
+	*	@method cleanEmptyLines
+	*	@param str {String} input string
+	*	@return String
+	**/
+	cleanEmptyLines(str = "") {
+		return str.replace(/^\s*[\r\n]/gm, '');
 	}
 
 });
+
+/**
+*	Template aggregation parsing added to require node strategy
+**/
+require.extensions['.tpl'] = function(module, filename) {
+    module.exports = fs.readFileSync(filename, 'utf8');
+};

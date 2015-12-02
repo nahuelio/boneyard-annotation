@@ -13,7 +13,7 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@bone({ id: "content", spec: "application" })
+*	@bone({ id: "content", spec: "specs/application" })
 */
 class Content extends Container {
 
@@ -43,7 +43,7 @@ class Content extends Container {
 	*	@public
 	*	@override
 	*	@method update
-	*	@listenTo({ spec: "application", events: "change", from: "model", handler: "update" })
+	*	@listenTo({ spec: "specs/application", events: "change", from: "model", handler: "update" })
 	*	@param model {Backbone.Model} model reference
 	*	@return examples.es6.view.Content
 	**/

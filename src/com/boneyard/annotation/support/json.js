@@ -22,8 +22,7 @@ class Json extends Bone {
 	*	@return com.boneyard.annotation.support.Json
 	**/
 	constructor(attrs = {}) {
-		super(attrs);
-		return this;
+		return super(attrs);
 	}
 
 	/**
@@ -44,12 +43,7 @@ class Json extends Bone {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend({
-			id: this.params.id,
-			$module: this.module,
-			$params: _.omit(this.params, 'id', 'spec', 'module'),
-			json: true
-		}, super.serialize());
+		return super.serialize();
 	}
 
 	/**
