@@ -164,7 +164,9 @@ class Reader  {
 		try {
 			this.factory.register(metadata._name.toLowerCase());
 			this.registry.push(this.getAnnotation(metadata));
-		} catch(ex) {}
+		} catch(ex) {
+			Logger.error(ex.message);
+		}
 		return this;
 	}
 

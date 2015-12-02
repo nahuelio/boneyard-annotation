@@ -190,7 +190,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	writeBones() {
-		return _.invoke(this.bones, 'write').join(', ');
+		return _.invoke(this.bones, 'write').join(', ').replace(/\n/g, '');
 	}
 
 	/**
@@ -200,7 +200,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	writeActions() {
-		return _.invoke(this.actions, 'write').join(', ');
+		return _.invoke(this.actions, 'write').join(', ').replace(/\n/g, '');
 	}
 
 	/**
@@ -210,7 +210,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	writePlugins() {
-		return _.invoke(this.plugins, 'write').join(', ');
+		return _.invoke(this.plugins, 'write').join(', ').replace(/\n/g, '');
 	}
 
 	/**

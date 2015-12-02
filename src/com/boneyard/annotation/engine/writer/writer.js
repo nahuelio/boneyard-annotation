@@ -64,7 +64,7 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		this.instrumenter.instrument(files).forEach((spec) => { this.toFile(spec.write()); });
+		this.instrumenter.instrument(files).forEach((spec) => { this.toFile(_.cleanEmptyLines(spec.write())); });
 		return this;
 	}
 

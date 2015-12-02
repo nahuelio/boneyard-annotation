@@ -29,6 +29,17 @@ _.mixin({
 	**/
 	clean(expr = "") {
 		return expr.replace(/[\*|\\|\s|\t]+/gi, '');
+	},
+
+	/**
+	*	Clean up empty lines from a given String
+	*	@static
+	*	@method cleanEmptyLines
+	*	@param str {String} input string
+	*	@return String
+	**/
+	cleanEmptyLines(str = "") {
+		return str.replace(/^\s*[\r\n]/gm, '');
 	}
 
 });

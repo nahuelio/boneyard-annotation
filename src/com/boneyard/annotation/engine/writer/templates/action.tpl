@@ -1,1 +1,1 @@
-{ <%= target %>: [<%= params %>] }
+{ "<%= target %>": <%= params %> }

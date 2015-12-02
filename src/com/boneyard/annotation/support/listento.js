@@ -71,8 +71,8 @@ class ListenTo extends Action {
 	**/
 	validate(metadata) {
 		return super.validate(metadata) &&
-			_.defined(metadata.target) && _.isObject(metadata.target) &&
-			_.defined(metadata.params) && _.isObject(metadata.params);
+			_.defined(metadata.target) && _.isString(metadata.target) &&
+			_.defined(metadata.params) && _.isString(metadata.params);
 	}
 
 	/**
