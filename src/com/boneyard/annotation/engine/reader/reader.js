@@ -40,6 +40,7 @@ class Reader  {
 		this.tokenizer = tokenizer;
 		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		this.factory = new Factory(resolve(__dirname, '../../support/'));
+		this.blacklist = [];
 		return this;
 	}
 
@@ -163,9 +164,10 @@ class Reader  {
 		if(!metadata) return this;
 		try {
 			this.factory.register(metadata._name.toLowerCase());
-			this.registry.push(this.getAnnotation(metadata));
+			let annotation = this.getAnnotation(metadata);
+			if(!this.onIgnore(annotation)) this.registry.push(annotation);
 		} catch(ex) {
-			Logger.error(ex.message);
+			Logger.warn(ex.message);
 		}
 		return this;
 	}
@@ -194,6 +196,21 @@ class Reader  {
 			_path: this.current,
 			_config: Parser.config
 		}, metadata));
+	}
+
+	/**
+	*	Returns true if current annotation was flagged to be blacklisted, otherwise it returns false.
+	*	@public
+	*	@method onIgnore
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return Boolean
+	**/
+	onIgnore(annotation) {
+		if(annotation._name === 'ignore') {
+			this.blacklist.push(annotation._path);
+			return true;
+		}
+		return false;
 	}
 
 	/**

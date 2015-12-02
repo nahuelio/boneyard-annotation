@@ -40,6 +40,23 @@ class Parser extends EventEmitter {
 	}
 
 	/**
+	*	Filters out all annotations that are not blacklisted as ignored
+	*	@public
+	*	@method get
+	*	@param annotations {Map} annotations map reference
+	*	@return Map
+	**/
+	get(annotations) {
+		this.reader.blacklist.forEach((i) => {
+			if(annotations.has(i)) {
+				Logger.error(`Ignoring "${i}"...`);
+				return annotations.delete(i);
+			}
+		});
+		return annotations;
+	}
+
+	/**
 	*	Default Before Parse Handler
 	*	@public
 	*	@method beforeParse
@@ -88,7 +105,7 @@ class Parser extends EventEmitter {
 	*	@return com.boneyard.annotation.engine.parser.Parser
 	**/
 	afterParse() {
-		this.writer.write(this.reader.annotations);
+		this.writer.write(this.get(this.reader.annotations));
 		this.emit(Parser.Events.end, this);
 		return this;
 	}

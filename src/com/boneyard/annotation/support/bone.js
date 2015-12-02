@@ -62,23 +62,23 @@ class Bone extends Annotation {
 	}
 
 	/**
-	*	Sets bone wire annotation
+	*	Sets bones wiring injections
 	*	@public
-	*	@property wire
-	*	@type com.boneyard.annotation.support.Wire
+	*	@property wires
+	*	@type Array
 	**/
-	set wire(wire) {
-		this._wire = wire;
+	set wires(wires) {
+		this._wires = wires;
 	}
 
 	/**
-	*	Retrieves bone wire annotation
+	*	Retrieves bone wiring injections
 	*	@public
-	*	@property wire
-	*	@type com.boneyard.annotation.support.Wire
+	*	@property wires
+	*	@type Array
 	**/
-	get wire() {
-		return this._wire;
+	get wires() {
+		return this._wires;
 	}
 
 	/**
@@ -132,6 +132,7 @@ class Bone extends Annotation {
 	*	@return Array
 	**/
 	module() {
+		//console.log(_.invoke(this.wires, 'serialize'));
 		return {
 			$module: this.modulePath,
 			$params: _.omit(this.params, 'id', 'spec', 'module')

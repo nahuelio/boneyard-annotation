@@ -51,7 +51,7 @@ class Instrumenter extends EventEmitter {
 	*	@return Array
 	**/
 	all(files) {
-		return _.compact(_.flatten(Array.from(files, (a) => { return this.ignore(a[1]); })));
+		return _.compact(_.flatten(Array.from(files, (a) => { return a; })));
 	}
 
 	/**
@@ -66,23 +66,12 @@ class Instrumenter extends EventEmitter {
 		return this.specs(annotations).map((spec) => {
 			spec.plugins = this.plugins(spec, annotations);
 			spec.bones = this.bones(spec, annotations).map((bone) => {
-				bone.wire = this.wires(bone, annotations);
+				bone.wires = this.wires(bone, annotations);
 				return bone;
 			});
 			spec.actions = this.actions(spec, annotations);
 			return spec;
 		});
-	}
-
-	/**
-	*	Filters out annotation flagged with a ignore annotation
-	*	@public
-	*	@method ignore
-	*	@param annotations {array} list of annotations
-	*	@return
-	**/
-	ignore(annotations) {
-		return annotations.map((a) => { return !a.ignored ? a : null; });
 	}
 
 	/**
@@ -119,7 +108,7 @@ class Instrumenter extends EventEmitter {
 	*	@return Array
 	**/
 	wires(bone, annotations) {
-		return _.filter(annotations, (a) => { return (a.name === 'wire' && a.id === bone.id); });
+		return _.filter(annotations, (a) => { return (a.name === 'wire' && _.contains(a.bones, bone.id)); });
 	}
 
 	/**

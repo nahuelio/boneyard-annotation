@@ -26,13 +26,60 @@ class Wire extends Annotation {
 	}
 
 	/**
-	*	Retrieves bone id
+	*	Retrieves list of bones to be injected
 	*	@public
-	*	@property id
+	*	@property bones
+	*	@type Array
+	**/
+	get bones() {
+		return this.params.bones;
+	}
+
+	/**
+	*	Retrieves attributes in which bones should be injected
+	*	@public
+	*	@property onAttr
 	*	@type String
 	**/
-	get id() {
-		return this.params.id;
+	get onAttr() {
+		return this.params.on;
+	}
+
+	/**
+	*	Retrieves property name of attribute in which bones should injected
+	*	@public
+	*	@property onName
+	*	@type String
+	**/
+	get onName() {
+		return this.params.name;
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) &&
+			_.defined(metadata.bones) && _.isArray(metadata.bones) &&
+			_.defined(metadata.on) && _.isString(metadata.on);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		// TODO: Continue here...
+		return {};
 	}
 
 	/**
