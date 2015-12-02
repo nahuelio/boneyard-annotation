@@ -122,7 +122,7 @@ class Bone extends Annotation {
 	*	@return Object
 	**/
 	serialize() {
-		return { [this.id]: _.extend(this.module(), super.serialize()) };
+		return _.extend({ id: this.id, module: JSON.stringify(this.module()) }, super.serialize());
 	}
 
 	/**

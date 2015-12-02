@@ -70,10 +70,13 @@ class Plugin extends Annotation {
 	*	@public
 	*	@override
 	*	@method serialize
-	*	@return Object
+	*	@return String
 	**/
 	serialize() {
-		return { [`${this.params.name}`] : this.params.config };
+		return {
+			name: this.params.name,
+			config: JSON.stringify(this.params.config)
+		};
 	}
 
 	/**

@@ -147,9 +147,9 @@ class Spec extends Annotation {
 			paths: this.paths(),
 			dependencies: this.dependencies(),
 			specs: this.parent(),
-			bones: JSON.stringify(_.invoke(this.bones, 'serialize')),
-			actions:JSON.stringify( _.invoke(this.actions, 'serialize')),
-			plugins: JSON.stringify(_.invoke(this.plugins, 'serialize'))
+			bones: this.writeBones(),
+			actions: this.writeActions(),
+			plugins: this.writePlugins()
 		}, this.author(), super.serialize());
 	}
 
@@ -160,7 +160,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	paths() {
-		return this.specs;
+		return (_.defined(this.specs) && this.specs.length > 0) ? _s.quote(this.specs.join("','"), "'") : "";
 	}
 
 	/**
@@ -181,6 +181,36 @@ class Spec extends Annotation {
 	**/
 	parent() {
 		return this.specs.map((s) => { return _s.strRightBack(s, '/'); }).join(', ');
+	}
+
+	/**
+	*	Resolves bones serialization associated with this spec
+	*	@public
+	*	@method writeBones
+	*	@return String
+	**/
+	writeBones() {
+		return _.invoke(this.bones, 'write').join(', ');
+	}
+
+	/**
+	*	Resolves actions serialization associated with this spec
+	*	@public
+	*	@method writeActions
+	*	@return String
+	**/
+	writeActions() {
+		return _.invoke(this.actions, 'write').join(', ');
+	}
+
+	/**
+	*	Resolves plugins serialization associated with this spec
+	*	@public
+	*	@method writePlugins
+	*	@return String
+	**/
+	writePlugins() {
+		return _.invoke(this.plugins, 'write').join(', ');
 	}
 
 	/**

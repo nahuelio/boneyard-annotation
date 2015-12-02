@@ -71,9 +71,7 @@ class Action extends Annotation {
 	*	@return Boolean
 	**/
 	validate(metadata) {
-		return super.validate(metadata) &&
-			_.defined(metadata.bone) && _.isString(metadata.bone) &&
-			_.defined(metadata.method) && _.isString(metadata.method);
+		return super.validate(metadata) && _.defined(metadata.target) && _.isObject(metadata.target));
 	}
 
 	/**
@@ -81,10 +79,10 @@ class Action extends Annotation {
 	*	@public
 	*	@override
 	*	@method serialize
-	*	@return Object
+	*	@return String
 	**/
 	serialize() {
-		return { [`$bone!${this.bone}.${this.method}`]: this.params.params };
+		return { target: `$bone!${this.bone}.${this.method}`, params: JSON.stringify(this.params.params) };
 	}
 
 	/**

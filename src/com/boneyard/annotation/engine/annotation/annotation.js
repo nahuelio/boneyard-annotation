@@ -159,11 +159,14 @@ class Annotation extends EventEmitter {
 	/**
 	*	Default strategy that projects serialized annotation metadata into a template and returns the result as a string.
 	*	@public
+	*	@throws Error
 	*	@method write
 	*	@return String
 	**/
-	write(metadata) {
-		if(!this.validate(metadata) || !this.template) throw new Error(``);
+	write() {
+		let metadata = this.serialize();
+		if(!this.validate(metadata) || !this.template)
+			throw new Error(`Annotation ${this.name} is not valid with metadata ${JSON.stringify(metadata)}`);
 		return this.template(metadata);
 	}
 

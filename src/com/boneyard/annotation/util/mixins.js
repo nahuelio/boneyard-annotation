@@ -5,6 +5,7 @@
 
 import fs from 'fs-extra';
 import _ from 'underscore';
+import _s from 'underscore.string';
 
 _.mixin({
 

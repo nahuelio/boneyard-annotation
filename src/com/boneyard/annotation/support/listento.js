@@ -27,7 +27,7 @@ class ListenTo extends Action {
 
 	/**
 	*	Retrieves target bone on this Action
-	*	FIXME: Resolve Bone by using something???
+	*	FIXME: Resolve Bone by using what???
 	*	@public
 	*	@override
 	*	@property bone
@@ -71,8 +71,8 @@ class ListenTo extends Action {
 	**/
 	validate(metadata) {
 		return super.validate(metadata) &&
-			_.defined(metadata.events) && _.isString(metadata.events) &&
-			_.defined(metadata.from) && _.isString(metadata.from);
+			_.defined(metadata.target) && _.isObject(metadata.target) &&
+			_.defined(metadata.params) && _.isObject(metadata.params);
 	}
 
 	/**
@@ -83,7 +83,10 @@ class ListenTo extends Action {
 	*	@return Object
 	**/
 	serialize() {
-		return { [`$bone!${this.bone}.${this.method}`]: [this.params.from, this.params.events, this.handler] };
+		return {
+			target: `$bone!${this.bone}.${this.method}`,
+			params: JSON.stringify([this.params.from, this.params.events, this.handler])
+		};
 	}
 
 	/**
