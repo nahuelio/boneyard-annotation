@@ -8,7 +8,6 @@ This document might be subjected to change.
 
 ### Scope Types
 ---
-- Module
 - Class
 - Constructor
 - Method
@@ -19,16 +18,16 @@ This document might be subjected to change.
 ---
 #### @spec
 
-* Scope: `Class`
+* Scope:
+	* `Class`
 * Parameters:
-	* `id` {_String_} **required** | _Spec Identifier_
-	* `include` {_Array_} _optional_ | _Array of parent spec ids_
-
-Examples:
+	* `id` {_String_} **required** | Spec unique identifier
+	* `include` {_Array_} _optional_ | List if parent specs that decorates the current spec
+* Examples:
 
 ```js
 /**
-*	@spec({ id: "configuration" })
+*	@spec({ id: 'specs/configuration' })
 **/
 class Configuration {
   ...
@@ -37,7 +36,7 @@ class Configuration {
 
 ```js
 /**
-*	@spec({ id: "main", include: ["header", "footer", "body"]})
+*	@spec({ id: 'specs/main', include: ['specs/header', 'specs/footer', 'specs/content'] })
 **/
 class ApplicationBootstrap extends Container {
   ...
@@ -47,24 +46,23 @@ class ApplicationBootstrap extends Container {
 ---
 #### @bone
 
-* Scope: `Class`
+* Scope:
+	* `Class`
 * Parameters:
 	* `id` {_String_} **required** | Bone Identifier
-	* `spec` {_String_} **required** | Spec id in which the bone belongs to.
-	* `module` {_String_} _optional_ | Module path (basepath resolution will use requirejs config)
+	* `specs` {_Array_} **required** | Array of specs id in which the bone will belong to
 	* `singleton` {_Boolean_} _optional_ | Flags the module to create one and only one instance (Default is Non-singleton).
-
-Examples:
+* Examples:
 
 ```js
 /**
 *	Declaration for registering a bone of type "Account" that extends "Backbone.Model".
 *	Bone identifier set to "account".
-*	Belongs to Spec "main".
+*	Belongs to Spec "specs/main".
 *	Note: Module path will be retrieved automatically based on the file location
 *	if not specified manually.
 *
-*	@bone({ id: "account", spec: "main" })
+*	@bone({ id: 'account', specs: ['specs/main'] })
 **/
 class Account extends Backbone.Model {
   ...
@@ -73,27 +71,13 @@ class Account extends Backbone.Model {
 
 ```js
 /**
-*	Declaration for registering a bone of type "Addresses" that extends "Backbone.Collection".
-*	Bone identifier set to "addresses".
-*	Belongs to Spec "account".
-*	Module is manually set to retrieve class constructor on specific location.
-*
-*	@bone({ id: "addresses", spec: "account", module: "myproject/collections/addresses" })
-**/
-class Addresses extends Backbone.Collection {
-  ...
-}
-```
-
-```js
-/**
 *	Declaration for registering a bone of type "UserService" that extends "Service".
 *	Bone identifier set to "userService".
-*	Belongs to Spec "user".
+*	Belongs to Spec "specs/services/user".
 *	Module is manually set to retrieve class constructor on specific location.
-*	Flag class to resolve instanciation as a singleton (Multiple injects will reference same instance)
+*	Flag class to resolve instanciates as a singleton (Multiple injects will reference same instance)
 *
-*	@bone({ id: "userService", spec: "user", module: "myproject/service/user-service", singleton: true })
+*	@bone({ id: 'userService', specs: ['specs/services/user'], singleton: true })
 **/
 class UserService extends Service {
   ...
@@ -103,26 +87,23 @@ class UserService extends Service {
 ---
 #### @wire (**Review**)
 
-**Note: This may affect $params special annotation when multiple params are passed**
-
 * Scope:
 	* `Constructor`
 	* `Field`
 * Parameters
-	* `id` {_String_} **required** | Bone identifier, or
-	* `on` {_String_} _optional_ | Will work for injections on constructors (Es5/Es6) and also in constructors/setters for Es6.
+	* `id` {_String_} **required** | Unique Bone identifier
+	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor.
     **This parameter will be automatically wired on scope field for Es5.**
 	* `name` {_String_} _optional_ | Optionally specified the property name the bone will be passed as part of the `on` object name
-	* `params` {_Array_} _optional_ | Optional parameters to pass to the bone instanciatation at the moment of injection.
-
-Examples:
+	* `params` {_Array_} _optional_ | Defaults Parameters to be pass on at the moment of injection
+* Examples:
 
 **ES5:**
 
 ```js
 /**
-*	Scope: Constructor
-*	@wire({ id: "myconfig", on: "config" })
+*  Scope: Constructor
+*  @wire({ id: 'myconfig', on: 'config' })
 **/
 constructor: function(config, other) {
   this.config = config;
@@ -132,9 +113,9 @@ constructor: function(config, other) {
 
 ```js
 /**
-*	Scope: Constructor (multiple bones to be injected in the same parameter attribute)
-*	@wire({ id: "header", on: "attrs", name: "views", params: [{ cls: 'myheader', autoId: true }] })
-*	@wire({ id: "footer", on: "attrs", name: "views" })
+*  Scope: Constructor (multiple bones to be injected in the same parameter attribute)
+*  @wire({ id: 'header', on: 'attrs.views', params: [{ cls: 'myheader', autoId: true }] })
+*  @wire({ id: 'footer', on: 'attrs.views' })
 **/
 constructor: function(attrs, other) {
   return MyClass.apply(this, arguments);
@@ -143,9 +124,9 @@ constructor: function(attrs, other) {
 
 ```js
 /**
-*	Scope: Field
-*	Will execute as @Action (Assignment)
-*	@wire({ id: "search" })
+*  Scope: Field
+*  Will execute as @Action (Assignment)
+*  @wire({ id: 'search' })
 **/
 search: null,
 
@@ -159,8 +140,8 @@ initialize: function(attrs) {
 
 ```js
 /**
-*	Scope: Constructor
-*	@wire({ id: "mymodel", on: "attrs", name: "model" })
+*  Scope: Constructor
+*  @wire({ id: 'mymodel', on: 'attrs.model' })
 **/
 constructor(attrs) {
   this.model = attrs.model; // <- "[on].[name]" -> mymodel"
@@ -170,23 +151,64 @@ constructor(attrs) {
 
 ```js
 /**
-*	Scope: Constructor (multiple bones)
-*	@wire({ bones: "header, footer", on: "attrs", name: "views" })
-**/
-constructor(attrs) {
-  return super(attrs);
-}
-```
-
-```js
-/**
-*	Scope: Field (Setter)
-*	Will execute as @Action (Assignment)
-*	@wire({ id: "mymodel", on: "model" })
+*  Scope: Field (Setter)
+*  Will execute as @Action (Assignment)
+*  @wire({ id: 'mymodel', params: '$bone!defaults' })
 **/
 set value(model) {
   this.property = model.get('value');
 }
+```
+---
+#### @inject (**Review**)
+
+Annotation that creates a bone on fly that has not been registered with the annotation @bone in the source code.
+This behave similar to @wire but specially for built-ins classes provided by boneyard will add a new bone and inject it
+into the specific attribute.
+
+* Scope:
+	* Constructor
+	* Field
+* Parameters:
+	* `path` {_String_} **required** | Path to the file on which the class/object is declared and exported via amd.
+	* `specs` {_Array_} **required** | Specifies on which specs the new module bone should be part of.
+	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor.
+	* `params` {_Array_} _optional_ | Defaults Parameters to be pass on the instanciation process for the module bone.
+	* `singleton` {_Boolean_} _optional_ | Flags the module to create one and only one instance (Default is Non-singleton).
+* Examples:
+
+```js
+...
+/**
+*  Scope: Constructor
+*  @inject({ path: 'ui/misc/panel', spec: 'specs/application', on: 'attrs.views', params: [{ title : 'My Title' }] })
+**/
+constructor(...attrs) {
+  super(...attrs);
+  ...
+}
+```
+
+```js
+...
+/**
+*  Scope: Field (Setter ES6)
+*  @inject({ path: 'model/elements', spec: 'specs/application', params: [1, 2, 3] })
+**/
+set mycollection(collection) {
+  this.collection = collection;
+}
+```
+
+```js
+...
+/**
+*  Scope: Field (ES5)
+*  @inject({ path: 'model/elements', spec: 'specs/application', params: '$bone!elements' })
+**/
+...
+collection: null,
+...
 ```
 
 ---
@@ -195,15 +217,12 @@ set value(model) {
 - Notes: Resolve multiple instances resolution in order to implement this
 
 * Scope:
-	* `Class`
 	* `Method`
 * Parameters:
 	* `bone` {_String_} **required** | Bone Identifier
-	* `method` {_String_} **required** | Bone method to be invoke
-	* `spec` {_String_} **required** | Spec identifier in which this action belongs to
+	* `spec` {_String_} **required** | Specifies on which spec the action should be part of.
 	* `params` {_Array_} _optional_ | Optional parameters to be passed to the method invocation.
-
-Examples:
+* Examples:
 
 ```js
 class User extends Backbone.Model {
@@ -211,7 +230,7 @@ class User extends Backbone.Model {
 
   /**
   *	Action Declaration to execute the method "fetch" on the bone "user"
-  *	@action({ bone: "user", method: "fetch" })
+  *	@action({ bone: 'user', spec: 'specs/view/profile' })
   **/
   fetch() {
 
@@ -228,7 +247,7 @@ class Application extends Container {
   /**
   *	Action Declaration to execute the method "fetch" on the bone "user"
   *	with params passed to the method "render".
-  *	@action({ bone: "application", method: "render", params:[{ method: "after", target: "div.menu" }] })
+  *	@action({ bone: "application", spec: 'specs/application', params: [{ method: "after", target: "div.menu" }] })
   **/
   render() {
 
@@ -244,13 +263,11 @@ class Application extends Container {
 Specific use of annotation **@Action** to start listening for events on instances of a given class.
 
 * Scope:
-	* `Class`
 	* `Method`
 * Parameters:
-	* `spec` {_String_} **required** | Spec identifier in which this action belongs to
-	* `events` {_String_} **required** | list of events
-	* `from` {_String_} **required** | source on which the event is being fire
-	* `handler` {_String_} **required** | name of the current instance method that will handle the event.
+	* `spec` {_String_} **required** | Specifies on which spec the action should be part of.
+	* `events` {_String_} **required** | list of events to start listen to (comma separated)
+	* `from` {_String_} **required** | specifies which property of the actual instance the event should be listening from.
 
 Examples:
 
@@ -258,22 +275,23 @@ Examples:
 class Grid extends Table {
 
   /**
-  *	@wire({ id: "elements", on: "attrs", name: "collection" })
+  *	@wire({ id: 'elements', on: 'attrs.collection' })
   **/
-  constructor(attrs) {
+  constructor(...attrs) {
     // Backbone automatically assign attrs.collection to this.collection (Backbone.View)
+	super(...attrs);
     this.collection.reset();
   }
 
   /**
   * Update Grid when add or remove event from Elements Backbone.Collection is fired
-  * @listenTo({ events: "add,remove", from: "collection", handler: "update" })
+  * @listenTo({ spec: 'specs/view/grid', events: 'add,remove', from: 'collection' })
   **/
   update() {
     this.collection.each(function(element) {
       this.doSomething(element);
       ...
-    })
+    });
     ...
   }
 
@@ -285,17 +303,18 @@ class Grid extends Table {
 
 Specific use of annotation **@bone** for objects that don't need to be instanciated.
 
-* Scope: `Class`
+* Scope:
+	* `Class`
 * Parameters:
 	* `id` {_String_} **required** | Bone Identifier
-	* `spec` {_String_} **required** | Spec id in which this json bone will be declared.
+	* `specs` {_Array_} **required** | Specifies on which specs the json bone should be part of.
 
 Examples:
 
 ```js
 /**
 *	Similar to @Bone annotation
-*	@json({ id: "myconfiguration", spec: "config" });
+*	@json({ id: 'myconfiguration', specs: ['specs/config'] });
 **/
 var MyConfiguration = {
   key1: "value1",
@@ -310,28 +329,28 @@ exports default MyConfiguation;
 #### @plugin (**Review**)
 
 * Scope:
-	* `Module`
 	* `Class`
 * Parameters:
 	* `name` {_String_} **required** | Plugin name
-	* `config` {_Object_} **required** | Plugin configuration
-	* `spec` {_String_} **required** | Spec id in which this plugin will be used.
+	* `specs` {_Array_} **required** | Specifies on which specs the plugin should be part of.
+	* `config` {_Object_} _optional_ | Optional Plugin configuration
 
 Examples:
 
 ```js
 /**
-*	@plugin({ name: "themes", config: "$bone!theme_config" })
-*	@plugin({ name: "html", config: { basePath: "$bone!html_basepath", mypackage: 'templates/mypackage' } })
+*	@plugin({ name: 'themes', config: '$bone!theme_config' })
+*	@plugin({ name: 'html', config: { basePath: '$bone!html_basepath', mypackage: 'templates/mypackage' } })
 **/
 import Container from 'ui/container';
 ...
 ```
 
 ---
-#### @ignore (**review**)
+#### @ignore
 
-* Scope: `Module`
+* Scope:
+	* `Class`
 * Parameters: No parameters
 
 Will ignore all annotations found in the current module.
@@ -351,6 +370,13 @@ import {Container} from "ui";
 
 _These set of featured annotation may affect boneyard-ioc core package._
 
+Patterns:
+
 #### @proxify
 #### @factory
 #### @decorate
+
+Local Storage:
+
+#### @persist
+#### @cease
