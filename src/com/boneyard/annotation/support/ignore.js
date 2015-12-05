@@ -43,7 +43,7 @@ class Ignore extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__module', '__class'];
+		return ['__class'];
 	}
 
 	/**
