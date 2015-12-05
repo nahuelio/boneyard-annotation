@@ -96,7 +96,7 @@ class ListenTo extends Action {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class', '__method'];
+		return ['__method'];
 	}
 
 	/**

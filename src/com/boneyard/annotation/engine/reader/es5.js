@@ -67,16 +67,6 @@ class Es5Reader extends Reader {
 	}
 
 	/**
-	*	Retrieves a list of RegExps used to calculate module context
-	*	@public
-	*	@property __module
-	*	@type Array
-	**/
-	get __module() {
-		return [/^define/i];
-	}
-
-	/**
 	*	Retrieves a list of RegExps used to calculate class context
 	*	@public
 	*	@property __module
@@ -84,6 +74,7 @@ class Es5Reader extends Reader {
 	**/
 	get __class() {
 		return [
+			/^define/i, // define
 			/^\s*(var\s+\w+|(?!var\b)\w+)\s*=\w*/i, // > var <v> =
 			/^\s*return(.*)\s+function\s*\(.*\)\s*{/i, // > return function() {
 			/^\s*function\s+.+\s*{$/i // > function <v>() {

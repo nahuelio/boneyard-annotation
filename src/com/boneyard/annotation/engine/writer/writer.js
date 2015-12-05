@@ -7,7 +7,7 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import Instrumenter from './instrumenter';
+import SpecInstrument from './instrument/spec';
 import Logger from '../../util/logger';
 
 /**
@@ -30,29 +30,18 @@ class Writer extends EventEmitter {
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
 	constructor(...args) {
-		super();
-		this.instrumenter = new Instrumenter();
-		return this;
+		return super(...args);
 	}
 
 	/**
-	*	Sets instrumenter
+	*	Retrieves all annotations of all specs to be processed by instrumenters
 	*	@public
-	*	@property instrumenter
-	*	@type com.boneyard.annotation.engine.writer.Instrumenter
+	*	@method all
+	*	@param files {Map} source files
+	*	@return Array
 	**/
-	set instrumenter(instrumenter) {
-		this._instrumenter = instrumenter;
-	}
-
-	/**
-	*	Retrieves Writer instrumenter
-	*	@public
-	*	@property instrumenter
-	*	@type com.boneyard.annotation.engine.writer.Instrumenter
-	**/
-	get instrumenter() {
-		return this._instrumenter;
+	all(files) {
+		return _.compact(_.flatten(Array.from(files, (a) => { return a; })));
 	}
 
 	/**
@@ -64,20 +53,100 @@ class Writer extends EventEmitter {
 	**/
 	write(files) {
 		if(files.size === 0) return this;
-		this.instrumenter.instrument(files).forEach((spec) => { this.toFile(_.cleanEmptyLines(spec.write())); });
-		return this;
+		return this.toFile(this.all(files).forEach((annotations) => { return this.specs(annotations); }));
+	}
+
+	/**
+	*	Filters out spec annotations from annotations list
+	*	@public
+	*	@method specs
+	*	@param annotations {array} list of annotations
+	*	@return Array
+	**/
+	specs(annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'spec'); }).map((s) => {
+			spec.plugins = this.plugins(spec, annotations);
+			//spec.injects = this.injects(spec, annotations);
+			spec.bones = this.bones(spec, annotations);
+			spec.actions = this.actions(spec, annotations);
+			return spec;
+		});
+	}
+
+	/**
+	*	Filters out plugins annotations from annotations list by spec
+	*	@public
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
+	*	@property plugins
+	*	@type Array
+	**/
+	plugins(spec, annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'plugin' && spec.id === a.spec); });
+	}
+
+	/**
+	*	Filters out inject annotations from annotations list by spec
+	*	@public
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
+	*	@property injects
+	*	@type Array
+	**/
+	injects(spec, annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'plugin' && spec.id === a.spec); });
+	}
+
+	/**
+	*	Filters out bone annotations from annotations list by spec
+	*	@public
+	*	@method bones
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
+	*	@param annotations {array} list of annotations
+	*	@return Array
+	**/
+	bones(spec, annotations) {
+		return _.filter(annotations, (a) => {
+			return (_.contains(['bone', 'json', 'inject'], a.name) && spec.id === a.spec);
+		});
+	}
+
+	/**
+	*	Filters out wire annotations from annotations list by bone
+	*	@public
+	*	@method wires
+	*	@param bone {com.boneyard.annotation.support.Bone} current bone
+	*	@param annotations {array} list of annotations
+	*	@return Array
+	**/
+	wires(bone, annotations) {
+		return _.filter(annotations, (a) => { return (a.name === 'wire' && _.contains(a.bones, bone.id)); });
+	}
+
+	/**
+	*	Filters out actions annotations from annotations list by spec
+	*	@public
+	*	@param spec {com.boneyard.annotation.support.Spec} current spec
+	*	@property actions
+	*	@type Array
+	**/
+	actions(spec, annotations) {
+		return _.filter(annotations, (a) => {
+			return (_.contains(['action', 'listenTo'], a.name) && spec.id === a.spec);
+		});
 	}
 
 	/**
 	*	Writes out final spec template into a file.
 	*	@public
 	*	@method toFile
-	*	@param template {String} string representation of a final spec
+	*	@param instruments {Array} list of instruments to export
 	*	@return com.boneyard.annotation.writer.Writer
 	**/
-	toFile(template) {
-		Logger.out(`${template}`, 'y');
-		// TODO Export to file
+	toFile(instruments = []) {
+		if(instruments.length === 0) return this;
+		instruments.forEach((instrument) => {
+			Logger.out(`${_.cleanEmptyLines(instrument.write())}`, 'y');
+			// Export to File
+		});
 		return this;
 	}
 
