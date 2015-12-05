@@ -22,12 +22,13 @@ This document might be subjected to change.
 	* `Class`
 * Parameters:
 	* `id` {_String_} **required** | Spec unique identifier
+	* `path` {_String_} **required** | Spec Path location
 	* `include` {_Array_} _optional_ | List if parent specs that decorates the current spec
 * Examples:
 
 ```js
 /**
-*	@spec({ id: 'specs/configuration' })
+*	@spec({ id: 'configuration', path: 'specs/configuration' })
 **/
 class Configuration {
   ...
@@ -36,7 +37,7 @@ class Configuration {
 
 ```js
 /**
-*	@spec({ id: 'specs/main', include: ['specs/header', 'specs/footer', 'specs/content'] })
+*	@spec({ id: 'main', path: 'specs/main', include: ['header', 'footer', 'content'] })
 **/
 class ApplicationBootstrap extends Container {
   ...
@@ -61,8 +62,7 @@ class ApplicationBootstrap extends Container {
 *	Belongs to Spec "specs/main".
 *	Note: Module path will be retrieved automatically based on the file location
 *	if not specified manually.
-*
-*	@bone({ id: 'account', specs: ['specs/main'] })
+*	@bone({ id: 'account', specs: ['main'] })
 **/
 class Account extends Backbone.Model {
   ...
@@ -73,13 +73,54 @@ class Account extends Backbone.Model {
 /**
 *	Declaration for registering a bone of type "UserService" that extends "Service".
 *	Bone identifier set to "userService".
-*	Belongs to Spec "specs/services/user".
-*	Module is manually set to retrieve class constructor on specific location.
+*	Belongs to Spec "user".
+*	Bone path resolution will be automatically resolved based on the class definition of the file.
 *	Flag class to resolve instanciates as a singleton (Multiple injects will reference same instance)
 *
-*	@bone({ id: 'userService', specs: ['specs/services/user'], singleton: true })
+*	@bone({ id: 'userService', specs: ['user'], singleton: true })
 **/
 class UserService extends Service {
+  ...
+}
+```
+---
+#### @component (**review**)
+
+Similar as @bone with the only difference that it's mainly used to create bones that can NOT been annotated with the @bone
+annotation. Often, we want to create a bone that it doesn't necessary need to be inherited, the default implementation
+is enough to use it. Notice that the parameter `path` is required.
+Best to be thought as a component that is `required` by the context of a class. Please see example.
+
+* Scope:
+	* `Class`
+* Parameters:
+	* `id` {_String_} **required** | Bone Identifier
+	* `specs` {_Array_} **required** | Array of specs id in which the bone will belong to
+	* `path` {_String_} **required** | Path to the file on which the class/object is declared and exported via amd.
+	* `singleton` {_Boolean_} _optional_ | Flags the module to create one and only one instance (Default is Non-singleton).
+* Examples:
+
+```js
+import Form from 'ui/form/form';
+
+/**
+*  @bone({ id: 'accountForm', specs: ['account'] })
+*  @class com.myproject.view.account.AccountForm
+*  @extends com.boneyard.ui.form.Form
+*
+*  Notice that ui/misc/panel default implementation provided by the boneyard-ui is enough for this case.
+*  @component({ id: 'basic', path: 'ui/misc/panel', specs: ['account'], params: [{ title: 'Basic Information' }] })
+*  @component({ id: 'button', path: 'ui/form/controls/button', specs: ['account'], params: [{ text: 'Update' }] })
+**/
+class AccountForm extends Form {
+
+  /**
+  *  @wire({ id: 'basic', on: 'attrs.views' })
+  *  @wire({ id: 'button', on: 'attrs.views' })
+  **/
+  constructor(attrs) {
+	return super(attrs);
+  }
   ...
 }
 ```
@@ -93,8 +134,6 @@ class UserService extends Service {
 * Parameters
 	* `id` {_String_} **required** | Unique Bone identifier
 	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor.
-    **This parameter will be automatically wired on scope field for Es5.**
-	* `name` {_String_} _optional_ | Optionally specified the property name the bone will be passed as part of the `on` object name
 	* `params` {_Array_} _optional_ | Defaults Parameters to be pass on at the moment of injection
 * Examples:
 
@@ -126,6 +165,7 @@ constructor: function(attrs, other) {
 /**
 *  Scope: Field
 *  Will execute as @Action (Assignment)
+*  Will automatically use the name of the field 'search' to resolve the 'on' attribute.
 *  @wire({ id: 'search' })
 **/
 search: null,
@@ -144,7 +184,7 @@ initialize: function(attrs) {
 *  @wire({ id: 'mymodel', on: 'attrs.model' })
 **/
 constructor(attrs) {
-  this.model = attrs.model; // <- "[on].[name]" -> mymodel"
+  this.model = attrs.model;
   ...
 }
 ```
@@ -153,62 +193,12 @@ constructor(attrs) {
 /**
 *  Scope: Field (Setter)
 *  Will execute as @Action (Assignment)
+*  Will automatically use the name of the setter 'value' to resolve the 'on' attribute.
 *  @wire({ id: 'mymodel', params: '$bone!defaults' })
 **/
 set value(model) {
   this.property = model.get('value');
 }
-```
----
-#### @inject (**Review**)
-
-Annotation that creates a bone on fly that has not been registered with the annotation @bone in the source code.
-This behave similar to @wire but specially for built-ins classes provided by boneyard will add a new bone and inject it
-into the specific attribute.
-
-* Scope:
-	* Constructor
-	* Field
-* Parameters:
-	* `path` {_String_} **required** | Path to the file on which the class/object is declared and exported via amd.
-	* `specs` {_Array_} **required** | Specifies on which specs the new module bone should be part of.
-	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor.
-	* `params` {_Array_} _optional_ | Defaults Parameters to be pass on the instanciation process for the module bone.
-	* `singleton` {_Boolean_} _optional_ | Flags the module to create one and only one instance (Default is Non-singleton).
-* Examples:
-
-```js
-...
-/**
-*  Scope: Constructor
-*  @inject({ path: 'ui/misc/panel', spec: 'specs/application', on: 'attrs.views', params: [{ title : 'My Title' }] })
-**/
-constructor(...attrs) {
-  super(...attrs);
-  ...
-}
-```
-
-```js
-...
-/**
-*  Scope: Field (Setter ES6)
-*  @inject({ path: 'model/elements', spec: 'specs/application', params: [1, 2, 3] })
-**/
-set mycollection(collection) {
-  this.collection = collection;
-}
-```
-
-```js
-...
-/**
-*  Scope: Field (ES5)
-*  @inject({ path: 'model/elements', spec: 'specs/application', params: '$bone!elements' })
-**/
-...
-collection: null,
-...
 ```
 
 ---
@@ -230,7 +220,7 @@ class User extends Backbone.Model {
 
   /**
   *	Action Declaration to execute the method "fetch" on the bone "user"
-  *	@action({ bone: 'user', spec: 'specs/view/profile' })
+  *	@action({ bone: 'user', spec: 'profile' })
   **/
   fetch() {
 
@@ -247,7 +237,7 @@ class Application extends Container {
   /**
   *	Action Declaration to execute the method "fetch" on the bone "user"
   *	with params passed to the method "render".
-  *	@action({ bone: "application", spec: 'specs/application', params: [{ method: "after", target: "div.menu" }] })
+  *	@action({ bone: "application", spec: 'application', params: [{ method: "after", target: "div.menu" }] })
   **/
   render() {
 
@@ -285,7 +275,7 @@ class Grid extends Table {
 
   /**
   * Update Grid when add or remove event from Elements Backbone.Collection is fired
-  * @listenTo({ spec: 'specs/view/grid', events: 'add,remove', from: 'collection' })
+  * @listenTo({ spec: 'grid', events: 'add,remove', from: 'collection' })
   **/
   update() {
     this.collection.each(function(element) {
@@ -314,7 +304,7 @@ Examples:
 ```js
 /**
 *	Similar to @Bone annotation
-*	@json({ id: 'myconfiguration', specs: ['specs/config'] });
+*	@json({ id: 'myconfiguration', specs: ['config'] });
 **/
 var MyConfiguration = {
   key1: "value1",
@@ -339,8 +329,8 @@ Examples:
 
 ```js
 /**
-*	@plugin({ name: 'themes', config: '$bone!theme_config' })
-*	@plugin({ name: 'html', config: { basePath: '$bone!html_basepath', mypackage: 'templates/mypackage' } })
+*	@plugin({ name: 'themes', specs: ['plugins'], config: '$bone!theme_config' })
+*	@plugin({ name: 'html', specs: ['plugins'], config: { basePath: '$bone!html_basepath', mypackage: 'templates/mypackage' } })
 **/
 import Container from 'ui/container';
 ...
