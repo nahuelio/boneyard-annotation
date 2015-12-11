@@ -18,11 +18,11 @@ class ListenTo extends Action {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.ListenTo
 	**/
-	constructor(attrs = {}) {
-		return super(attrs);
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**
@@ -51,28 +51,13 @@ class ListenTo extends Action {
 
 	/**
 	*	Resolves ListenTo handler
-	*	FIXME: Resolve Handler by using Context
 	*	@public
 	*	@property handler
 	*	@type String
 	**/
 	get handler() {
-		return _.defined(this.params.handler) ? this.params.handler : '';
-	}
-
-	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@override
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return super.validate(metadata) &&
-			_.defined(metadata.target) && _.isString(metadata.target) &&
-			_.defined(metadata.params) && _.isString(metadata.params);
+		// TODO: Resolve Handler by using Context
+		return '';
 	}
 
 	/**

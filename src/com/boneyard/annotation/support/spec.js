@@ -5,7 +5,6 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import template from '../engine/writer/templates/spec.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -24,11 +23,11 @@ class Spec extends Annotation {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.Spec
 	**/
-	constructor(attrs = {}) {
-		return super(_.extend(attrs, { _template: _.template(template) }));
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**
@@ -42,12 +41,22 @@ class Spec extends Annotation {
 	}
 
 	/**
-	*	Retrieves parent specs if defined
+	*	Retrieves spec path
 	*	@public
-	*	@property id
+	*	@property path
 	*	@type String
 	**/
-	get specs() {
+	get path() {
+		return this.params.path;
+	}
+
+	/**
+	*	Retrieves parent specs if defined
+	*	@public
+	*	@property parent
+	*	@type Array
+	**/
+	get parent() {
 		return _.defined(this.params.include) ? this.params.include : [];
 	}
 
@@ -62,79 +71,6 @@ class Spec extends Annotation {
 	}
 
 	/**
-	*	Set bones into this spec
-	*	@public
-	*	@property bones
-	*	@type Array
-	**/
-	set bones(bones = []) {
-		this._bones = bones;
-	}
-
-	/**
-	*	Retrieves bones from this spec
-	*	@public
-	*	@property bones
-	*	@type Array
-	**/
-	get bones() {
-		return this._bones;
-	}
-
-	/**
-	*	Set actions into this spec
-	*	@public
-	*	@property bones
-	*	@type Array
-	**/
-	set actions(actions = []) {
-		this._actions = actions;
-	}
-
-	/**
-	*	Retrieves actions from this spec
-	*	@public
-	*	@property actions
-	*	@type Array
-	**/
-	get actions() {
-		return this._actions;
-	}
-
-	/**
-	*	Set plugins into this spec
-	*	@public
-	*	@property plugins
-	*	@type Array
-	**/
-	set plugins(plugins = []) {
-		this._plugins = plugins;
-	}
-
-	/**
-	*	Retrieves plugins from this spec
-	*	@public
-	*	@property plugins
-	*	@type Array
-	**/
-	get plugins() {
-		return this._plugins;
-	}
-
-	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@override
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return super.validate(metadata) && _.defined(metadata.id);
-	}
-
-	/**
 	*	Serialization strategy
 	*	@public
 	*	@override
@@ -146,10 +82,7 @@ class Spec extends Annotation {
 			id: this.id,
 			paths: this.paths(),
 			dependencies: this.dependencies(),
-			specs: this.parent(),
-			bones: this.writeBones(),
-			actions: this.writeActions(),
-			plugins: this.writePlugins()
+			specs: this.specs()
 		}, this.author(), super.serialize());
 	}
 
@@ -160,7 +93,7 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	paths() {
-		return (_.defined(this.specs) && this.specs.length > 0) ? _s.quote(this.specs.join("','"), "'") : "";
+		return (_.defined(this.parent) && this.parent.length > 0) ? _s.quote(this.parent.join("','"), "'") : "";
 	}
 
 	/**
@@ -170,47 +103,17 @@ class Spec extends Annotation {
 	*	@return String
 	**/
 	dependencies() {
-		return this.parent();
+		return this.specs();
 	}
 
 	/**
 	*	Resolves parent specs decorators (parents) if declared and returns them
 	*	@public
-	*	@method dependencies
+	*	@method specs
 	*	@return String
 	**/
-	parent() {
-		return this.specs.map((s) => { return _s.strRightBack(s, '/'); }).join(', ');
-	}
-
-	/**
-	*	Resolves bones serialization associated with this spec
-	*	@public
-	*	@method writeBones
-	*	@return String
-	**/
-	writeBones() {
-		return _.invoke(this.bones, 'write').join(', ').replace(/\n/g, '');
-	}
-
-	/**
-	*	Resolves actions serialization associated with this spec
-	*	@public
-	*	@method writeActions
-	*	@return String
-	**/
-	writeActions() {
-		return _.invoke(this.actions, 'write').join(', ').replace(/\n/g, '');
-	}
-
-	/**
-	*	Resolves plugins serialization associated with this spec
-	*	@public
-	*	@method writePlugins
-	*	@return String
-	**/
-	writePlugins() {
-		return _.invoke(this.plugins, 'write').join(', ').replace(/\n/g, '');
+	specs() {
+		return this.parent.map((s) => { return _s.strRightBack(s, '/'); }).join(', ');
 	}
 
 	/**

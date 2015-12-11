@@ -40,6 +40,23 @@ _.mixin({
 	**/
 	cleanEmptyLines(str = "") {
 		return str.replace(/^\s*[\r\n]/gm, '');
+	},
+
+	/**
+	*	Convert a String in dot notation format into a JSON object
+	*	@static
+	*	@method strToJSON
+	*	@param expr {String} dot notation
+	*	@return Object
+	**/
+	strToJSON: function(expr) {
+		if(!expr || !_.isString(expr) || expr === '') return {};
+		var p = {}, o = p, ps = expr.split('.');
+		for(var i = 0; i < ps.length; i++) {
+			p[ps[i]] = {}; p = p[ps[i]];
+			if(i === (ps.length-1)) p = null;
+		}
+		return o;
 	}
 
 });

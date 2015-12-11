@@ -67,11 +67,11 @@ class Annotation extends EventEmitter {
 	/**
 	*	Retrieves absolute filepath in which this annotation was found
 	*	@public
-	*	@property path
+	*	@property filePath
 	*	@type String
 	**/
-	get path() {
-		return this._path;
+	get filePath() {
+		return this._filepath;
 	}
 
 	/**
@@ -115,62 +115,6 @@ class Annotation extends EventEmitter {
 	}
 
 	/**
-	*	Retrieves annotation template
-	*	@public
-	*	@property template
-	*	@type Function
-	**/
-	get template() {
-		return this._template;
-	}
-
-	/**
-	*	Sets the annotation template
-	*	@public
-	*	@property template
-	*	@type Function
-	**/
-	set template(template) {
-		this._template = template;
-	}
-
-	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return _.defined(metadata);
-	}
-
-	/**
-	*	Default annotation serialization
-	*	@public
-	*	@method serialize
-	*	@return Object
-	**/
-	serialize() {
-		return {};
-	}
-
-	/**
-	*	Default strategy that projects serialized annotation metadata into a template and returns the result as a string.
-	*	@public
-	*	@throws Error
-	*	@method write
-	*	@return String
-	**/
-	write() {
-		let metadata = this.serialize();
-		if(!this.validate(metadata) || !this.template)
-			throw new Error(`Annotation ${this.name} is not valid with metadata ${JSON.stringify(metadata)}`);
-		return this.template(metadata);
-	}
-
-	/**
 	*	Returns true if annotation has a context
 	*	@public
 	*	@method hasContext
@@ -178,6 +122,16 @@ class Annotation extends EventEmitter {
 	**/
 	hasContext() {
 		return !this.context;
+	}
+
+	/**
+	*	Default JSON serialization strategy of this annotation
+	*	@public
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return {};
 	}
 
 	/**

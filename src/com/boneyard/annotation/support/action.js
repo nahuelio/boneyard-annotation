@@ -5,7 +5,6 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import template from '../engine/writer/templates/action.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -24,11 +23,11 @@ class Action extends Annotation {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.Action
 	**/
-	constructor(attrs = {}) {
-		return super(_.extend(attrs, { _template: _.template(template) }));
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**
@@ -62,30 +61,6 @@ class Action extends Annotation {
 	}
 
 	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@override
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return super.validate(metadata) && _.defined(metadata.target) && _.isString(metadata.target);
-	}
-
-	/**
-	*	Serialization
-	*	@public
-	*	@override
-	*	@method serialize
-	*	@return Object
-	**/
-	serialize() {
-		return { target: `$bone!${this.bone}.${this.method}`, params: JSON.stringify(this.params.params) };
-	}
-
-	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
@@ -93,6 +68,18 @@ class Action extends Annotation {
 	**/
 	get contexts() {
 		return ['__class', '__method'];
+	}
+
+	/**
+	*	JSON serialization strategy
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		// TODO
+		return {};
 	}
 
 	/**

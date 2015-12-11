@@ -18,22 +18,11 @@ class Ignore extends Annotation {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.Ignore
 	**/
-	constructor(attrs = {}) {
-		super(attrs);
-		return this;
-	}
-
-	/**
-	*	Serialization
-	*	@public
-	*	@method serialize
-	*	@return Object
-	**/
-	serialize() {
-		return { [this.name]: { file: this.path } };
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**

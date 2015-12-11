@@ -3,8 +3,8 @@
 *	@module examples.es5
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "specs/application" })
-*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "specs/application" })
+*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "main" })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "main" })
 */
 define(['ui/container'], function(Container) {
 
@@ -16,16 +16,18 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@spec({ id: "specs/application", include: ["specs/common/header", "specs/common/footer", "specs/model/model"] })
-	*	@bone({ id: "application", spec: "specs/application", module: "examples.es5.application" })
-	*	@action({ bone: "application", method: "render", spec: "specs/application", params: [] })
+	*	@spec({ id: "main", path: "specs/application", include: ["header", "footer", "model"] })
+	*	@bone({ id: "application", spec: "main" })
+	*	@action({ bone: "application", method: "render", spec: "application", params: [] })
 	**/
 	var Application = Boneyard.namespace('examples.es5.Application', Container.inherit({
 
 		/**
 		*	Constructor
 		*	@constructor
-		*	@wire({ bones: ["header", "content", "footer"], on: "attrs", name: "views" })
+		*	@wire({ id: "header", on: "attrs.views" })
+		*	@wire({ id: "footer", on: "attrs.views" })
+		*	@wire({ id: "content", on: "attrs.views" })
 		*	@param attrs {Object} constructor attributes
 		*	@return examples.es5.Application
 		**/

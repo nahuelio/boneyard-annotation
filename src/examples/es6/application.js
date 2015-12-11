@@ -16,9 +16,9 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@spec({ id: "specs/application", include: ["specs/common/header", "specs/common/footer", "specs/model/model"] })
-*	@bone({ id: "application", spec: "specs/application" })
-*	@action({ bone: "application", method: "render", spec: "specs/application" })
+*	@spec({ id: "main", path: "specs/application", include: ["header", "footer", "model"] })
+*	@bone({ id: "application", specs: ["main"] })
+*	@action({ bone: "application", method: "render", spec: "application", params: [] })
 */
 class Application extends Container {
 
@@ -26,7 +26,9 @@ class Application extends Container {
 	*	Initialize
 	*	@public
 	*	@method initialize
-	*	@wire({ bones: ["header", "content", "footer"], on: "attrs", name: "views" })
+	*	@wire({ id: "header", on: "attrs.views" })
+	*	@wire({ id: "footer", on: "attrs.views" })
+	*	@wire({ id: "content", on: "attrs.views" })
 	*	@param attrs {Object} constructor attributes
 	*	@return examples.es6.Application
 	*/

@@ -193,7 +193,7 @@ class Reader  {
 	**/
 	getAnnotation(metadata) {
 		return this.factory.create(metadata._name.toLowerCase(), _.extend({
-			_path: this.current,
+			_filepath: this.current,
 			_config: Parser.config
 		}, metadata));
 	}
@@ -207,7 +207,7 @@ class Reader  {
 	**/
 	onIgnore(annotation) {
 		if(annotation._name === 'ignore') {
-			this.blacklist.push(annotation._path);
+			this.blacklist.push(annotation._filepath);
 			return true;
 		}
 		return false;

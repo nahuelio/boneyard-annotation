@@ -13,15 +13,15 @@ define(['backbone'], function(Backbone) {
 	*
 	*	@requires Backbone.Model
 	*
-	*	@spec({ id: "specs/model/model" })
-	*	@bone({ id: "model", spec: "specs/model/model" })
+	*	@spec({ id: "model", path: "specs/model/model" })
+	*	@bone({ id: "model", specs: ["model"] })
 	*/
 	var Model = Boneyard.namespace('examples.es5.model.Model', Backbone.Model.inherit({
 
 		/**
 		*	Defaults
 		*	@public
-		*	@wire({ bones: ["defaults"] })
+		*	@wire({ id: "defaults" })
 		*	@property defaults
 		*	@type Object
 		**/

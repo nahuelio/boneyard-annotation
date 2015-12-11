@@ -13,8 +13,9 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@spec({ id: "specs/common/footer" })
-	*	@bone({ id: "footer", spec: "specs/common/footer" })
+	*	@spec({ id: "footer", path: "specs/common/footer" })
+	*	@bone({ id: "footer", specs: ["footer"] })
+	*	@component({ id: "copyright", path: "ui/basic/paragraph", specs: ['footer'], params: [{ content: "Boneyard &copy; 2016" }] })
 	*/
 	var Footer = Boneyard.namespace('examples.es5.view.footer.Footer', Container.inherit({
 

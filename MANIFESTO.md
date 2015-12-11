@@ -207,40 +207,44 @@ set value(model) {
 - Notes: Resolve multiple instances resolution in order to implement this
 
 * Scope:
+	* `Class`
 	* `Method`
 * Parameters:
 	* `bone` {_String_} **required** | Bone Identifier
 	* `spec` {_String_} **required** | Specifies on which spec the action should be part of.
+	* `method` {_String_} _optional_ | Required Only when the annotation is on the scope class.
 	* `params` {_Array_} _optional_ | Optional parameters to be passed to the method invocation.
 * Examples:
 
 ```js
+/**
+*	Action Declaration to execute the method "fetch" on the bone "user" with no parameters
+*	@bone({ id: 'user', specs: ['profile'] })
+*	@action({ bone: 'user', spec: 'profile', method: 'fetch' })
+**/
 class User extends Backbone.Model {
-  ...
-
-  /**
-  *	Action Declaration to execute the method "fetch" on the bone "user"
-  *	@action({ bone: 'user', spec: 'profile' })
-  **/
-  fetch() {
-
-  }
-
   ...
 }
 ```
 
 ```js
-class Application extends Container {
+/**
+*  @bone({ id: 'userReportGrid', specs: ['userReport', 'userPerformanceReport'] })
+**/
+class UserReportGrid extends Container {
   ...
 
   /**
-  *	Action Declaration to execute the method "fetch" on the bone "user"
-  *	with params passed to the method "render".
-  *	@action({ bone: "application", spec: 'application', params: [{ method: "after", target: "div.menu" }] })
+  *	 Action Declaration to execute the method "render" on the bone "userReportGrid" component
+  *	 with params passed to the method "render".
+  *  Notice that method attribute is omitted since the annotation is on scope method.
+  *	 Notice also, that the action will be executed when the bone is instanciated on the userReport spec only,
+  *  even though the userReportGrid was targeted to get an instance on userPerformanceReport too.
+  *  Important: @actions can specify one spec target and only one at a time.
+  *	 @action({ bone: 'userReportGrid', spec: 'userReport', params: [{ method: 'after', target: 'div.header' }] })
   **/
   render() {
-
+    ...
   }
 
   ...

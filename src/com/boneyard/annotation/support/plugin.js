@@ -5,7 +5,6 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import template from '../engine/writer/templates/plugin.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -24,11 +23,11 @@ class Plugin extends Annotation {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.Plugin
 	**/
-	constructor(attrs = {}) {
-		return super(_.extend(attrs, { _template: _.template(template) }));
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**
@@ -49,20 +48,6 @@ class Plugin extends Annotation {
 	**/
 	get contexts() {
 		return ['__class'];
-	}
-
-	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@override
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return super.validate(metadata) &&
-			_.defined(metadata.name) && _.isString(metadata.name) && _.defined(metadata.config);
 	}
 
 	/**

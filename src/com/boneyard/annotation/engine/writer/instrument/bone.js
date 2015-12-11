@@ -24,12 +24,64 @@ class BoneInstrument extends Instrument {
 	*	Constructor
 	*	@constructor
 	*	@param spec {com.boneyard.annotation.engine.writer.instrument.SpecInstrument} spec instrument
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
 	**/
-	constructor(spec) {
-		super(template);
-		this.spec
+	constructor(spec, annotation) {
+		super(annotation, template);
+		this.spec = spec;
 		return this;
+	}
+
+	/**
+	*	Resolves module data structure.
+	*	@public
+	*	@method module
+	*	@return Array
+	**/
+	module() {
+		return {
+			$module: this.get().modulePath,
+			$params: _.omit(this.get().params, 'id', 'spec', 'module')
+		};
+	}
+
+	/**
+	*	Returns true if this instrument has a given annotation by matching the spec id against annotation spec id or list
+	*	of spec ids, otherwise returns false.
+	*	@public
+	*	@override
+	*	@method has
+	*	@param instrument {com.boneyard.annotation.engine.writer.instrument.Instrument} instrument reference
+	*	@return Boolean
+	**/
+	has(instrument) {
+		if(!super.belongsTo(instrument)) return false;
+		return _.contains(this.get().specs, instrument.get().spec.id);
+	}
+
+	/**
+	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
+	*	otherwise returns false.
+	*	@public
+	*	@override
+	*	@method validate
+	*	@param metadata {Object} metadata retrieved by serialization strategy
+	*	@return Boolean
+	**/
+	validate(metadata) {
+		return super.validate(metadata) && _.defined(metadata.id) && _.defined(metadata.module);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return _.extend({ id: this.get().id, module: JSON.stringify(this.module()) }, super.serialize());
 	}
 
 	/**

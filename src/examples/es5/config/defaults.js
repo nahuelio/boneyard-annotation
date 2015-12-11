@@ -8,7 +8,7 @@ define([], function() {
 	/**
 	*	Defaults
 	*	@public
-	*	@json({ id: "defaults", spec: "specs/model/model" })
+	*	@json({ id: "defaults", specs: ["model"] })
 	*	@property Defaults
 	*	@type Object
 	**/

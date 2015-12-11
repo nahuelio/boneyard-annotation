@@ -23,11 +23,28 @@ class PluginInstrument extends Instrument {
 	/**
 	*	Constructor
 	*	@constructor
+	*	@param specInstrument {com.boneyard.annotation.engine.writer.instrument.SpecInstrument} spec instrument
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.PluginInstrument
 	**/
-	constructor() {
-		super(template);
+	constructor(specInstrument, annotation) {
+		super(annotation, template);
+		this.spec = specInstrument;
 		return this;
+	}
+
+	/**
+	*	Returns true if this instrument belongs to a given spec by matching the spec id against to this instrument list
+	*	of spec ids, otherwise returns false.
+	*	@public
+	*	@override
+	*	@method belongsTo
+	*	@param instrument {com.boneyard.annotation.engine.writer.instrument.Instrument} instrument reference
+	*	@return Boolean
+	**/
+	belongsTo(instrument) {
+		if(!super.belongsTo(instrument)) return false;
+		return _.contains(this.get().specs, instrument.get().spec.id);
 	}
 
 	/**

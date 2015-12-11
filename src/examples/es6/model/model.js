@@ -13,7 +13,7 @@ import Backbone from 'backbone';
 *
 *	@requires Backbone.Model
 *
-*	@bone({ id: "model", spec: "specs/model/model" })
+*	@bone({ id: "model", specs: ["model"] })
 */
 class Model extends Backbone.Model {
 
@@ -30,7 +30,7 @@ class Model extends Backbone.Model {
 	/**
 	*	Defaults
 	*	@public
-	*	@wire({ bones: ["defaults"], on: "defaults" })
+	*	@wire({ id: "defaults", on: "defaults" })
 	*	@property defaults
 	*	@type Object
 	**/
