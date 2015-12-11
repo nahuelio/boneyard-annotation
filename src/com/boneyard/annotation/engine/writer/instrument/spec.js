@@ -23,33 +23,11 @@ class SpecInstrument extends Instrument {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param file {String} spec file
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.SpecInstrument
 	**/
-	constructor(file) {
-		super(template);
-		this.file = file;
-		return this;
-	}
-
-	/**
-	*	Sets Spec file
-	*	@public
-	*	@property file
-	*	@type String
-	**/
-	set file(file) {
-		this._file = file;
-	}
-
-	/**
-	*	Retrieves Spec file
-	*	@public
-	*	@property file
-	*	@type String
-	**/
-	get file() {
-		return this._file;
+	constructor(annotation) {
+		return super(annotation, template);
 	}
 
 	/**
@@ -63,7 +41,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Retrieves Spec bones
+	*	Retrieves Spec bone instruments
 	*	@public
 	*	@property bones
 	*	@type Array
@@ -73,7 +51,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Sets Spec actions
+	*	Sets Spec action instruments
 	*	@public
 	*	@property actions
 	*	@type Array
@@ -83,7 +61,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Retrieves Spec actions
+	*	Retrieves Spec action instruments
 	*	@public
 	*	@property actions
 	*	@type Array
@@ -93,7 +71,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Sets Spec plugins
+	*	Sets Spec plugin instruments
 	*	@public
 	*	@property plugins
 	*	@type Array
@@ -103,7 +81,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Retrieves Spec plugins
+	*	Retrieves Spec plugin instruments
 	*	@public
 	*	@property plugins
 	*	@type Array
@@ -122,16 +100,16 @@ class SpecInstrument extends Instrument {
 	**/
 	validate() {
 		super.validate();
-		if(!_.defined(this.file) || !_.isString(this.file))
-			throw new Error(`${SpecInstrument.NAME} file is not defined or is not a string`);
+		if(!_.defined(this.get().filepath) || !_.isString(this.get().filepath))
+			throw new Error(`${this.toString()} annotation filepath is not defined or is not a string`);
 		return true;
 	}
 
 	/**
-	*	Add a new bone
+	*	Add a new bone instrument
 	*	@public
 	*	@method addBone
-	*	@param bone {com.boneyard.annotation.support.Bone} bone reference
+	*	@param bone {com.boneyard.annotation.engine.writer.instrument.BoneInstrument} bone instrument reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.SpecInstrument
 	**/
 	addBone(bone) {
@@ -141,16 +119,16 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Removes an existing bone
+	*	Removes an existing bone instrument
 	*	@public
 	*	@method addBone
-	*	@param bone {com.boneyard.annotation.support.Bone} bone reference
+	*	@param bone {com.boneyard.annotation.engine.writer.instrument.BoneInstrument} bone instrument reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.SpecInstrument
 	**/
 	removeBone(bone) {
 		if(!this.findBone(bone)) return this;
 		for(let i = 0; i < this.bones.length; i++) {
-			if(this.bones[i].id === bone.id) {
+			if(this.bones[i].get().id === bone.get().id) {
 				this.bones.splice(i, 1);
 				break;
 			}
@@ -159,25 +137,14 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Performs a look up by bone annotation and retrieves it if found, otherwise returns null
+	*	Performs a look up by bone instrument and retrieves it if found, otherwise returns null
 	*	@public
 	*	@method findBone
-	*	@param bone {com.boneyard.annotation.support.Bone} bone reference
+	*	@param bone {com.boneyard.annotation.engine.writer.instrument.BoneInstrument} bone instrument reference
 	*	@return com.boneyard.annotation.support.Bone
 	**/
 	findBone(bone) {
-		return _.find(this.bones, (b) => { return (b.id === bone.id); });
-	}
-
-	/**
-	*	Spec Serialization
-	*	@public
-	*	@override
-	*	@method serialize
-	*	@return Object
-	**/
-	serialize() {
-		return {};
+		return _.find(this.bones, (b) => { return (b.get().id === bone.id); });
 	}
 
 	/**

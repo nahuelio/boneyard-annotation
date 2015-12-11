@@ -5,7 +5,6 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import template from '../engine/writer/templates/bone.tpl';
 import Annotation from '../engine/annotation/annotation';
 
 /**
@@ -24,11 +23,11 @@ class Bone extends Annotation {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [...attrs] {Object} constructor parameters
 	*	@return com.boneyard.annotation.support.Bone
 	**/
-	constructor(attrs = {}) {
-		return super(_.extend(attrs, { _template: _.template(template) }));
+	constructor(...attrs) {
+		return super(...attrs);
 	}
 
 	/**
@@ -44,11 +43,21 @@ class Bone extends Annotation {
 	/**
 	*	Retrieves spec id in which this bone belongs to
 	*	@public
-	*	@property spec
+	*	@property specs
+	*	@type Array
+	**/
+	get specs() {
+		return this.params.specs;
+	}
+
+	/**
+	*	Resolves bone module path
+	*	@public
+	*	@property path
 	*	@type String
 	**/
-	get spec() {
-		return this.params.spec;
+	get path() {
+		return _s.replaceAll(this._filepath, this.config.cwd + '/', '');
 	}
 
 	/**
@@ -62,26 +71,6 @@ class Bone extends Annotation {
 	}
 
 	/**
-	*	Sets bones wiring injections
-	*	@public
-	*	@property wires
-	*	@type Array
-	**/
-	set wires(wires) {
-		this._wires = wires;
-	}
-
-	/**
-	*	Retrieves bone wiring injections
-	*	@public
-	*	@property wires
-	*	@type Array
-	**/
-	get wires() {
-		return this._wires;
-	}
-
-	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
@@ -92,51 +81,15 @@ class Bone extends Annotation {
 	}
 
 	/**
-	*	Resolves bone module path
-	*	@public
-	*	@property module
-	*	@type String
-	**/
-	get modulePath() {
-		return !this.params.module ? _s.replaceAll(this.path, this.config.cwd + '/', '') : this.params.module;
-	}
-
-	/**
-	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
-	*	otherwise returns false.
-	*	@public
-	*	@override
-	*	@method validate
-	*	@param metadata {Object} metadata retrieved by serialization strategy
-	*	@return Boolean
-	**/
-	validate(metadata) {
-		return super.validate(metadata) && _.defined(metadata.id) && _.defined(metadata.module);
-	}
-
-	/**
-	*	Serialization
+	*	JSON serialization strategy
 	*	@public
 	*	@override
 	*	@method serialize
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend({ id: this.id, module: JSON.stringify(this.module()) }, super.serialize());
-	}
-
-	/**
-	*	Resolves module data structure.
-	*	@public
-	*	@method module
-	*	@return Array
-	**/
-	module() {
-		//console.log(_.invoke(this.wires, 'serialize'));
-		return {
-			$module: this.modulePath,
-			$params: _.omit(this.params, 'id', 'spec', 'module')
-		};
+		// TODO
+		return {};
 	}
 
 	/**

@@ -20,11 +20,13 @@ class Instrument extends EventEmitter {
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param template {String} instrument template
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@param [template] {String} instrument template
 	*	@return com.boneyard.annotation.engine.writer.instrument.Instrument
 	**/
-	constructor(template = "") {
+	constructor(annotation, template = '') {
 		super();
+		this.annotation = annotation;
 		this.template = _.template(template);
 		return this;
 	}
@@ -50,6 +52,28 @@ class Instrument extends EventEmitter {
 	}
 
 	/**
+	*	Retrieves annotation associated to this instrument
+	*	@public
+	*	@method get
+	*	@return com.boneyard.annotation.engine.annotation.Annotation
+	**/
+	get() {
+		return this.annotation;
+	}
+
+	/**
+	*	Default spec has annotation implementation
+	*	@public
+	*	@method has
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return Boolean
+	**/
+	has(annotation) {
+		if(!_.defined(annotation) || (!_.defined(annotation.specs) && !_.defined(annotation.spec))) return false;
+		return true;
+	}
+
+	/**
 	*	Validates Instrumenter
 	*	@public
 	*	@throws Error
@@ -57,8 +81,10 @@ class Instrument extends EventEmitter {
 	*	@return Boolean
 	**/
 	validate() {
+		if(!_.defined(this.annotation))
+			throw new Error(`${this.toString()} annotation associated with this instrument was not defined.`);
 		if(!_.defined(this.template) || !_.isFunction(this.template))
-			throw new Error(`${this.constructor.NAME} template is not defined or is not a function.`);
+			throw new Error(`${this.toString()} template is not defined or is not a function.`);
 		return true;
 	}
 
@@ -69,7 +95,7 @@ class Instrument extends EventEmitter {
 	*	@return Object
 	**/
 	serialize() {
-		return {};
+		return this.validate() ? this.annotation.serialize() : {};
 	}
 
 	/**
@@ -80,8 +106,19 @@ class Instrument extends EventEmitter {
 	*	@return String
 	**/
 	write() {
-		if(!_.defined(this.template))
 		return this.template(this.serialize());
+	}
+
+	/**
+	*	Returns String representation of the instance of this class
+	*	@public
+	*	@override
+	*	@method toString
+	*	@return String
+	**/
+	toString() {
+		console.log('CALLED');
+		return this.constructor.NAME;
 	}
 
 	/**

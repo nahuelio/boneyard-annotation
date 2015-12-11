@@ -13,8 +13,8 @@ import Container from 'ui/container';
 *
 *	@requires ui.Container
 *
-*	@spec({ id: "specs/common/header" })
-*	@bone({ id: "header", spec: "specs/common/header" })
+*	@spec({ id: "header", path: "specs/common/header" })
+*	@bone({ id: "header", specs: ["header"] })
 */
 class Header extends Container {
 

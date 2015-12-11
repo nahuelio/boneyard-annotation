@@ -13,7 +13,7 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@bone({ id: "content", spec: "specs/application" })
+	*	@bone({ id: "content", specs: ["main"] })
 	*/
 	var Content = Boneyard.namespace('examples.es5.view.Content', Container.inherit({
 
@@ -41,7 +41,7 @@ define(['ui/container'], function(Container) {
 		*	@public
 		*	@override
 		*	@method update
-		*	@listenTo({ spec: "specs/application", events: "change", from: "model", handler: "update" })
+		*	@listenTo({ spec: "application", events: "change", from: "model" })
 		*	@param model {Backbone.Model} model reference
 		*	@return examples.es5.view.Content
 		**/

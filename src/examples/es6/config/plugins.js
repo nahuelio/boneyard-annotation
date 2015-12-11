@@ -7,7 +7,7 @@
 /**
 *	Plugins Configuration
 *	@public
-*	@json({ id: "plugins", spec: "specs/application" })
+*	@json({ id: "plugins", specs: ["application"] })
 *	@property plugins
 *	@type Object
 **/
