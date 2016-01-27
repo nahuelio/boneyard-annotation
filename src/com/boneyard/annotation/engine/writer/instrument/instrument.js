@@ -117,7 +117,6 @@ class Instrument extends EventEmitter {
 	*	@return String
 	**/
 	toString() {
-		console.log('CALLED');
 		return this.constructor.NAME;
 	}
 

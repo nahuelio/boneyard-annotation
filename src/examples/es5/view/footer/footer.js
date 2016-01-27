@@ -22,10 +22,11 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Initialize
 		*	@public
+		*	@wire({ id: "copyright", on: "attrs.views" })
 		*	@method initialize
 		*	@return examples.es5.view.footer.Footer
 		*/
-		initialize: function() {
+		constructor: function(attrs) {
 			return Footer.__super__.initialize.apply(this, arguments);
 		}
 

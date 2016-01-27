@@ -23,7 +23,7 @@ This document might be subjected to change.
 * Parameters:
 	* `id` {_String_} **required** | Spec unique identifier
 	* `path` {_String_} **required** | Spec Path location
-	* `include` {_Array_} _optional_ | List if parent specs that decorates the current spec
+	* `include` {_Array_} _optional_ | List of parent spec ids that decorate the current spec
 * Examples:
 
 ```js
@@ -133,8 +133,7 @@ class AccountForm extends Form {
 	* `Field`
 * Parameters
 	* `id` {_String_} **required** | Unique Bone identifier
-	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor.
-	* `params` {_Array_} _optional_ | Defaults Parameters to be pass on at the moment of injection
+	* `on` {_String_} _optional_ | Not required on scope Field, but required on scope Constructor (dot notation).
 * Examples:
 
 **ES5:**
@@ -153,10 +152,32 @@ constructor: function(config, other) {
 ```js
 /**
 *  Scope: Constructor (multiple bones to be injected in the same parameter attribute)
-*  @wire({ id: 'header', on: 'attrs.views', params: [{ cls: 'myheader', autoId: true }] })
+*  Notice that `attrs` will map to the first constructor argument (index 0) as an object and `other` as second (index 1)
+*  At the moment of injection, this combination of multiple wires will be resolved as:
+*  Also, notice when multiple wires has the same `on` path target set (`attrs.views`), this will be treated as an array.
+**/
+...
+mybone: {
+	$module: 'path/to/module',
+	$params: [{
+		views: ['$bone!header', '$bone!footer']
+	}, {
+		other: '$bone!config'
+	}]
+}
+```
+
+```js
+/**
+*  Example describing the above comments
+*  @wire({ id: 'header', on: 'attrs.views' })
 *  @wire({ id: 'footer', on: 'attrs.views' })
+*  @wire({ id: 'config', on: 'other' })
 **/
 constructor: function(attrs, other) {
+  attrs.views[0]; // reference to an instance of 'header' bone
+  attrs.views[1]; // reference to an instance of 'footer' bone
+  other; // reference to an instance of 'config' bone
   return MyClass.apply(this, arguments);
 }
 ```
@@ -164,8 +185,8 @@ constructor: function(attrs, other) {
 ```js
 /**
 *  Scope: Field
-*  Will execute as @Action (Assignment)
-*  Will automatically use the name of the field 'search' to resolve the 'on' attribute.
+*  Will execute as a @Action annotation (Simple assignment)
+*  Will automatically use the name of the field 'search' to resolve the 'on' attribute (One to One mapping).
 *  @wire({ id: 'search' })
 **/
 search: null,
@@ -194,7 +215,7 @@ constructor(attrs) {
 *  Scope: Field (Setter)
 *  Will execute as @Action (Assignment)
 *  Will automatically use the name of the setter 'value' to resolve the 'on' attribute.
-*  @wire({ id: 'mymodel', params: '$bone!defaults' })
+*  @wire({ id: 'mymodel' })
 **/
 set value(model) {
   this.property = model.get('value');

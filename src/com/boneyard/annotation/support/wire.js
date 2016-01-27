@@ -50,15 +50,40 @@ class Wire extends Annotation {
 	}
 
 	/**
+	*	Retrieves bone annotation on which this annotation was found
+	*	@public
+	*	@method foundIn
+	*	@return com.boneyard.annotation.support.Bone
+	**/
+	get foundIn() {
+		return this._foundIn;
+	}
+
+	/**
+	*	Sets where in which bone this annotation was found
+	*	@public
+	*	@property foundIn
+	*	@type com.boneyard.annotation.support.Bone
+	**/
+	set foundIn(bone) {
+		this._foundIn = bone;
+	}
+
+	/**
 	*	Serialization
+	*	@FIXME: // On Field (No 'on' params, process it as an action)!!
 	*	@public
 	*	@override
 	*	@method serialize
 	*	@return Object
 	**/
 	serialize() {
-		// TODO
-		return {};
+		if(this.params.on) {
+			let out = {};
+			_.ns(this.params.on, [`$bone.${this.params.id}`], out);
+			return out;
+		}
+		return [];
 	}
 
 	/**

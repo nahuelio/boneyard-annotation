@@ -67,10 +67,10 @@ class Annotation extends EventEmitter {
 	/**
 	*	Retrieves absolute filepath in which this annotation was found
 	*	@public
-	*	@property filePath
+	*	@property filepath
 	*	@type String
 	**/
-	get filePath() {
+	get filepath() {
 		return this._filepath;
 	}
 
@@ -132,6 +132,17 @@ class Annotation extends EventEmitter {
 	**/
 	serialize() {
 		return {};
+	}
+
+	/**
+	*	Type to String
+	*	@public
+	*	@override
+	*	@method toString
+	*	@return String
+	**/
+	toString() {
+		return this.constructor.NAME;
 	}
 
 	/**

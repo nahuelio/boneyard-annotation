@@ -36,8 +36,8 @@ class Plugin extends Annotation {
 	*	@property spec
 	*	@type String
 	**/
-	get spec() {
-		return this.params.spec;
+	get specs() {
+		return this.params.specs;
 	}
 
 	/**

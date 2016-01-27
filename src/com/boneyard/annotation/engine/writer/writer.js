@@ -11,6 +11,7 @@ import SpecInstrument from './instrument/spec';
 import PluginInstrument from './instrument/plugin';
 import BoneInstrument from './instrument/bone';
 import ActionInstrument from './instrument/action';
+import WireInstrument from './instrument/wire';
 import Logger from '../../util/logger';
 
 /**
@@ -40,14 +41,14 @@ class Writer extends EventEmitter {
 	}
 
 	/**
-	*	Retrieves all annotations of all specs to be processed by instrumenters
+	*	Retrieves all annotations found in all files (flattens annotations across the board)
 	*	@public
 	*	@method all
-	*	@param files {Map} source files
+	*	@param files {Map} files reference
 	*	@return Array
 	**/
 	all(files) {
-		return _.compact(_.flatten(Array.from(files, (a) => { return a[1]; })));
+		return _.flatten(Array.from(files.values()));
 	}
 
 	/**
@@ -60,9 +61,12 @@ class Writer extends EventEmitter {
 	write(files) {
 		if(files.size === 0) return this;
 		let annotations = this.all(files);
-		return this.toFile(_.compact(annotations.map((a) => {
+		let instrumenters = _.compact(annotations.map((a) => {
 			return (a.name === 'spec') ? this.specs(a, annotations) : false;
-		})));
+		}));
+		_.invoke(instrumenters, 'resolvePaths', instrumenters);
+		_.invoke(this.wires(annotations), 'wire',  instrumenters);
+		return this.toFile(instrumenters);
 	}
 
 	/**
@@ -78,7 +82,7 @@ class Writer extends EventEmitter {
 		instrument.plugins = this.plugins(instrument, annotations);
 		instrument.bones = this.bones(instrument, annotations);
 		instrument.actions = this.actions(instrument, annotations);
-		return this.wires(instrument, annotations);
+		return instrument;
 	}
 
 	/**
@@ -114,24 +118,6 @@ class Writer extends EventEmitter {
 	}
 
 	/**
-	*	Filters out wire annotations from annotations list by spec bone instrumenters and returns
-	*	@public
-	*	@method wires
-	*	@param spec {com.boneyard.annotation.engine.writer.instrument.SpecInstrument} current spec instrumenter
-	*	@param annotations {array} list of annotations
-	*	@return Array
-	**/
-	wires(spec, annotations) {
-		annotations.forEach((a) => {
-			if(a.name === 'wire') {
-				let bone = spec.findBone(a);
-				if(_.defined(bone)) bone.wire(a);
-			}
-		});
-		return specInstrument;
-	}
-
-	/**
 	*	Filters out actions annotations from annotations list by spec instrumenter and
 	*	returns a list of Action Instrumenters
 	*	@public
@@ -148,6 +134,18 @@ class Writer extends EventEmitter {
 	}
 
 	/**
+	*	Filters out wire annotations from annotations list
+	*	@public
+	*	@method wires
+	*	@param annotations {array} list of all annotations
+	*	@param specs {Array} list of all spec instrumenters
+	*	@return Array
+	**/
+	wires(annotations, specs) {
+		return _.compact(annotations.map((a) => { return (a.name === 'wire') ? new WireInstrument(a) : false; }));
+	}
+
+	/**
 	*	Writes out final spec template into a file.
 	*	@public
 	*	@method toFile
@@ -157,7 +155,7 @@ class Writer extends EventEmitter {
 	toFile(instruments = []) {
 		if(instruments.length === 0) return this;
 		instruments.forEach((instrument) => {
-			Logger.out(`${_.cleanEmptyLines(instrument.write())}`, 'y');
+			Logger.out(`${_.cleanEmptyLines(instrument.write(), null, 2)}`, 'y');
 			// Export to File
 		});
 		return this;

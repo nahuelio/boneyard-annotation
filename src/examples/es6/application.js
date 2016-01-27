@@ -3,8 +3,8 @@
 *	@module examples.es6
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "specs/application" })
-*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "specs/application" })
+*	@plugin({ name: "html", config: "$bone!plugins.html", specs: ["application"] })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes", specs: ["application"] })
 */
 import Container from 'ui/container';
 
