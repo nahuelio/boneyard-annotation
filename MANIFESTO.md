@@ -86,9 +86,13 @@ class UserService extends Service {
 ---
 #### @component (**review**)
 
-Similar as @bone with the only difference that it's mainly used to create bones that can NOT been annotated with the @bone
-annotation. Often, we want to create a bone that it doesn't necessary need to be inherited, the default implementation
-is enough to use it. Notice that the parameter `path` is required.
+Similar as @bone with the only difference that it's mainly used to create bones that can NOT be annotated with the @bone
+annotation. Often, we want to declared a bone that it doesn't necessary need to be overriden by subclassing,
+the default implementation is enough to use it. A good example of this is: boneyard-ui package provides a lot of components
+out of the box and ready to use. In most of the cases the default implementation itself is enough to tell the DI to instanciate them.
+
+**In this case, notice that the parameter `path` is required to the IoC where to locate the component.**
+
 Best to be thought as a component that is `required` by the context of a class. Please see example.
 
 * Scope:
@@ -152,24 +156,6 @@ constructor: function(config, other) {
 ```js
 /**
 *  Scope: Constructor (multiple bones to be injected in the same parameter attribute)
-*  Notice that `attrs` will map to the first constructor argument (index 0) as an object and `other` as second (index 1)
-*  At the moment of injection, this combination of multiple wires will be resolved as:
-*  Also, notice when multiple wires has the same `on` path target set (`attrs.views`), this will be treated as an array.
-**/
-...
-mybone: {
-	$module: 'path/to/module',
-	$params: [{
-		views: ['$bone!header', '$bone!footer']
-	}, {
-		other: '$bone!config'
-	}]
-}
-```
-
-```js
-/**
-*  Example describing the above comments
 *  @wire({ id: 'header', on: 'attrs.views' })
 *  @wire({ id: 'footer', on: 'attrs.views' })
 *  @wire({ id: 'config', on: 'other' })
@@ -179,6 +165,24 @@ constructor: function(attrs, other) {
   attrs.views[1]; // reference to an instance of 'footer' bone
   other; // reference to an instance of 'config' bone
   return MyClass.apply(this, arguments);
+}
+```
+
+```js
+/**
+*  Sample output inside the a spec of the example provided above.
+*  Notice that `attrs` will map to the first constructor argument (index 0) as an object and `other` as second (index 1)
+*  Also, notice when multiple wires has the same `on` path target set (`attrs.views`), this will be treated as an array.
+*  At the moment of injection, this combination of multiple wires will be resolved as:
+**/
+...
+mybone: {
+  $module: 'path/to/module',
+  $params: [{
+    views: ['$bone!header', '$bone!footer']
+  }, {
+    other: '$bone!config'
+  }]
 }
 ```
 
@@ -256,13 +260,13 @@ class UserReportGrid extends Container {
   ...
 
   /**
-  *	 Action Declaration to execute the method "render" on the bone "userReportGrid" component
-  *	 with params passed to the method "render".
-  *  Notice that method attribute is omitted since the annotation is on scope method.
-  *	 Notice also, that the action will be executed when the bone is instanciated on the userReport spec only,
-  *  even though the userReportGrid was targeted to get an instance on userPerformanceReport too.
-  *  Important: @actions can specify one spec target and only one at a time.
-  *	 @action({ bone: 'userReportGrid', spec: 'userReport', params: [{ method: 'after', target: 'div.header' }] })
+  *	Action Declaration to execute the method "render" on the bone "userReportGrid" component
+  *	with params passed to the method "render".
+  *	Notice that method attribute is omitted since the annotation is on scope method.
+  *	Notice also, that the action will be executed when the bone is instanciated on the userReport spec only,
+  *	even though the userReportGrid was targeted to get an instance on userPerformanceReport too.
+  *	Important: @actions can specify one spec target and only one at a time.
+  *	@action({ bone: 'userReportGrid', spec: 'userReport', params: [{ method: 'after', target: 'div.header' }] })
   **/
   render() {
     ...
