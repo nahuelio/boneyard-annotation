@@ -20,7 +20,7 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Model
 		*	@public
-		*	@wire({ bones: ["model"] })
+		*	@wire({ id: 'model' })
 		*	@property model
 		*	@type Backbone.Model
 		**/
@@ -29,10 +29,11 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Initialize
 		*	@public
+		*	@wire({ id: "title", on: "attrs.views" })
 		*	@method initialize
 		*	@return examples.es5.view.Content
 		*/
-		initialize: function() {
+		constructor: function(attrs) {
 			return Content.__super__.initialize.apply(this, arguments);
 		},
 

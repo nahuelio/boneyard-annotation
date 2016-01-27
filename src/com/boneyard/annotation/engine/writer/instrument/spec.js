@@ -36,6 +36,26 @@ class SpecInstrument extends Instrument {
 	*	@property bones
 	*	@type Array
 	**/
+	set paths(paths) {
+		this._paths = paths;
+	}
+
+	/**
+	*	Retrieves resolved dependency paths
+	*	@public
+	*	@property paths
+	*	@type Array
+	**/
+	get paths() {
+		return this._paths;
+	}
+
+	/**
+	*	Sets Spec bone instruments
+	*	@public
+	*	@property bones
+	*	@type Array
+	**/
 	set bones(bones) {
 		this._bones = bones;
 	}
@@ -91,6 +111,74 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
+	*	Default spec has annotation implementation
+	*	@public
+	*	@override
+	*	@method has
+	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
+	*	@return Boolean
+	**/
+	has(annotation) {
+		var method = this[`has${annotation.toString()}`];
+		return (super.has(annotation) && _.defined(method) && method.call(this, annotation));
+	}
+
+	/**
+	*	Returns true if a given plugin is part of this spec, otherwise returns false.
+	*	@public
+	*	@method hasPlugin
+	*	@param plugin {com.boneyard.annotation.support.Plugin} annotation reference
+	*	@return Boolean
+	**/
+	hasPlugin(plugin) {
+		return _.contains(plugin.specs, this.get().id);
+	}
+
+	/**
+	*	Returns true if a given bone is part of this spec, otherwise returns false.
+	*	@public
+	*	@method hasBone
+	*	@param bone {com.boneyard.annotation.support.Bone} annotation reference
+	*	@return Boolean
+	**/
+	hasBone(bone) {
+		return _.contains(bone.specs, this.get().id);
+	}
+
+	/**
+	*	Returns true if a given component is part of this spec, otherwise returns false.
+	*	@public
+	*	@method hasComponent
+	*	@param component {com.boneyard.annotation.support.Component} annotation reference
+	*	@return Boolean
+	**/
+	hasComponent(component) {
+		return _.contains(component.specs, this.get().id);
+	}
+
+	/**
+	*	Returns true if a given json is part of this spec, otherwise returns false.
+	*	@public
+	*	@method hasJson
+	*	@param json {com.boneyard.annotation.support.Json} annotation reference
+	*	@return Boolean
+	**/
+	hasJson(json) {
+		return _.contains(json.specs, this.get().id);
+	}
+
+	/**
+	*	Returns true if a given action is part of this spec, otherwise returns false.
+	*	@public
+	*	@method hasAction
+	*	@param action {com.boneyard.annotation.support.Action} annotation reference
+	*	@return Boolean
+	**/
+	hasAction(action) {
+		return (action.spec === this.get().id);
+	}
+
+	/**
 	*	Validates Instrumenter
 	*	@public
 	*	@override
@@ -141,10 +229,53 @@ class SpecInstrument extends Instrument {
 	*	@public
 	*	@method findBone
 	*	@param bone {com.boneyard.annotation.engine.writer.instrument.BoneInstrument} bone instrument reference
-	*	@return com.boneyard.annotation.support.Bone
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
 	**/
 	findBone(bone) {
 		return _.find(this.bones, (b) => { return (b.get().id === bone.id); });
+	}
+
+	/**
+	*	Performs a bone instrument look up by wire annotation and retrieves it if found, otherwise returns null
+	*	@public
+	*	@method findBoneByWire
+	*	@param wire {com.boneyard.annotation.support.Wire} wire annotation
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
+	**/
+	findBoneByWire(wire) {
+		return _.find(this.bones, (b) => { return (b.get().filepath === wire.filepath); });
+	}
+
+	/**
+	*	Dependency Path Resolution strategy
+	*	@public
+	*	@method resolvePaths
+	*	@param specs {Array} list of spec instruments
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
+	**/
+	resolvePaths(specs) {
+		this.paths = (this.get().parent.length > 0) ?
+			_.compact(_.map(this.get().parent, (p, ix, arr) => {
+				let s = _.find(specs, (s) => { return (s.get().id === p); });
+				return (s) ? s.get().path : null;
+			})) : [];
+		return this;
+	}
+
+	/**
+	*	Instrument Serialization strategy
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return _.extend(super.serialize(), this.get().serialize(), {
+			paths: (this.paths.length > 0) ? _s.quote(this.paths.join("','"), "'") : '',
+			//bones: _.invoke(this.bones, 'write'),
+			actions: _.invoke(this.actions, 'write'),
+			plugins: _.invoke(this.plugins, 'write')
+		});
 	}
 
 	/**

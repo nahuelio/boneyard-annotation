@@ -34,19 +34,6 @@ class BoneInstrument extends Instrument {
 	}
 
 	/**
-	*	Resolves module data structure.
-	*	@public
-	*	@method module
-	*	@return Array
-	**/
-	module() {
-		return {
-			$module: this.get().modulePath,
-			$params: _.omit(this.get().params, 'id', 'spec', 'module')
-		};
-	}
-
-	/**
 	*	Returns true if this instrument has a given annotation by matching the spec id against annotation spec id or list
 	*	of spec ids, otherwise returns false.
 	*	@public
@@ -61,6 +48,18 @@ class BoneInstrument extends Instrument {
 	}
 
 	/**
+	*	Wire Strategy
+	*	@public
+	*	@method wire
+	*	@param annotation {com.boneyard.annotation.support.Wire} annotation reference
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
+	**/
+	wire(annotation) {
+		_.extend(annotation.foundId.get().params, { params: annotation.serialize() });
+		return this;
+	}
+
+	/**
 	*	Returns true if metadata passes rules criteria in order to serialized annotation to be exported as template,
 	*	otherwise returns false.
 	*	@public
@@ -69,8 +68,8 @@ class BoneInstrument extends Instrument {
 	*	@param metadata {Object} metadata retrieved by serialization strategy
 	*	@return Boolean
 	**/
-	validate(metadata) {
-		return super.validate(metadata) && _.defined(metadata.id) && _.defined(metadata.module);
+	validate() {
+		return super.validate() && _.defined(this.get().id) && _.defined(this.get().path);
 	}
 
 	/**
@@ -81,7 +80,7 @@ class BoneInstrument extends Instrument {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend({ id: this.get().id, module: JSON.stringify(this.module()) }, super.serialize());
+		return _.extend(super.serialize(), this.get().serialize());
 	}
 
 	/**

@@ -71,6 +71,19 @@ class Bone extends Annotation {
 	}
 
 	/**
+	*	Resolves module data structure.
+	*	@public
+	*	@method module
+	*	@return Array
+	**/
+	module() {
+		return JSON.stringify({
+			$module: this.path,
+			$params: this.params.params
+		}, null, 4);
+	}
+
+	/**
 	*	Retrieves list of context in which this annotation should be found
 	*	@public
 	*	@property contexts
@@ -81,15 +94,14 @@ class Bone extends Annotation {
 	}
 
 	/**
-	*	JSON serialization strategy
+	*	Serialization
 	*	@public
 	*	@override
 	*	@method serialize
 	*	@return Object
 	**/
 	serialize() {
-		// TODO
-		return {};
+		return _.extend(super.serialize(), { id: this.id, module: this.module() });
 	}
 
 	/**

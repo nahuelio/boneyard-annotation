@@ -22,10 +22,11 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Initialize
 		*	@public
+		*	@wire({ id: "title", on: "attrs.views" })
 		*	@method initialize
 		*	@return examples.es5.view.header.Header
 		*/
-		initialize: function() {
+		constructor: function(attrs) {
 			return Header.__super__.initialize.apply(this, arguments);
 		}
 

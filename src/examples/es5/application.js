@@ -3,8 +3,8 @@
 *	@module examples.es5
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 *
-*	@plugin({ name: "html", config: "$bone!plugins.html", spec: "main" })
-*	@plugin({ name: "themes", config: "$bone!plugins.themes", spec: "main" })
+*	@plugin({ name: "html", config: "$bone!plugins.html", specs: ["main"] })
+*	@plugin({ name: "themes", config: "$bone!plugins.themes", specs: ["main"] })
 */
 define(['ui/container'], function(Container) {
 
@@ -17,7 +17,7 @@ define(['ui/container'], function(Container) {
 	*	@requires ui.Container
 	*
 	*	@spec({ id: "main", path: "specs/application", include: ["header", "footer", "model"] })
-	*	@bone({ id: "application", spec: "main" })
+	*	@bone({ id: "application", specs: ["main"] })
 	*	@action({ bone: "application", method: "render", spec: "application", params: [] })
 	**/
 	var Application = Boneyard.namespace('examples.es5.Application', Container.inherit({
@@ -26,8 +26,8 @@ define(['ui/container'], function(Container) {
 		*	Constructor
 		*	@constructor
 		*	@wire({ id: "header", on: "attrs.views" })
-		*	@wire({ id: "footer", on: "attrs.views" })
 		*	@wire({ id: "content", on: "attrs.views" })
+		*	@wire({ id: "footer", on: "attrs.views" })
 		*	@param attrs {Object} constructor attributes
 		*	@return examples.es5.Application
 		**/

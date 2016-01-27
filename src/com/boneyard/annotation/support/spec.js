@@ -80,20 +80,9 @@ class Spec extends Annotation {
 	serialize() {
 		return _.extend({
 			id: this.id,
-			paths: this.paths(),
 			dependencies: this.dependencies(),
 			specs: this.specs()
 		}, this.author(), super.serialize());
-	}
-
-	/**
-	*	Resolves spec dependenciy paths if any and returns them
-	*	@public
-	*	@method dependencies
-	*	@return String
-	**/
-	paths() {
-		return (_.defined(this.parent) && this.parent.length > 0) ? _s.quote(this.parent.join("','"), "'") : "";
 	}
 
 	/**
