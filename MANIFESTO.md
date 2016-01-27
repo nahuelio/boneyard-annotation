@@ -170,7 +170,7 @@ constructor: function(attrs, other) {
 
 ```js
 /**
-*  Sample output inside the a spec of the example provided above.
+*  Sample output inside a spec of the example provided above.
 *  Notice that `attrs` will map to the first constructor argument (index 0) as an object and `other` as second (index 1)
 *  Also, notice when multiple wires has the same `on` path target set (`attrs.views`), this will be treated as an array.
 *  At the moment of injection, this combination of multiple wires will be resolved as:
@@ -178,11 +178,7 @@ constructor: function(attrs, other) {
 ...
 mybone: {
   $module: 'path/to/module',
-  $params: [{
-    views: ['$bone!header', '$bone!footer']
-  }, {
-    other: '$bone!config'
-  }]
+  $params: [{ views: ['$bone!header', '$bone!footer'] }, '$bone!config']
 }
 ```
 
