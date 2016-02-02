@@ -5,6 +5,8 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
+import util from 'util';
+import Logger from '../../../util/logger';
 
 /**
 *	Class Instrument
@@ -14,6 +16,8 @@ import {EventEmitter} from 'events';
 *
 *	@requires underscore
 *	@requires underscore.string
+*	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.util.Logger
 **/
 class Instrument extends EventEmitter {
 
@@ -95,7 +99,7 @@ class Instrument extends EventEmitter {
 	*	@return Object
 	**/
 	serialize() {
-		return this.validate() ? this.annotation.serialize() : {};
+		return this.validate() ? this.get().serialize() : {};
 	}
 
 	/**
@@ -106,7 +110,19 @@ class Instrument extends EventEmitter {
 	*	@return String
 	**/
 	write() {
-		return this.template(this.serialize());
+		var out = this.serialize();
+		if(this.toString().indexOf('Spec') !== -1) {
+			Logger.out(`INSPECT ${this.toString()}`, 'r');
+			Logger.out(`----------------------`, 'r');
+		} else {
+			Logger.out(`INSPECT ${this.toString()}`, 'y');
+		}
+		console.log(util.inspect(out, { showHidden: false, depth: null, colors: true }));
+		if(this.toString().indexOf('Spec') !== -1) {
+			Logger.out(`----------------------`, 'r');
+			Logger.out(`----------------------`, 'r');
+		}
+		return this.template(out);
 	}
 
 	/**

@@ -43,8 +43,7 @@ class Component extends Bone {
 	*	@return Object
 	**/
 	serialize() {
-		// TODO
-		return {};
+		return super.serialize();
 	}
 
 	/**

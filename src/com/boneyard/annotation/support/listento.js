@@ -4,6 +4,7 @@
 **/
 
 import Action from './action';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class ListenTo
@@ -12,6 +13,7 @@ import Action from './action';
 *	@extends com.boneyard.annotation.support.Action
 *
 *	@requires com.boneyard.annotation.support.Action
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class ListenTo extends Action {
 
@@ -81,7 +83,7 @@ class ListenTo extends Action {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__method'];
+		return [Context.TYPES.Method];
 	}
 
 	/**

@@ -13,7 +13,7 @@ define(['ui/container'], function(Container) {
 	*
 	*	@requires ui.Container
 	*
-	*	@bone({ id: "content", specs: ["main"] })
+	*	@bone({ id: "content", specs: ["main"], singleton: true })
 	*/
 	var Content = Boneyard.namespace('examples.es5.view.Content', Container.inherit({
 
@@ -29,7 +29,7 @@ define(['ui/container'], function(Container) {
 		/**
 		*	Initialize
 		*	@public
-		*	@wire({ id: "title", on: "attrs.views" })
+		*	@wire({ id: "title", on: "attrs.views", params: [{ heading: 4, title: "Content Title" }] })
 		*	@method initialize
 		*	@return examples.es5.view.Content
 		*/

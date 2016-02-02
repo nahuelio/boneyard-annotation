@@ -6,6 +6,7 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import Annotation from '../engine/annotation/annotation';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Spec
@@ -17,6 +18,7 @@ import Annotation from '../engine/annotation/annotation';
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.templates.specTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Spec extends Annotation {
 
@@ -67,7 +69,7 @@ class Spec extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class'];
+		return [Context.TYPES.Class];
 	}
 
 	/**

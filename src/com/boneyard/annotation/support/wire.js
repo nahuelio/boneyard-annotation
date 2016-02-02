@@ -6,6 +6,7 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import Annotation from '../engine/annotation/annotation';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Wire
@@ -16,6 +17,7 @@ import Annotation from '../engine/annotation/annotation';
 *	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Wire extends Annotation {
 
@@ -71,19 +73,18 @@ class Wire extends Annotation {
 
 	/**
 	*	Serialization
-	*	@FIXME: // On Field (No 'on' params, process it as an action)!!
 	*	@public
 	*	@override
 	*	@method serialize
 	*	@return Object
 	**/
 	serialize() {
-		if(this.params.on) {
-			let out = {};
-			_.ns(this.params.on, [`$bone.${this.params.id}`], out);
-			return out;
-		}
-		return [];
+		// continue here...
+		console.log(this.params.on);
+		let out = {};
+		_.ns(this.params.on, [`$bone.${this.params.id}`], out);
+		console.log(out);
+		return out;
 	}
 
 	/**
@@ -93,7 +94,7 @@ class Wire extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__constructor', '__field'];
+		return [Context.TYPES.Constructor, Context.TYPES.Field];
 	}
 
 	/**

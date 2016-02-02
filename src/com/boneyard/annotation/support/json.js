@@ -4,6 +4,7 @@
 **/
 
 import Bone from './bone';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Json
@@ -12,6 +13,7 @@ import Bone from './bone';
 *	@extends com.boneyard.annotation.support.Bone
 *
 *	@requires com.boneyard.annotation.support.Bone
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Json extends Bone {
 
@@ -32,7 +34,7 @@ class Json extends Bone {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class'];
+		return [Context.TYPES.Class];
 	}
 
 	/**

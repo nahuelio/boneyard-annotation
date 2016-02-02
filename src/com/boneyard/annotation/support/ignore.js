@@ -4,6 +4,7 @@
 **/
 
 import Annotation from '../engine/annotation/annotation';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Ignore
@@ -12,6 +13,7 @@ import Annotation from '../engine/annotation/annotation';
 *	@extends com.boneyard.annotation.engine.annotation.Annotation
 *
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Ignore extends Annotation {
 
@@ -32,7 +34,7 @@ class Ignore extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class'];
+		return [Context.TYPES.Class];
 	}
 
 	/**
