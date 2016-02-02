@@ -247,7 +247,7 @@ class SpecInstrument extends Instrument {
 	}
 
 	/**
-	*	Dependency Path Resolution strategy
+	*	Dependency Path Resolution strategy (Spec decorations on other specs)
 	*	@public
 	*	@method resolvePaths
 	*	@param specs {Array} list of spec instruments
@@ -270,11 +270,11 @@ class SpecInstrument extends Instrument {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend(super.serialize(), this.get().serialize(), {
+		return _.extend(super.serialize(), {
 			paths: (this.paths.length > 0) ? _s.quote(this.paths.join("','"), "'") : '',
-			//bones: _.invoke(this.bones, 'write'),
-			actions: _.invoke(this.actions, 'write'),
-			plugins: _.invoke(this.plugins, 'write')
+			bones: _.invoke(this.bones, 'write')
+			//actions: _.invoke(this.actions, 'write'),
+			//plugins: _.invoke(this.plugins, 'write')
 		});
 	}
 

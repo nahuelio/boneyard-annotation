@@ -155,7 +155,8 @@ class Writer extends EventEmitter {
 	toFile(instruments = []) {
 		if(instruments.length === 0) return this;
 		instruments.forEach((instrument) => {
-			Logger.out(`${_.cleanEmptyLines(instrument.write(), null, 2)}`, 'y');
+			instrument.write();
+			//Logger.out(`${_.cleanEmptyLines(instrument.write())}`, 'g');
 			// Export to File
 		});
 		return this;

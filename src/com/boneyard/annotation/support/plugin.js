@@ -6,6 +6,7 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import Annotation from '../engine/annotation/annotation';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Plugin
@@ -17,6 +18,7 @@ import Annotation from '../engine/annotation/annotation';
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.templates.pluginTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Plugin extends Annotation {
 
@@ -47,7 +49,7 @@ class Plugin extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class'];
+		return [Context.TYPES.Class];
 	}
 
 	/**

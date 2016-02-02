@@ -6,6 +6,7 @@ import _ from 'underscore';
 import _s from 'underscore.string';
 import Instrument from './instrument';
 import template from '../templates/bone.tpl';
+import Context from '../../annotation/context';
 
 /**
 *	Class BoneInstrument
@@ -17,6 +18,7 @@ import template from '../templates/bone.tpl';
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.instrument.Instrument
 *	@requires com.boneyard.annotation.engine.writer.templates.spec
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class BoneInstrument extends Instrument {
 
@@ -30,32 +32,43 @@ class BoneInstrument extends Instrument {
 	constructor(spec, annotation) {
 		super(annotation, template);
 		this.spec = spec;
+		this.wires = [];
 		return this;
 	}
 
 	/**
-	*	Returns true if this instrument has a given annotation by matching the spec id against annotation spec id or list
-	*	of spec ids, otherwise returns false.
+	*	Dependency Injection Strategy
 	*	@public
-	*	@override
-	*	@method has
-	*	@param instrument {com.boneyard.annotation.engine.writer.instrument.Instrument} instrument reference
-	*	@return Boolean
+	*	@method inject
+	*	@param wire {com.boneyard.annotation.engine.writer.instrument.WireInstrument} wire instrument reference
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
 	**/
-	has(instrument) {
-		if(!super.belongsTo(instrument)) return false;
-		return _.contains(this.get().specs, instrument.get().spec.id);
+	inject(wire) {
+		this[`inject${wire.get().context.name}`].call(this, wire);
+		this.wires.push(wire);
+		return this;
 	}
 
 	/**
-	*	Wire Strategy
+	*	Contructor Injection Resolution
 	*	@public
-	*	@method wire
-	*	@param annotation {com.boneyard.annotation.support.Wire} annotation reference
+	*	@method inject__constructor
+	*	@param wire {com.boneyard.annotation.engine.writer.instrument.WireInstrument} wire instrument reference
 	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
 	**/
-	wire(annotation) {
-		_.extend(annotation.foundId.get().params, { params: annotation.serialize() });
+	inject__constructor(wire) {
+		return wire.serialize();
+	}
+
+	/**
+	*	Field Injection Resolution
+	*	@public
+	*	@method inject__constructor
+	*	@param wire {com.boneyard.annotation.engine.writer.instrument.WireInstrument} wire instrument reference
+	*	@return com.boneyard.annotation.engine.writer.instrument.BoneInstrument
+	**/
+	inject__field(wire) {
+		// TODO: Handle if wire is on field (Action perform)
 		return this;
 	}
 
@@ -80,7 +93,7 @@ class BoneInstrument extends Instrument {
 	*	@return Object
 	**/
 	serialize() {
-		return _.extend(super.serialize(), this.get().serialize());
+		return super.serialize();
 	}
 
 	/**

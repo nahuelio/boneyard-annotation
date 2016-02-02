@@ -14,7 +14,7 @@ define(['ui/container'], function(Container) {
 	*	@requires ui.Container
 	*
 	*	@spec({ id: "header", path: "specs/common/header" })
-	*	@bone({ id: "header", specs: ["header"] })
+	*	@bone({ id: "header", specs: ["header"], singleton: true })
 	*	@component({ id: "title", path: "ui/basic/header", specs: ['header'], params: [{ heading: 2, title: "Header" }] })
 	*/
 	var Header = Boneyard.namespace('examples.es5.view.header.Header', Container.inherit({

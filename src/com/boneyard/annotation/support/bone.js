@@ -6,6 +6,7 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import Annotation from '../engine/annotation/annotation';
+import Context from '../engine/annotation/context';
 
 /**
 *	Class Bone
@@ -17,6 +18,7 @@ import Annotation from '../engine/annotation/annotation';
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.templates.boneTpl
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
+*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Bone extends Annotation {
 
@@ -77,10 +79,10 @@ class Bone extends Annotation {
 	*	@return Array
 	**/
 	module() {
-		return JSON.stringify({
-			$module: this.path,
-			$params: this.params.params
-		}, null, 4);
+		return {
+			$module: _s.trim(this.path, '.js'),
+			$params: (this.params.params) ? this.params.params : []
+		};
 	}
 
 	/**
@@ -90,7 +92,7 @@ class Bone extends Annotation {
 	*	@type Array
 	**/
 	get contexts() {
-		return ['__class'];
+		return [Context.TYPES.Class];
 	}
 
 	/**

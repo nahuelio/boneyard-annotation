@@ -29,7 +29,7 @@ class WireInstrument extends Instrument {
 	}
 
 	/**
-	*	Resolves Wire location
+	*	Resolves Wire locations
 	*	@public
 	*	@method resolve
 	*	@param specs {Array} list of all spec instrumenters
@@ -39,7 +39,7 @@ class WireInstrument extends Instrument {
 		var bone;
 		for(let s of specs) {
 			bone = s.findBoneByWire(this.get());
-			if(bone) { this.get().foundId = bone; break; }
+			if(bone) { this.get().foundIn = bone; break; }
 		}
 		return bone;
 	}
@@ -52,7 +52,18 @@ class WireInstrument extends Instrument {
 	*	@return Array
 	**/
 	wire(specs) {
-		this.resolve(specs).wire(this.get());
+		this.resolve(specs).inject(this);
+	}
+
+	/**
+	*	Serialization
+	*	@public
+	*	@override
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		return super.serialize();
 	}
 
 	/**

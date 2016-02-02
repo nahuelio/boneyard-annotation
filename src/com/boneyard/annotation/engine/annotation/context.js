@@ -26,6 +26,17 @@ class Context {
 	}
 
 	/**
+	*	Returns true if the current context was found in a given context name. Otherwise, returns false.
+	*	@public
+	*	@method isContext
+	*	@param [name] {String} context name
+	*	@return Boolean
+	**/
+	isContext(name = '') {
+		return (_.contains(_.values(Context.TYPES), name) && this.name === name);
+	}
+
+	/**
 	*	Returns true if annotations context can be resolved on next immediate token that it's not inside a comment,
 	*	otherwise it will throw an exception.
 	*	@static
@@ -63,6 +74,21 @@ class Context {
 		return `Context couldn't be resolved for @${annotation.name} located in ${annotation.path}.
 			 Annotation @${annotation.name} supports the following scopes:
 			 ${_s.trim(annotation.contexts.join(','), '_')}`.replace(/(\n|\t)/gi, '');
+	}
+
+	/**
+	*	Context Types
+	*	@static
+	*	@property TYPES
+	*	@type Object
+	**/
+	static get TYPES() {
+		return {
+			Class: '__class',
+			Constructor: '__constructor',
+			Method: '__method',
+			Field: '__field'
+		};
 	}
 
 }
