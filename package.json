@@ -1,9 +1,11 @@
 {
     "name": "boneyard-annotation",
     "version": "0.1.0",
-    "description": "Boneyard Annotation Specs Instrumenter for Boneyard IoC package",
+    "description": "Boneyard Annotation Instrumenter for Boneyard IOC",
     "dependencies": {
         "babel": "5.8.x",
+        "esprima": "2.x.x",
+        "json-query": "1.x.x",
         "commander": "2.8.1",
         "bower": "1.4.x",
         "connect": "3.4.x",

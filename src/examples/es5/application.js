@@ -17,8 +17,8 @@ define(['ui/container'], function(Container) {
 	*	@requires ui.Container
 	*
 	*	@spec({ id: "main", path: "specs/application", include: ["header", "footer", "model"] })
-	*	@bone({ id: "application", specs: ["main"], singleton: true })
-	*	@action({ bone: "application", method: "render", spec: "application", params: [] })
+	*	@bone({ id: "application", spec: "main", singleton: true })
+	*	@action({ method: "render", spec: "main", params: [] })
 	**/
 	var Application = Boneyard.namespace('examples.es5.Application', Container.inherit({
 
