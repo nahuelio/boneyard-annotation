@@ -32,7 +32,7 @@ class Runner extends EventEmitter {
 	constructor(cfg = {}) {
 		super();
 		this._settings = _.extend({}, this.default, ((cfg.yard) ? cfg.yard : cfg));
-		Logger.environment = (this.settings.env) ? this.settings.env : Logger.environments.prod;
+		Logger.environment = (this.settings.env) ? Logger.environments[this.settings.env] : Logger.environments.prod;
 		return this;
 	}
 
@@ -43,11 +43,10 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	run() {
-		this._engine = new Engine(this.settings);
-		this.engine
-			.on('engine:start', this.onStart)
-			.on('engine:end', this.onEnd);
-		return this.engine;
+		this._engine = new Engine(this);
+		this.engine.on('engine:start', this.onStart).on('engine:end', this.onEnd);
+		this.engine.run();
+		return this;
 	}
 
 	/**
@@ -58,7 +57,11 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onStart() {
-		// TODO
+		Logger.out('Yard Settings: \n', 'm');
+		_.each(this.settings, function(v, k) {
+			Logger.out(`\t${k}: ${JSON.stringify(v)}`, 'y');
+		});
+		Logger.out('\nYarding started...\n', 'c');
 		return this;
 	}
 
@@ -70,18 +73,7 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onEnd() {
-		// TODObower
-		return this;
-	}
-
-	/**
-	*	Write to the stout settings
-	*	@public
-	*	@method info
-	*	@return com.boneyard.annotation.commands.Runner
-	**/
-	info() {
-		// TODO
+		Logger.out('Yarding Completed\n', 'c');
 		return this;
 	}
 

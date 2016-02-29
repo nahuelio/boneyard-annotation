@@ -3,9 +3,11 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import  {EventEmitter} from 'events';
+import Logger from '../util/logger';
 
 /**
 *	Class Engine
@@ -13,9 +15,11 @@ import  {EventEmitter} from 'events';
 *	@class com.boneyard.annotation.engine.Engine
 *	@extends events.EventEmitter
 *
+*	@requires path.resolve
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.util.Logger;
 **/
 class Engine extends EventEmitter {
 
@@ -27,8 +31,18 @@ class Engine extends EventEmitter {
 	constructor(runner) {
 		super();
 		this._runner = runner;
-		//this._reader = this.createReader(this.runner.settings);
-		//this._writer = this.createWriter(this.runner.settings);
+		return this.createReader().createWriter();
+	}
+
+	/**
+	*	Run
+	*	@public
+	*	@method run
+	*	@return com.boneyard.annotation.engine.Engine
+	**/
+	run() {
+		this.emit('engine:start');
+		this.reader.scan();
 		return this;
 	}
 
@@ -36,14 +50,17 @@ class Engine extends EventEmitter {
 	*	Reader Factory
 	*	@public
 	*	@method createReader
-	*	@param [...args] {Object} arguments to pass to the reader constructor
-	*	@return com.boneyard.annotation.engine.reader.Reader
+	*	@return com.boneyard.annotation.engine.Engine
 	**/
-	createReader(...args) {
+	createReader() {
 		try {
-			return new require(resolve('../engine/reader/es', this.esversion))(...args);
+			let Reader = require(resolve(__dirname, '../engine/reader/es' + this.settings.esversion.toString()));
+			this._reader = new Reader(this);
+			this._reader.on('reader:complete', _.bind(this.onReaderComplete, this));
+			return this;
 		} catch(ex) {
-			process.exit();
+			Logger.error(`StackTrace: ${ex.stack}`);
+			process.exit(1);
 		}
 	}
 
@@ -51,15 +68,41 @@ class Engine extends EventEmitter {
 	*	Writer Factory
 	*	@public
 	*	@method createWriter
-	*	@param [...args] {Object} arguments to pass to the writer constructor
-	*	@return com.boneyard.annotation.engine.writer.Writer
+	*	@return com.boneyard.annotation.engine.Engine
 	**/
 	createWriter(...args) {
 		try {
-			return new require('../engine/writer/writer')(...args);
+			//let Writer = new require('../engine/writer/writer');
+			//this._writer = new Writer(this);
+			//this._writer.on('writer:complete', _.bind(this.onWriterComplete, this));
+			return this;
 		} catch(ex) {
-			process.exit();
+			Logger.error(`StackTrace: ${ex.stack}`);
+			process.exit(1);
 		}
+	}
+
+	/**
+	*	Reader Complete Handler
+	*	@public
+	*	@method onReaderComplete
+	*	@return com.boneyard.annotation.engine.Engine
+	**/
+	onReaderComplete(scannedFiles, ignoredFiles) {
+		Logger.out(`Results\n\n\t${scannedFiles.length} Files Scanned\n\t${ignoredFiles.length} Files Ignored\n`, 'g');
+		//this.writer.writeAll();
+		return this.onWriterComplete();
+	}
+
+	/**
+	*	Writer Complete Handler
+	*	@public
+	*	@method onWriterComplete
+	*	@return com.boneyard.annotation.engine.Engine
+	**/
+	onWriterComplete() {
+		this.emit('engine:end');
+		return this;
 	}
 
 	/**
@@ -83,13 +126,23 @@ class Engine extends EventEmitter {
 	}
 
 	/**
-	*	Retrieves Writer
+	*	Retrieves Runner
 	*	@public
 	*	@property runner
 	*	@type com.boneyard.annotation.commands.Runner
 	**/
 	get runner() {
 		return this._runner;
+	}
+
+	/**
+	*	Retrieves Runner's settings
+	*	@public
+	*	@property settings
+	*	@type Object
+	**/
+	get settings() {
+		return this.runner.settings;
 	}
 
 }

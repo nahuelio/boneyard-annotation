@@ -3,7 +3,7 @@
 		"source": "./src/examples/es6",
 		"target": "./dist",
 		"esversion": 6,
-		"ignore": [],
+		"ignore": ["**/*.html", "main.js"],
 		"minify": false,
 		"env": "dev"
 	}
