@@ -5,7 +5,7 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import  {EventEmitter} from 'events';
+import {EventEmitter} from 'events';
 
 /**
 *	Class ASTComment
@@ -21,11 +21,22 @@ class ASTComment extends EventEmitter {
 
 	/**
 	*	@constructor
-	*	@param [attrs] {Object} attributes
+	*	@param [attrs] {Object} constructor attributes
 	*	@return com.boneyard.annotation.engine.ast.ASTComment
 	**/
 	constructor(attrs = {}) {
-		return super(attrs);
+		super(attrs);
+		return this;
+	}
+
+	/**
+	*	Retrieve annotations
+	*	@public
+	*	@property annotations
+	*	@type Map
+	**/
+	get annotations() {
+		return this._annotations;
 	}
 
 }

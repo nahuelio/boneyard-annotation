@@ -8,52 +8,41 @@ import _s from 'underscore.string';
 import ASTMetadata from './metadata';
 
 /**
-*	Class ASTProperty
+*	Class ASTMethod
 *	@namespace com.boneyard.annotation.engine.ast
-*	@class com.boneyard.annotation.engine.ast.ASTProperty
+*	@class com.boneyard.annotation.engine.ast.ASTMethod
 *	@extends com.boneyard.annotation.engine.ast.ASTMetadata
 *
 *	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.ast.ASTMetadata
 **/
-class ASTProperty extends ASTMetadata {
+class ASTMethod extends ASTMetadata {
 
 	/**
 	*	@constructor
 	*	@param [attrs] {Object} constructor attributes
-	*	@return com.boneyard.annotation.engine.ast.ASTProperty
+	*	@return com.boneyard.annotation.engine.ast.ASTMethod
 	**/
-	constructor(name, value, clazz) {
+	constructor(parameters, clazz) {
 		super();
-		this._name = name;
-		this._value = value;
+		this._parameters = parameters;
 		this._class = clazz;
 		return this;
 	}
 
 	/**
-	*	Retrieve name
+	*	Retrieve constructor parameters
 	*	@public
-	*	@property name
-	*	@type String
+	*	@property parameters
+	*	@type Array
 	**/
-	get name() {
-		return this._name;
+	get parameters() {
+		return this._parameters;
 	}
 
 	/**
-	*	Retrieve value
-	*	@public
-	*	@property value
-	*	@type Object
-	**/
-	get value() {
-		return this._value;
-	}
-
-	/**
-	*	Retrieve property class
+	*	Retrieve constructor class
 	*	@public
 	*	@property clazz
 	*	@type com.boneyard.annotation.engine.ast.ASTClass
@@ -64,4 +53,4 @@ class ASTProperty extends ASTMetadata {
 
 }
 
-export default ASTProperty;
+export default ASTMethod;

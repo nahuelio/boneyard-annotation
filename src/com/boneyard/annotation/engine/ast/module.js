@@ -5,27 +5,47 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import  {EventEmitter} from 'events';
+import ASTMetadata from './metadata';
 
 /**
 *	Class ASTModule
 *	@namespace com.boneyard.annotation.engine.ast
 *	@class com.boneyard.annotation.engine.ast.ASTModule
-*	@extends events.EventEmitter
+*	@extends com.boneyard.annotation.engine.ast.ASTMetadata
 *
 *	@requires underscore
 *	@requires underscore.string
-*	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.engine.ast.ASTMetadata
 **/
-class ASTModule extends EventEmitter {
+class ASTModule extends ASTMetadata {
 
 	/**
 	*	@constructor
-	*	@param [attrs] {Object} attributes
 	*	@return com.boneyard.annotation.engine.ast.ASTModule
 	**/
-	constructor(attrs = {}) {
-		return super(attrs);
+	constructor() {
+		super();
+		return this;
+	}
+
+	/**
+	*	Retrieve Imports
+	*	@public
+	*	@property imports
+	*	@type Map
+	**/
+	get imports() {
+		return this._imports;
+	}
+
+	/**
+	*	Retrieve Exports
+	*	@public
+	*	@property exports
+	*	@type Map
+	**/
+	get exports() {
+		return this._exports;
 	}
 
 }

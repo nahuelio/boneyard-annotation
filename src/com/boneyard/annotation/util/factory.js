@@ -12,7 +12,7 @@ import Logger from './logger';
 *	@namespace com.boneyard.annotation.util
 *	@class com.boneyard.annotation.util.Factory
 *
-*	@requires path
+*	@requires path.resolve
 *	@requires com.boneyard.annotation.util.Logger
 **/
 class Factory {
@@ -35,7 +35,7 @@ class Factory {
 	*	@param [ns] {String} namespace
 	**/
 	set namespace(ns = './') {
-		this.ns = path.resolve(process.cwd(), ns);
+		this.ns = resolve(process.cwd(), ns);
 	}
 
 	/**

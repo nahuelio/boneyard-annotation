@@ -3,12 +3,13 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
+import Stream from 'stream';
+import {EventEmitter} from 'events';
 import esprima from 'esprima';
-import Parser from '../parser/parser';
-import Annotation from '../annotation/annotation';
 import Factory from '../../util/factory';
 import Logger from '../../util/logger';
 
@@ -17,32 +18,100 @@ import Logger from '../../util/logger';
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Reader
 *
-*	@requires path
+*	@requires fs-extra
+*	@requires path.resolve
 *	@requires underscore
 *	@requires underscore.string
-*	@requires com.boneyard.annotation.parser.Parser
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires events.EventEmitter
+*	@requires esprima
 *	@requires com.boneyard.annotation.util.Factory
 *	@requires com.boneyard.annotation.util.Logger
 **/
-class Reader  {
+class Reader extends EventEmitter {
 
 	/**
 	*	Constructor
 	*	@constructor
-	*	@param tokenizer {com.boneyard.annotation.parser.Tokenizer} tokenizer instance
+	*	@param engine {com.boneyard.annotation.engine.Engine} engine reference
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
-	constructor(tokenizer) {
-		this.annotations = new Map();
-		this.factory = new Factory(resolve(__dirname, '../../support/'));
-		this.blacklist = [];
+	constructor(engine) {
+		super();
+		this._engine = engine;
+		this._factory = new Factory(resolve(__dirname, '../../support/'));
+		this._scanned = [];
+		this._ignored = [];
 		return this;
 	}
 
 	/**
-	*	Sets Current file being analyzed by this reader
+	*	Scan Source Path
+	*	@public
+	*	@method scan
+	*	@return
+	**/
+	scan() {
+		fs.walk(this.engine.settings.source)
+			.on('data', _.bind(this.read, this))
+			.on('error', _.bind(this.error, this))
+			.on('end', _.bind(this.complete, this));
+		return this;
+	}
+
+	/**
+	*	Default Annotation Read Strategy
+	*	@public
+	*	@method read
+	*	@param path {String} current file to read contents from
+	*	@param content {String} file content to be read
+	*	@return com.boneyard.annotation.reader.Reader
+	**/
+	read(asset) {
+		if(!this.ignore(asset)) {
+			//this.parse(esprima.parse(content, this.options));
+		}
+		return this;
+	}
+
+	/**
+	*	Default Ignore Handler
+	*	@public
+	*	@method ignore
+	*	@param asset {Object} asset metadata
+	*	@return Boolean
+	**/
+	ignore(asset) {
+		if(asset.stats.isDirectory()) return true;
+		let result = false;
+		(result) ? this._ignored.push(asset.path) : this._scanned.push(asset.path);
+		return result;
+	}
+
+	/**
+	*	Default Error Handler
+	*	@public
+	*	@method error
+	*	@param err {Error} error reference
+	*	@param file {Object} file reference
+	**/
+	error(err, file) {
+		Logger.error(`[Yard]: Error found while scanning file [${file}]: ${err.message}`);
+		process.exit(1);
+	}
+
+	/**
+	*	Default Complete Handler
+	*	@public
+	*	@method complete
+	*	@return com.boneyard.annotation.reader.Reader
+	**/
+	complete() {
+		this.emit('reader:complete', this.files, this.ignored);
+		return this;
+	}
+
+	/**
+	*	Sets current file being analyzed by this reader
 	*	@public
 	*	@property current
 	*	@type String
@@ -62,162 +131,58 @@ class Reader  {
 	}
 
 	/**
-	*	Retrieves annotation registry for the current file being read
+	*	Retrieve Esprima default options
 	*	@public
-	*	@property registry
+	*	@property options
+	*	@type Object
+	**/
+	get options() {
+		return {
+			sourceType: 'module',
+			tokens: true,
+			tolerant: false,
+			attachComments: true
+		};
+	}
+
+	/**
+	*	Retrieve Scanned files
+	*	@public
+	*	@property files
 	*	@type Array
 	**/
-	get registry() {
-		return this.annotations.get(this.current);
+	get files() {
+		return this._scanned;
 	}
 
 	/**
-	*	Returns true if token passes basic validation, otherwise false.
-	*	Return true all the following conditions are met:
-	*	- A token is a string
-	*	- A token has length greater than 0.
-	*	- A token contains a symbol character declared in Annotation.Symbol.
-	*	- A token must be defined inside a comment block of any kind (multi line / single line).
-	*	- A token containing a symbol character must start with the symbol itself.
+	*	Retrieve Ignored files
 	*	@public
-	*	@method isValid
-	*	@param token {String} token reference
-	*	@return Boolean
+	*	@property ignored
+	*	@type Array
 	**/
-	isValid(token) {
-		return (typeof(token) === 'string' && token.length > 0 && Annotation.regExp.test(token));
+	get ignored() {
+		return this._ignored;
 	}
 
 	/**
-	*	Returns true if the content of a given token is a comment, otherwise returns false.
+	*	Retrieve Reader's factory
 	*	@public
-	*	@method inComment
-	*	@param token {String} token to evaluate
-	*	@return Boolean
+	*	@property factory
+	*	@type com.boneyard.annotation.util.Factory
 	**/
-	inComment(token) {
-		return _s.startsWith(token, '*') || _s.startsWith(token, '//') || _s.startsWith(token, '/*');
+	get factory() {
+		return this._factory;
 	}
 
 	/**
-	*	Resolves relative path to the current file being read
+	*	Retrieve Reader's Engine
 	*	@public
-	*	@method resolvePath
-	*	@param path {String} current file to read contents from
-	*	@return String
+	*	@property engine
+	*	@type com.boneyard.annotation.engine.Engine
 	**/
-	resolvePath(path) {
-		if(!path) return null;
-		return _s.replaceAll(path, Parser.config.cwd + '/', '')
-	}
-
-	/**
-	*	Default Annotation Read Strategy
-	*	@public
-	*	@method read
-	*	@param path {String} current file to read contents from
-	*	@param content {String} file content to be read
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	read(path, content = "") {
-		if(!(this.current = this.resolvePath(path))) return this;
-		Logger.out(`Reading ${this.current}...`, 'm');
-		this.annotations.set(this.current, new Array());
-		this.tokenizer.reset(content).tokenize();
-		return this;
-	}
-
-	/**
-	*	Returns a list of annotations that have not resolved their contexts by this reader.
-	*	@public
-	*	@method annotationsWithNoContext
-	*	@return Array
-	**/
-	annotationsWithNoContext() {
-		return _.compact(this.registry.map((a) => { return a.hasContext() ? a : null }));
-	}
-
-	/**
-	*	Default Token Handler
-	*	Evaluates token expression and decide which annotation will process the token
-	*	@public
-	*	@method onToken
-	*	@param token {String} token to be analyzed
-	*	@param [predicate] {Function} predicate operation
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	onToken(token) {
-		return this.isValid(token) ? this.onAnnotation(Annotation.metadata(token)) : this.onContext(token);
-	}
-
-	/**
-	*	Default Annotation resolution strategy
-	*	@public
-	*	@method onAnnotation
-	*	@param metadata {Object} annotation metadata
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	onAnnotation(metadata) {
-		if(!metadata) return this;
-		try {
-			this.factory.register(metadata._name.toLowerCase());
-			let annotation = this.getAnnotation(metadata);
-			if(!this.onIgnore(annotation)) this.registry.push(annotation);
-		} catch(ex) {
-			Logger.warn(ex.message);
-		}
-		return this;
-	}
-
-	/**
-	*	Default Context resolution strategy
-	*	@public
-	*	@method onContext
-	*	@param token {String} token not in comment used to determine annotation context
-	*	@return Array
-	**/
-	onContext(token) {
-		if(this.inComment(token)) return [];
-		return this.annotationsWithNoContext();
-	}
-
-	/**
-	*	Retrieves annotation class given a token extracted from tokenizer
-	*	@public
-	*	@method getAnnotation
-	*	@param metadata {Object} annotation metadata
-	*	@return com.boneyard.annotation.support.Annotation
-	**/
-	getAnnotation(metadata) {
-		return this.factory.create(metadata._name.toLowerCase(), _.extend({
-			_filepath: this.current,
-			_config: Parser.config
-		}, metadata));
-	}
-
-	/**
-	*	Returns true if current annotation was flagged to be blacklisted, otherwise it returns false.
-	*	@public
-	*	@method onIgnore
-	*	@param annotation {com.boneyard.annotation.engine.annotation.Annotation} annotation reference
-	*	@return Boolean
-	**/
-	onIgnore(annotation) {
-		if(annotation._name === 'ignore') {
-			this.blacklist.push(annotation._filepath);
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	*	Static Constructor
-	*	@static
-	*	@method new
-	*	@return com.boneyard.annotation.reader.Reader
-	**/
-	static new() {
-		return new this(new Tokenizer());
+	get engine() {
+		return this._engine;
 	}
 
 }

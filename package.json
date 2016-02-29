@@ -10,7 +10,7 @@
     "commander": "2.8.1",
     "connect": "3.4.x",
     "esprima": "2.x.x",
-    "fs-extra": "0.23.x",
+    "fs-extra": "0.26.x",
     "glob": "5.0.14",
     "json-query": "1.x.x",
     "serve-static": "*",
