@@ -5,51 +5,43 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-var program = require('commander'),
+var fs = require('fs-extra'),
 	resolve = require('path').resolve,
 	_ = require('underscore'),
+	Command = require('commander').Command,
+	program = require('commander'),
+	chalk = require('chalk'),
 	pkg = require('../package.json'),
-	es6 = require('babel/register');
+	es6 = require('babel/register'),
+	basePath = resolve(__dirname, '../src/com/boneyard/annotation/commands'),
+	Runner = require(basePath + '/runner');
+
+var year = new Date().getFullYear(),
+	info = _.template(fs.readFileSync(basePath + '/info/yard.info', 'utf8')),
+	help = _.template(fs.readFileSync(basePath + '/info/help.info', 'utf8'));
 
 /**
-*	Version
+*	CLI Information
 **/
-program
-	.version(('yard@' + pkg.version + ' - Boneyard Annotation CLI Tool\n'))
-	.usage('[command] [options]');
+var version = _.bind(function() { return chalk.cyan(info(_.extend(pkg, { year: year }))); }, this);
 
 /**
-*	Command: Build
+*	Help Override
 **/
-program
-	.command('build [source]')
-	.description('Scans, analyzes and executes dependency injection given a source dir (or an specific file that uses @scan annotations)')
-	.option('-e, --exclude <paths...>', 'Exclude files using patterns from the scanner', function(paths) {
-		return paths.split(',');
-	})
-	.action(_.bind(function(source, program) {
-		require('../src/com/boneyard/annotation/commands/runner').new(resolve(__dirname, '../', source), null, program.exclude, program);
-	}, this));
+Command.prototype.helpInformation = _.bind(function() {
+	console.log(version());
+	console.log(help({ chalk: chalk }));
+	return '';
+}, this);
 
 /**
-*	Command: Examples
+*	Yard Command
 **/
 program
-	.command('examples [port]')
-	.description('Spins up a simple http server to check examples results')
-	.action(_.bind(function(command, port) {
-		require('../src/com/boneyard/annotation/commands/examples')((arguments.length === 3) ? port : undefined, program);
-	}, this));
+	.version(version())
+	.option('-c, --config <path>', 'Path to your configuration file')
+	.parse(process.argv)
 
-/**
-*	Program Help
-**/
-program
-	.on('--help', _.bind(function() {
-		console.log('\tCommand Build usage example:\n');
-		console.log('\t\tyard build ./src/**/*.js -e src/excludeme/**/*.js,src/other.js');
-		console.log('\n');
-		console.log('\tCommand Examples usage:\n');
-		console.log('\t\tyard examples -p 9393');
-		console.log('\n');
-	}, this)).parse(process.argv);
+if(program.config) {
+	Runner.new(fs.readJsonSync(program.config));
+}

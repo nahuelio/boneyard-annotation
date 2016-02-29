@@ -27,8 +27,8 @@ class Engine extends EventEmitter {
 	constructor(runner) {
 		super();
 		this._runner = runner;
-		this._reader = this.createReader(settings);
-		this._writer = this.createWriter(settings);
+		//this._reader = this.createReader(this.runner.settings);
+		//this._writer = this.createWriter(this.runner.settings);
 		return this;
 	}
 

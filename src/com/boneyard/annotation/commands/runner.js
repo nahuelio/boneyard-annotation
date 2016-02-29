@@ -31,7 +31,7 @@ class Runner extends EventEmitter {
 	**/
 	constructor(cfg = {}) {
 		super();
-		this._settings = _.extend({}, this.default, cfg);
+		this._settings = _.extend({}, this.default, ((cfg.yard) ? cfg.yard : cfg));
 		Logger.environment = (this.settings.env) ? this.settings.env : Logger.environments.prod;
 		return this;
 	}
@@ -44,9 +44,10 @@ class Runner extends EventEmitter {
 	**/
 	run() {
 		this._engine = new Engine(this.settings);
-		this.engine.on('engine:start', this.onStart)
+		this.engine
+			.on('engine:start', this.onStart)
 			.on('engine:end', this.onEnd);
-		return this.engine.start();
+		return this.engine;
 	}
 
 	/**
@@ -57,7 +58,7 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onStart() {
-		Logger.out(`Yard`)
+		// TODO
 		return this;
 	}
 
@@ -69,6 +70,7 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onEnd() {
+		// TODObower
 		return this;
 	}
 
@@ -76,12 +78,11 @@ class Runner extends EventEmitter {
 	*	Write to the stout settings
 	*	@public
 	*	@method info
+	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	info() {
-		Logger.out(
-			`Yard@
-			`
-		);
+		// TODO
+		return this;
 	}
 
 	/**
@@ -112,10 +113,10 @@ class Runner extends EventEmitter {
 	**/
 	get default() {
 		return {
-			cwd: this.source.substring(0, this.source.lastIndexOf('/')),
-			target: this.source.substring(this.source.lastIndexOf('/'), this.source.length),
-			ignore: ['libraries/**/*.*', 'main.js'],
-			nodir: true
+			ignore: [],
+			esversion: 6,
+			minify: false,
+			env: Logger.environments.dev
 		};
 	}
 
@@ -126,7 +127,7 @@ class Runner extends EventEmitter {
 	*	@param [cfg] {Object} Runner config
 	*	@return com.boneyard.annotation.Scanner
 	**/
-	static new(cfg = { esversion = 6, source = './examples', target: './dist', exclude = [] }) {
+	static new(cfg = this.default) {
 		return new Runner(cfg).run();
 	}
 
