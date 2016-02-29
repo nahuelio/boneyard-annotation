@@ -1,0 +1,7 @@
+<% return chalk.yellow('Options:\n') +
+chalk.green('\t-V, --version\t\tDisplay Program Version\n') +
+chalk.green('\t-h, --help\t\tDisplay this help\n') +
+chalk.green('\t-c, --config <path>\tPath to your configuration file\n\n') +
+chalk.yellow('Usage:\n') +
+chalk.green('\tyard -c ./yard.json\n');
+%>

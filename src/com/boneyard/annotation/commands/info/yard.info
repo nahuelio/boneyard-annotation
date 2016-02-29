@@ -1,0 +1,2 @@
+Boneyard CLI Tool | v<%= version %>
+Made with love by nahuel.io © <%= year %>
