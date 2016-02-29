@@ -6,7 +6,7 @@
 import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
-import Tokenizer from '../parser/tokenizer';
+import esprima from 'esprima';
 import Parser from '../parser/parser';
 import Annotation from '../annotation/annotation';
 import Factory from '../../util/factory';
@@ -20,7 +20,6 @@ import Logger from '../../util/logger';
 *	@requires path
 *	@requires underscore
 *	@requires underscore.string
-*	@requires com.boneyard.annotation.parser.Tokenizer
 *	@requires com.boneyard.annotation.parser.Parser
 *	@requires com.boneyard.annotation.engine.annotation.Annotation
 *	@requires com.boneyard.annotation.engine.annotation.Context
@@ -37,8 +36,6 @@ class Reader  {
 	**/
 	constructor(tokenizer) {
 		this.annotations = new Map();
-		this.tokenizer = tokenizer;
-		this.tokenizer.on(Tokenizer.Events.next, _.bind(this.onToken, this));
 		this.factory = new Factory(resolve(__dirname, '../../support/'));
 		this.blacklist = [];
 		return this;

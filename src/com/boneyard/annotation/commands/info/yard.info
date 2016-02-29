@@ -1,0 +1,3 @@
+Boneyard Annotation CLI Tool | yard@<%= version %>
+Author: Patricio Ferreira <3dimentionar@gmail.com>
+nahuel.io | copyright 2016-<%= today %>

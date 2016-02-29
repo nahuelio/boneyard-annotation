@@ -1,0 +1,5 @@
+\x1b[0;33mUsage:
+	\x1b[0;36m~/yard -c ./yard.json
+\x1b[0;33mOptions:
+	\x1b[0;36m-c, --config <path> Relative path to your configuration
+\x1b[0m
