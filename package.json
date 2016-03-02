@@ -3,17 +3,14 @@
   "version": "0.1.0",
   "description": "Boneyard Annotation Instrumenter for Boneyard IOC",
   "dependencies": {
-    "async": "1.5.x",
     "babel": "5.8.x",
     "bower": "1.4.x",
     "chalk": "^1.1.1",
     "commander": "2.8.1",
-    "connect": "3.4.x",
     "esprima": "2.x.x",
     "fs-extra": "0.26.x",
     "glob": "5.0.14",
     "json-query": "1.x.x",
-    "serve-static": "*",
     "underscore": "~1.8",
     "underscore.string": "~3.2.x"
   },

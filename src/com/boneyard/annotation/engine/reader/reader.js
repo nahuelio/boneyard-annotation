@@ -7,7 +7,6 @@ import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
-import Stream from 'stream';
 import {EventEmitter} from 'events';
 import esprima from 'esprima';
 import Factory from '../../util/factory';
@@ -22,6 +21,7 @@ import Logger from '../../util/logger';
 *	@requires path.resolve
 *	@requires underscore
 *	@requires underscore.string
+*	@requires glob
 *	@requires events.EventEmitter
 *	@requires esprima
 *	@requires com.boneyard.annotation.util.Factory
@@ -51,7 +51,7 @@ class Reader extends EventEmitter {
 	*	@return
 	**/
 	scan() {
-		fs.walk(this.engine.settings.source)
+		fs.walk(this.settings.source)
 			.on('data', _.bind(this.read, this))
 			.on('error', _.bind(this.error, this))
 			.on('end', _.bind(this.complete, this));
@@ -67,10 +67,24 @@ class Reader extends EventEmitter {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	read(asset) {
-		if(!this.ignore(asset)) {
+		if(this.filter(asset)) {
 			//this.parse(esprima.parse(content, this.options));
 		}
 		return this;
+	}
+
+	/**
+	*	Default Filter Handler
+	*	@public
+	*	@method filter
+	*	@param asset {Object} asset metadata
+	*	@return Boolean
+	**/
+	filter(asset) {
+		if(asset.stats.isDirectory()) return true;
+		let result = (this.extensions(asset) && !this.ignore(asset));
+		(result) ? this._scanned.push(asset.path) : this._ignored.push(asset.path);
+		return result;
 	}
 
 	/**
@@ -81,10 +95,19 @@ class Reader extends EventEmitter {
 	*	@return Boolean
 	**/
 	ignore(asset) {
-		if(asset.stats.isDirectory()) return true;
-		let result = false;
-		(result) ? this._ignored.push(asset.path) : this._scanned.push(asset.path);
-		return result;
+		let basePath = `${resolve(process.cwd(), this.settings.source)}/`;
+		return _.contains(this.settings.ignore, _s.strRight(asset.path, basePath));
+	}
+
+	/**
+	*	Default Extensions Handler
+	*	@public
+	*	@method extensions
+	*	@param asset {Object} asset metadata
+	*	@return Boolean
+	**/
+	extensions(asset) {
+		return _.some(this.settings.extensions, (ext) => { return _s.endsWith(asset.path, ext); });
 	}
 
 	/**
@@ -183,6 +206,16 @@ class Reader extends EventEmitter {
 	**/
 	get engine() {
 		return this._engine;
+	}
+
+	/**
+	*	Retrieves Engine's settings
+	*	@public
+	*	@property settings
+	*	@type Object
+	**/
+	get settings() {
+		return this.engine.settings;
 	}
 
 }

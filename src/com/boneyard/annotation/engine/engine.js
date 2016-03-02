@@ -89,7 +89,9 @@ class Engine extends EventEmitter {
 	*	@return com.boneyard.annotation.engine.Engine
 	**/
 	onReaderComplete(scannedFiles, ignoredFiles) {
-		Logger.out(`Results\n\n\t${scannedFiles.length} Files Scanned\n\t${ignoredFiles.length} Files Ignored\n`, 'g');
+		Logger.out(`Results:\n`, 'm');
+		Logger.out(`\t${scannedFiles.length} Files Scanned`, 'g');
+		Logger.out(`\t${ignoredFiles.length} Files Ignored\n`, 'r');
 		//this.writer.writeAll();
 		return this.onWriterComplete();
 	}

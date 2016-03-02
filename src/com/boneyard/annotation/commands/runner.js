@@ -6,6 +6,7 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
+import glob from 'glob';
 import {EventEmitter} from 'events';
 import Engine from '../engine/engine';
 import Logger from '../util/logger';
@@ -31,7 +32,7 @@ class Runner extends EventEmitter {
 	**/
 	constructor(cfg = {}) {
 		super();
-		this._settings = _.extend({}, this.default, ((cfg.yard) ? cfg.yard : cfg));
+		this._settings = this.parse(_.extend({}, this.default, ((cfg.yard) ? cfg.yard : cfg)));
 		Logger.environment = (this.settings.env) ? Logger.environments[this.settings.env] : Logger.environments.prod;
 		return this;
 	}
@@ -73,8 +74,23 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onEnd() {
-		Logger.out('Yarding Completed\n', 'c');
+		Logger.out('Yarding Completed.\n', 'c');
 		return this;
+	}
+
+	/**
+	*	Parse Settings
+	*	@public
+	*	@method parse
+	*	@param settings {Object} settings
+	*	@return Object
+	**/
+	parse(settings) {
+		let list = _.isString(settings.ignore) ? [settings.ignore] : settings.ignore;
+		settings.ignore = _.flatten(_.map(settings.ignore, (p) => {
+			return glob.sync(p, { cwd: settings.source, strict: true });
+		}));
+		return settings;
 	}
 
 	/**

@@ -48,4 +48,8 @@ release:
 	@make coverage && make docs && make build
 	@echo "\n\033[1;36mRelease Completed.\033[0m"
 
-.PHONY: clean clean-test clean-examples-test clean-docs clean-build test test-examples coverage docs build release
+start:
+	@supervisor -w ./src -n exit -- ./bin/yard -c ./src/examples/config-sample.json
+
+.PHONY:
+	clean clean-test clean-examples-test clean-docs clean-build test test-examples coverage docs build release start
