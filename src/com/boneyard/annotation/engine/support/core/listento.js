@@ -1,19 +1,17 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import Action from './action';
-import Context from '../engine/annotation/context';
 
 /**
 *	Class ListenTo
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.ListenTo
-*	@extends com.boneyard.annotation.support.Action
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.ListenTo
+*	@extends com.boneyard.annotation.engine.support.core.Action
 *
-*	@requires com.boneyard.annotation.support.Action
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.core.Action
 **/
 class ListenTo extends Action {
 
@@ -21,7 +19,7 @@ class ListenTo extends Action {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.ListenTo
+	*	@return com.boneyard.annotation.engine.support.core.ListenTo
 	**/
 	constructor(...attrs) {
 		return super(...attrs);
@@ -74,16 +72,6 @@ class ListenTo extends Action {
 			target: `$bone!${this.bone}.${this.method}`,
 			params: JSON.stringify([this.params.from, this.params.events, this.handler])
 		};
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@static
-	*	@property contexts
-	*	@type Array
-	**/
-	get contexts() {
-		return [Context.TYPES.Method];
 	}
 
 	/**

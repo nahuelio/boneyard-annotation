@@ -56,7 +56,9 @@ class Engine extends EventEmitter {
 		try {
 			let Reader = require(resolve(__dirname, '../engine/reader/es' + this.settings.esversion.toString()));
 			this._reader = new Reader(this);
-			this._reader.on('reader:complete', _.bind(this.onReaderComplete, this));
+			this._reader
+				.on('reader:asset', _.bind(this.onReaderAsset, this))
+				.on('reader:complete', _.bind(this.onReaderComplete, this));
 			return this;
 		} catch(ex) {
 			Logger.error(`StackTrace: ${ex.stack}`);
@@ -83,15 +85,27 @@ class Engine extends EventEmitter {
 	}
 
 	/**
+	*	Reader Asset Read Handler
+	*	@public
+	*	@method onReaderAsset
+	*	@param asset {Object} current asset being parsed
+	*	@return com.boneyard.annotation.engine.Engine
+	**/
+	onReaderAsset(asset) {
+		Logger.out(`[${_s.strRight(asset.path, this.settings.basePath)}]`, 'g');
+		return this;
+	}
+
+	/**
 	*	Reader Complete Handler
 	*	@public
 	*	@method onReaderComplete
 	*	@return com.boneyard.annotation.engine.Engine
 	**/
 	onReaderComplete(scannedFiles, ignoredFiles) {
-		Logger.out(`Results:\n`, 'm');
-		Logger.out(`\t${scannedFiles.length} Files Scanned`, 'g');
-		Logger.out(`\t${ignoredFiles.length} Files Ignored\n`, 'r');
+		Logger.out(`\nResults:\n`, 'm');
+		Logger.out(`\t${scannedFiles.length} Files Scanned.`, 'g');
+		Logger.out(`\t${ignoredFiles.length} Files Ignored.\n`, 'r');
 		//this.writer.writeAll();
 		return this.onWriterComplete();
 	}

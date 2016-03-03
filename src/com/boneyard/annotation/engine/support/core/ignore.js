@@ -1,19 +1,17 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Annotation from '../engine/annotation/annotation';
-import Context from '../engine/annotation/context';
+import Annotation from '../annotation';
 
 /**
 *	Class Ignore
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Ignore
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.Ignore
+*	@extends com.boneyard.annotation.engine.support.Annotation
 *
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.Annotation
 **/
 class Ignore extends Annotation {
 
@@ -21,20 +19,10 @@ class Ignore extends Annotation {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.Ignore
+	*	@return com.boneyard.annotation.engine.support.core.Ignore
 	**/
 	constructor(...attrs) {
 		return super(...attrs);
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@public
-	*	@property contexts
-	*	@type Array
-	**/
-	get contexts() {
-		return [Context.TYPES.Class];
 	}
 
 	/**

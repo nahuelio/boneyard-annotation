@@ -3,6 +3,8 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import esprima from 'esprima';
+import q from 'json-query';
 import Reader from './reader';
 
 /**
@@ -11,8 +13,9 @@ import Reader from './reader';
 *	@class com.boneyard.annotation.reader.Es6Reader
 *	@extends com.boneyard.annotation.reader.Reader
 *
+*	@requires esprima
+*	@requires json-query
 *	@requires com.boneyard.annotation.reader.Reader
-*	@requires com.boneyard.annotation.engine.annotation.Context
 **/
 class Es6Reader extends Reader {
 
@@ -24,6 +27,19 @@ class Es6Reader extends Reader {
 	**/
 	constructor(...args) {
 		return super(...args);
+	}
+
+	/**
+	*	Asset Content Parsing Strategy
+	*	@public
+	*	@override
+	*	@method parse
+	*	@param asset {Object} asset reference
+	*	@return Object
+	**/
+	parse(asset) {
+		//console.log(esprima.parse(asset.content, this.options));
+		return asset;
 	}
 
 }

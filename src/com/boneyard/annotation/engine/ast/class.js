@@ -62,10 +62,10 @@ class ASTClass extends ASTMetadata {
 	/**
 	*	Retrieve class constructor
 	*	@public
-	*	@property constructor
+	*	@property construct
 	*	@type com.boneyard.annotation.engine.ast.ASTConstructor
 	**/
-	get constructor() {
+	get construct() {
 		return this._constructor;
 	}
 

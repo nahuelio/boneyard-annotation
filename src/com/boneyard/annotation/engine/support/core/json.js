@@ -1,19 +1,17 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import Bone from './bone';
-import Context from '../engine/annotation/context';
 
 /**
 *	Class Json
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Json
-*	@extends com.boneyard.annotation.support.Bone
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.Json
+*	@extends com.boneyard.annotation.engine.support.core.Bone
 *
-*	@requires com.boneyard.annotation.support.Bone
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.core.Bone
 **/
 class Json extends Bone {
 
@@ -25,16 +23,6 @@ class Json extends Bone {
 	**/
 	constructor(...attrs) {
 		return super(...attrs);
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@public
-	*	@property contexts
-	*	@type Array
-	**/
-	get contexts() {
-		return [Context.TYPES.Class];
 	}
 
 	/**

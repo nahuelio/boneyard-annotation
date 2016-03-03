@@ -58,8 +58,8 @@ class Runner extends EventEmitter {
 	*	@return com.boneyard.annotation.commands.Runner
 	**/
 	onStart() {
-		Logger.out('Yard Settings: \n', 'm');
-		_.each(this.settings, function(v, k) {
+		Logger.out('\nYard Settings: \n', 'm');
+		_.each(_.omit(this.settings, 'basePath'), function(v, k) {
 			Logger.out(`\t${k}: ${JSON.stringify(v)}`, 'y');
 		});
 		Logger.out('\nYarding started...\n', 'c');
@@ -86,10 +86,7 @@ class Runner extends EventEmitter {
 	*	@return Object
 	**/
 	parse(settings) {
-		let list = _.isString(settings.ignore) ? [settings.ignore] : settings.ignore;
-		settings.ignore = _.flatten(_.map(settings.ignore, (p) => {
-			return glob.sync(p, { cwd: settings.source, strict: true });
-		}));
+		settings.basePath = `${resolve(process.cwd(), settings.source)}/`;
 		return settings;
 	}
 
