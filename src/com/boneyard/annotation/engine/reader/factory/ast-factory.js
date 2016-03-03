@@ -56,6 +56,7 @@ class ASTFactory extends Factory {
 			method: 'method.js',
 			module: 'module.js',
 			parameter: 'parameter.js',
+			program: 'program.js',
 			property: 'property.js'
 		}
 	}

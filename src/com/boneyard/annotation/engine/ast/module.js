@@ -21,11 +21,48 @@ class ASTModule extends ASTMetadata {
 
 	/**
 	*	@constructor
+	*	@param [attrs] {Object} constructor attributes
 	*	@return com.boneyard.annotation.engine.ast.ASTModule
 	**/
-	constructor() {
+	constructor(attrs = {}) {
 		super();
-		return this;
+		this._classes = new Map();
+		this._imports = new Map();
+		this._exports = new Map();
+		return this.serialize(attrs.node);
+	}
+
+	/**
+	*	Serialization strategy
+	*	@public
+	*	@override
+	*	@param node {Object} ast module node
+	*	@method serialize
+	*	@return com.boneyard.annotation.engine.ast.ASTModule
+	**/
+	serialize(node) {
+		console.log(node);
+	}
+
+	/**
+	*	Deserialization strategy
+	*	@public
+	*	@override
+	*	@method deserialize
+	*	@return Object
+	**/
+	deserialize() {
+		return _.extend(super.deserialize(), {});
+	}
+
+	/**
+	*	Retrieve classes
+	*	@public
+	*	@property classes
+	*	@type Map
+	**/
+	get classes() {
+		return this._classes;
 	}
 
 	/**
@@ -46,6 +83,17 @@ class ASTModule extends ASTMetadata {
 	**/
 	get exports() {
 		return this._exports;
+	}
+
+	/**
+	*	Static Module Constructor
+	*	@static
+	*	@method parse
+	*	@param node {Object} ast node
+	*	@return com.boneyard.annotation.engine.ast.ASTModule
+	**/
+	static parse(node) {
+		return new ASTModule({ node: node });
 	}
 
 }

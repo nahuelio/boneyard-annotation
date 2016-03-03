@@ -34,6 +34,7 @@ class Es5Reader extends Reader {
 	*	@return Object
 	**/
 	parse(asset) {
+		//console.log(esprima.parse(asset.content, this.options));
 		return asset;
 	}
 
