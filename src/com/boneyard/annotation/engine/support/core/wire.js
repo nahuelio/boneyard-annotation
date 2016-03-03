@@ -1,23 +1,21 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import Annotation from '../engine/annotation/annotation';
-import Context from '../engine/annotation/context';
+import Annotation from '../annotation';
 
 /**
 *	Class Wire
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Wire
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.Wire
+*	@extends com.boneyard.annotation.engine.support.Annotation
 *
 *	@requires underscore
 *	@requires underscore.string
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.Annotation
 **/
 class Wire extends Annotation {
 
@@ -25,7 +23,7 @@ class Wire extends Annotation {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.Wire
+	*	@return com.boneyard.annotation.engine.support.core.Wire
 	**/
 	constructor(...attrs) {
 		return super(...attrs);
@@ -55,7 +53,7 @@ class Wire extends Annotation {
 	*	Retrieves bone annotation on which this annotation was found
 	*	@public
 	*	@method foundIn
-	*	@return com.boneyard.annotation.support.Bone
+	*	@return com.boneyard.annotation.engine.support.core.Bone
 	**/
 	get foundIn() {
 		return this._foundIn;
@@ -65,7 +63,7 @@ class Wire extends Annotation {
 	*	Sets where in which bone this annotation was found
 	*	@public
 	*	@property foundIn
-	*	@type com.boneyard.annotation.support.Bone
+	*	@type com.boneyard.annotation.engine.support.core.Bone
 	**/
 	set foundIn(bone) {
 		this._foundIn = bone;
@@ -79,22 +77,9 @@ class Wire extends Annotation {
 	*	@return Object
 	**/
 	serialize() {
-		// continue here...
-		console.log(this.params.on);
 		let out = {};
 		_.ns(this.params.on, [`$bone.${this.params.id}`], out);
-		console.log(out);
 		return out;
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@public
-	*	@property contexts
-	*	@type Array
-	**/
-	get contexts() {
-		return [Context.TYPES.Constructor, Context.TYPES.Field];
 	}
 
 	/**

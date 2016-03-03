@@ -1,24 +1,22 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import Annotation from '../engine/annotation/annotation';
-import Context from '../engine/annotation/context';
+import Annotation from '../annotation';
 
 /**
 *	Class Plugin
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Plugin
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.Plugin
+*	@extends com.boneyard.annotation.engine.support.Annotation
 *
 *	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.templates.pluginTpl
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.Annotation
 **/
 class Plugin extends Annotation {
 
@@ -26,7 +24,7 @@ class Plugin extends Annotation {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.Plugin
+	*	@return com.boneyard.annotation.engine.support.core.Plugin
 	**/
 	constructor(...attrs) {
 		return super(...attrs);
@@ -40,16 +38,6 @@ class Plugin extends Annotation {
 	**/
 	get specs() {
 		return this.params.specs;
-	}
-
-	/**
-	*	Retrieves list of context in which this annotation should be found
-	*	@public
-	*	@property contexts
-	*	@type Array
-	**/
-	get contexts() {
-		return [Context.TYPES.Class];
 	}
 
 	/**

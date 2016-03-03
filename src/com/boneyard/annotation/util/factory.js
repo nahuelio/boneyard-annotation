@@ -35,7 +35,17 @@ class Factory {
 	*	@param [ns] {String} namespace
 	**/
 	set namespace(ns = './') {
-		this.ns = resolve(process.cwd(), ns);
+		this._namespace = resolve(__dirname, ns);
+	}
+
+	/**
+	*	Retrieves namespace
+	*	@public
+	*	@property namespace
+	*	@type String
+	**/
+	get namespace() {
+		return this._namespace;
 	}
 
 	/**
@@ -44,14 +54,13 @@ class Factory {
 	*	@throws Error
 	*	@method register
 	*	@param path {String} file path to the resource
-	*	@param [asString] {Boolean} load file as string
-	*	@return String
+	*	@return com.boneyard.annotation.util.Factory
 	**/
 	register(path = '') {
 		if(path === '' || this.exists(path)) return path;
-		var fullpath = (this.ns + '/' + path);
+		var fullpath = (this.namespace + '/' + path);
 		this.factories.set(path, require(fullpath));
-		return path;
+		return this;
 	}
 
 	/**
@@ -72,11 +81,11 @@ class Factory {
 	*	Returns true if a factory exists given the path name, otherwise returns false
 	*	@public
 	*	@method exists
-	*	@param [...path] {String} list of paths
+	*	@param [path] {String} path
 	*	@return Boolean
 	**/
-	exists(...path) {
-		return _.every(path.map((p) => { return this.factories.has(p); }));
+	exists(path = '') {
+		return this.factories.has(path);
 	}
 
 	/**

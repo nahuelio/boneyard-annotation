@@ -8,8 +8,8 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import esprima from 'esprima';
-import Factory from '../../util/factory';
+import ASTFactory from './factory/ast-factory';
+import AnnotationFactory from './factory/annotation-factory';
 import Logger from '../../util/logger';
 
 /**
@@ -23,8 +23,8 @@ import Logger from '../../util/logger';
 *	@requires underscore.string
 *	@requires glob
 *	@requires events.EventEmitter
-*	@requires esprima
-*	@requires com.boneyard.annotation.util.Factory
+*	@requires com.boneyard.annotation.engine.reader.factory.ASTFactory
+*	@requires com.boneyard.annotation.engine.reader.factory.AnnotationFactory
 *	@requires com.boneyard.annotation.util.Logger
 **/
 class Reader extends EventEmitter {
@@ -38,9 +38,11 @@ class Reader extends EventEmitter {
 	constructor(engine) {
 		super();
 		this._engine = engine;
-		this._factory = new Factory(resolve(__dirname, '../../support/'));
 		this._scanned = [];
 		this._ignored = [];
+		this._modules = [];
+		this._astFactory = new ASTFactory();
+		this._annFactory = new AnnotationFactory();
 		return this;
 	}
 
@@ -62,15 +64,42 @@ class Reader extends EventEmitter {
 	*	Default Annotation Read Strategy
 	*	@public
 	*	@method read
-	*	@param path {String} current file to read contents from
-	*	@param content {String} file content to be read
+	*	@param asset {String} current asset to read
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	read(asset) {
 		if(this.filter(asset)) {
-			//this.parse(esprima.parse(content, this.options));
+			this.emit('reader:asset', this.parse(this.load(asset)));
 		}
 		return this;
+	}
+
+	/**
+	*	Loads Asset Content from file
+	*	@public
+	*	@method load
+	*	@param asset {Object} asset to load content from
+	*	@return Object
+	**/
+	load(asset) {
+		try {
+			_.extend(asset, { content: fs.readFileSync(asset.path, 'utf8') });
+		} catch(ex) {
+			Logger.out(`Error while parsing file [${asset.path}]:\n\t${ex.message}`, 'r');
+			process.exit(1);
+		}
+		return asset;
+	}
+
+	/**
+	*	Default Asset Content Parsing Strategy
+	*	@public
+	*	@method parse
+	*	@param asset {Object} asset reference
+	*	@return Object
+	**/
+	parse(asset) {
+		return asset;
 	}
 
 	/**
@@ -81,7 +110,7 @@ class Reader extends EventEmitter {
 	*	@return Boolean
 	**/
 	filter(asset) {
-		if(asset.stats.isDirectory()) return true;
+		if(asset.stats.isDirectory()) return false;
 		let result = (this.extensions(asset) && !this.ignore(asset));
 		(result) ? this._scanned.push(asset.path) : this._ignored.push(asset.path);
 		return result;
@@ -95,8 +124,7 @@ class Reader extends EventEmitter {
 	*	@return Boolean
 	**/
 	ignore(asset) {
-		let basePath = `${resolve(process.cwd(), this.settings.source)}/`;
-		return _.contains(this.settings.ignore, _s.strRight(asset.path, basePath));
+		return _.contains(this.settings.ignore, _s.strRight(asset.path, this.settings.basePath));
 	}
 
 	/**
@@ -134,26 +162,6 @@ class Reader extends EventEmitter {
 	}
 
 	/**
-	*	Sets current file being analyzed by this reader
-	*	@public
-	*	@property current
-	*	@type String
-	**/
-	set current(path) {
-		this._current = path;
-	}
-
-	/**
-	*	Retrieves current file path being analyzed by this reader
-	*	@public
-	*	@property current
-	*	@type String
-	**/
-	get current() {
-		return this._current;
-	}
-
-	/**
 	*	Retrieve Esprima default options
 	*	@public
 	*	@property options
@@ -162,7 +170,6 @@ class Reader extends EventEmitter {
 	get options() {
 		return {
 			sourceType: 'module',
-			tokens: true,
 			tolerant: false,
 			attachComments: true
 		};
@@ -189,13 +196,33 @@ class Reader extends EventEmitter {
 	}
 
 	/**
-	*	Retrieve Reader's factory
+	*	Retrieve Modules
 	*	@public
-	*	@property factory
-	*	@type com.boneyard.annotation.util.Factory
+	*	@property modules
+	*	@type Array
 	**/
-	get factory() {
-		return this._factory;
+	get modules() {
+		return this._modules;
+	}
+
+	/**
+	*	Retrieves ASTFactory
+	*	@public
+	*	@property astFactory
+	*	@type com.boneyard.annotation.engine.reader.factory.ASTFactory
+	**/
+	get astFactory() {
+		return this._astFactory;
+	}
+
+	/**
+	*	Retrieves AnnotationFactory
+	*	@public
+	*	@property annFactory
+	*	@type com.boneyard.annotation.engine.reader.factory.AnnotationFactory
+	**/
+	get annFactory() {
+		return this._annFactory;
 	}
 
 	/**

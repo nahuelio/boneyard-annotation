@@ -1,16 +1,16 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
-import Bone from './bone';
+import Bone from '../core/bone';
 
 /**
 *	Class Component
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Component
-*	@extends com.boneyard.annotation.support.Bone
+*	@namespace com.boneyard.annotation.engine.support.ui
+*	@class com.boneyard.annotation.engine.support.ui.Component
+*	@extends com.boneyard.annotation.engine.support.core.Bone
 *
-*	@requires com.boneyard.annotation.support.Bone
+*	@requires com.boneyard.annotation.engine.support.core.Bone
 **/
 class Component extends Bone {
 
@@ -18,7 +18,7 @@ class Component extends Bone {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.Component
+	*	@return com.boneyard.annotation.support.ui.Component
 	**/
 	constructor(...attrs) {
 		return super(...attrs);

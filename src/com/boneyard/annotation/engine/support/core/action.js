@@ -1,24 +1,22 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support.core
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import Annotation from '../engine/annotation/annotation';
-import Context from '../engine/annotation/context';
+import Annotation from '../annotation';
 
 /**
 *	Class Action
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Action
-*	@extends com.boneyard.annotation.engine.annotation.Annotation
+*	@namespace com.boneyard.annotation.engine.support.core
+*	@class com.boneyard.annotation.engine.support.core.Action
+*	@extends com.boneyard.annotation.engine.support.Annotation
 *
 *	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.engine.writer.templates.actionTpl
-*	@requires com.boneyard.annotation.engine.annotation.Annotation
-*	@requires com.boneyard.annotation.engine.annotation.Context
+*	@requires com.boneyard.annotation.engine.support.Annotation
 **/
 class Action extends Annotation {
 
@@ -26,7 +24,7 @@ class Action extends Annotation {
 	*	Constructor
 	*	@constructor
 	*	@param [...attrs] {Object} constructor parameters
-	*	@return com.boneyard.annotation.support.Action
+	*	@return com.boneyard.annotation.support.core.Action
 	**/
 	constructor(...attrs) {
 		return super(...attrs);

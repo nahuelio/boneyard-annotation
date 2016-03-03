@@ -1,24 +1,22 @@
 /**
-*	@module com.boneyard.annotation.support
+*	@module com.boneyard.annotation.engine.support
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import Context from './context';
 import '../../util/mixins';
 
 /**
 *	Class Annotation
-*	@namespace com.boneyard.annotation.support
-*	@class com.boneyard.annotation.support.Annotation
+*	@namespace com.boneyard.annotation.engine.support
+*	@class com.boneyard.annotation.engine.support.Annotation
 *	@extends events.EventEmitter
 *
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
-*	@requires com.boneyard.annotation.support.Context
 *	@requires com.boneyard.annotation.util.mixins
 **/
 class Annotation extends EventEmitter {
@@ -27,7 +25,7 @@ class Annotation extends EventEmitter {
 	*	Constructor
 	*	@constructor
 	*	@param [parameters] {Object} annotation's parameters.
-	*	@return com.boneyard.annotation.support.Annotation
+	*	@return com.boneyard.annotation.engine.support.Annotation
 	**/
 	constructor(parameters = {}) {
 		super();
