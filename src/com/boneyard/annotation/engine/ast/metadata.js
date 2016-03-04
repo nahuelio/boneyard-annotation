@@ -25,8 +25,27 @@ class ASTMetadata extends EventEmitter {
 	*	@return com.boneyard.annotation.engine.ast.ASTMetadata
 	**/
 	constructor(attrs = {}) {
-		super();
+		return super();
+	}
+
+	/**
+	*	Default AST metadata serialization strategy
+	*	@public
+	*	@method serialize
+	*	@return com.boneyard.annotation.engine.ast.ASTMetadata
+	**/
+	serialize() {
 		return this;
+	}
+
+	/**
+	*	Default AST metadata deserialization strategy
+	*	@public
+	*	@method deserialize
+	*	@return Object
+	**/
+	deserialize() {
+		return { filename: this._filename };
 	}
 
 	/**

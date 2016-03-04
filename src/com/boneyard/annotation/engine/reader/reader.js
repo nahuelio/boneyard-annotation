@@ -40,7 +40,6 @@ class Reader extends EventEmitter {
 		this._engine = engine;
 		this._scanned = [];
 		this._ignored = [];
-		this._modules = [];
 		this._astFactory = new ASTFactory();
 		this._annFactory = new AnnotationFactory();
 		return this;
@@ -196,16 +195,6 @@ class Reader extends EventEmitter {
 	}
 
 	/**
-	*	Retrieve Modules
-	*	@public
-	*	@property modules
-	*	@type Array
-	**/
-	get modules() {
-		return this._modules;
-	}
-
-	/**
 	*	Retrieves ASTFactory
 	*	@public
 	*	@property astFactory
@@ -223,6 +212,16 @@ class Reader extends EventEmitter {
 	**/
 	get annFactory() {
 		return this._annFactory;
+	}
+
+	/**
+	*	Retrieves Program
+	*	@public
+	*	@property com.boneyard.annotation.engine.ast.ASTProgram
+	*	@type type
+	**/
+	get program() {
+		return this._program;
 	}
 
 	/**
