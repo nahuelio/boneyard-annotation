@@ -3,6 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import _ from 'underscore';
 import _s from 'underscore.string';
 import esprima from 'esprima';
 import q from '../../util/query';
@@ -14,6 +15,7 @@ import Reader from './reader';
 *	@class com.boneyard.annotation.reader.Es6Reader
 *	@extends com.boneyard.annotation.reader.Reader
 *
+*	@requires underscore
 *	@requires underscore.string
 *	@requires esprima
 *	@requires json-query
@@ -42,21 +44,23 @@ class Es6Reader extends Reader {
 	*	@return Object
 	**/
 	parse(asset) {
-		//q.set(esprima.parse(asset.content, this.options));
-		//console.log(q('body.type'));
-		//.forEach((n) => { this.program.add(this.filename(asset, n)); });
+		q.set(esprima.parse(asset.content, this.options))
+			.forEach('.body', null, _.bind(this.onModule, this, asset));
 		return asset;
 	}
 
-	test() {
-		q.set({
-		  people: [
-		    {name: 'Matt', country: 'NZ'},
-		    {name: 'Pete', country: 'AU'},
-		    {name: 'Mikey', country: 'NZ'}
-		  ]
-		});
-		console.log(q('people[].name'));
+	/**
+	*	Deulat Module Handler
+	*	@public
+	*	@method onModule
+	*	@param asset {Object} asset reference
+	*	@param node {Object} node reference
+	*	@return com.boneyard.annotation.reader.Es6Reader
+	**/
+	onModule(asset, node) {
+		console.log(asset.path, node);
+		//this.program.add(this.filename(asset, n));
+		return this;
 	}
 
 	/**

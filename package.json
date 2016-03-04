@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Boneyard Annotation Instrumenter for Boneyard IOC",
   "dependencies": {
+    "JSONSelect": "^0.4.0",
     "babel": "5.8.x",
     "bower": "1.4.x",
     "chalk": "^1.1.1",
@@ -10,7 +11,6 @@
     "esprima": "2.x.x",
     "fs-extra": "0.26.x",
     "glob": "5.0.14",
-    "json-query": "1.x.x",
     "underscore": "~1.8",
     "underscore.string": "~3.2.x"
   },
