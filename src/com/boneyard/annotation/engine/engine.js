@@ -7,6 +7,8 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import  {EventEmitter} from 'events';
+import Reader from './reader/reader';
+//import Writer from './writer/writer';
 import Logger from '../util/logger';
 
 /**
@@ -19,7 +21,9 @@ import Logger from '../util/logger';
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
-*	@requires com.boneyard.annotation.util.Logger;
+*	@requires com.boneyard.annotation.engine.reader.Reader
+*	@requires com.boneyard.annotation.engine.writer.Writer
+*	@requires com.boneyard.annotation.util.Logger
 **/
 class Engine extends EventEmitter {
 
@@ -31,7 +35,19 @@ class Engine extends EventEmitter {
 	constructor(runner) {
 		super();
 		this._runner = runner;
-		return this.createReader().createWriter();
+		this._reader = new Reader(this);
+		//this._writer = new Writer(this);
+		return this.attachEvents();
+	}
+
+	attachEvents() {
+		this._reader
+			.on('reader:asset', _.bind(this.onReaderAsset, this))
+			.on('reader:complete', _.bind(this.onReaderComplete, this));
+		// this._writer
+		// 	.on('wirter:asset', _.bind(this.onWriterAsset, this))
+		// 	.on('writer:complete', _.bind(this.onWriterComplete, this));
+		return this;
 	}
 
 	/**
@@ -44,44 +60,6 @@ class Engine extends EventEmitter {
 		this.emit('engine:start');
 		this.reader.scan();
 		return this;
-	}
-
-	/**
-	*	Reader Factory
-	*	@public
-	*	@method createReader
-	*	@return com.boneyard.annotation.engine.Engine
-	**/
-	createReader() {
-		try {
-			let Reader = require(resolve(__dirname, '../engine/reader/es' + this.settings.esversion.toString()));
-			this._reader = new Reader(this);
-			this._reader
-				.on('reader:asset', _.bind(this.onReaderAsset, this))
-				.on('reader:complete', _.bind(this.onReaderComplete, this));
-			return this;
-		} catch(ex) {
-			Logger.error(`StackTrace: ${ex.stack}`);
-			process.exit(1);
-		}
-	}
-
-	/**
-	*	Writer Factory
-	*	@public
-	*	@method createWriter
-	*	@return com.boneyard.annotation.engine.Engine
-	**/
-	createWriter(...args) {
-		try {
-			//let Writer = new require('../engine/writer/writer');
-			//this._writer = new Writer(this);
-			//this._writer.on('writer:complete', _.bind(this.onWriterComplete, this));
-			return this;
-		} catch(ex) {
-			Logger.error(`StackTrace: ${ex.stack}`);
-			process.exit(1);
-		}
 	}
 
 	/**
