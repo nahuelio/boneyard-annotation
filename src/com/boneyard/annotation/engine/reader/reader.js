@@ -8,6 +8,8 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
+import esprima from 'esprima';
+import q from '../../util/query';
 import ASTFactory from './factory/ast-factory';
 import AnnotationFactory from './factory/annotation-factory';
 import Logger from '../../util/logger';
@@ -21,8 +23,9 @@ import Logger from '../../util/logger';
 *	@requires path.resolve
 *	@requires underscore
 *	@requires underscore.string
-*	@requires glob
 *	@requires events.EventEmitter
+*	@requires esprima
+*	@requires com.boneyard.annotation.util.Query
 *	@requires com.boneyard.annotation.engine.reader.factory.ASTFactory
 *	@requires com.boneyard.annotation.engine.reader.factory.AnnotationFactory
 *	@requires com.boneyard.annotation.util.Logger
@@ -42,6 +45,7 @@ class Reader extends EventEmitter {
 		this._ignored = [];
 		this._astFactory = new ASTFactory();
 		this._annFactory = new AnnotationFactory();
+		this._program = this.astFactory.create('program.js');
 		return this;
 	}
 
@@ -91,14 +95,30 @@ class Reader extends EventEmitter {
 	}
 
 	/**
-	*	Default Asset Content Parsing Strategy
+	*	Asset Content Parsing Strategy
 	*	@public
+	*	@override
 	*	@method parse
 	*	@param asset {Object} asset reference
 	*	@return Object
 	**/
 	parse(asset) {
+		q.set(esprima.parse(asset.content, this.options));
+		q.forEach(':root > .body', null, _.bind(this.onModule, this, asset));
 		return asset;
+	}
+
+	/**
+	*	Default Module Handler
+	*	@public
+	*	@method onModule
+	*	@param asset {Object} asset reference
+	*	@param node {Object} node reference
+	*	@return com.boneyard.annotation.reader.Es6Reader
+	**/
+	onModule(asset, node) {
+		this.program.add(this.filename(asset), node);
+		return this;
 	}
 
 	/**
@@ -123,7 +143,7 @@ class Reader extends EventEmitter {
 	*	@return Boolean
 	**/
 	ignore(asset) {
-		return _.contains(this.settings.ignore, _s.strRight(asset.path, this.settings.basePath));
+		return _.contains(this.settings.ignore, this.filename(asset));
 	}
 
 	/**
@@ -158,6 +178,17 @@ class Reader extends EventEmitter {
 	complete() {
 		this.emit('reader:complete', this.files, this.ignored);
 		return this;
+	}
+
+	/**
+	*	Retrieves asset relative filename path to the source directory
+	*	@public
+	*	@method filename
+	*	@param asset {Object} asset reference
+	*	@return String
+	**/
+	filename(asset) {
+		return _s.strRight(asset.path, this.settings.basePath);
 	}
 
 	/**

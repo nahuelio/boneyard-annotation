@@ -36,7 +36,7 @@ class ASTProgram extends EventEmitter {
 	*	@public
 	*	@method add
 	*	@param key {String} module key
-	*	@param m {com.boneyard.annotation.engine.ast.ASTModule} module to add
+	*	@param node {Object} node reference
 	*	@return com.boneyard.annotation.engine.ast.ASTProgram
 	**/
 	add(key, node) {
@@ -50,12 +50,12 @@ class ASTProgram extends EventEmitter {
 	*	Remove an existing module
 	*	@public
 	*	@method remove
-	*	@param m {com.boneyard.annotation.engine.ast.ASTModule} module to add
+	*	@param key {String} module key
 	*	@return com.boneyard.annotation.engine.ast.ASTProgram
 	**/
-	remove(m) {
-		if(this.modules.has(m.filename)) {
-			this.modules.delete(m.filename);
+	remove(key) {
+		if(this.modules.has(key)) {
+			this.modules.delete(key);
 		}
 		return this;
 	}
