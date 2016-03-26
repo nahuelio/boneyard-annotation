@@ -5,21 +5,21 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import {EventEmitter} from 'events';
+import ASTElement from './element';
 import ASTModule from './module';
 
 /**
 *	Class ASTProgram
 *	@namespace com.boneyard.annotation.engine.ast
 *	@class com.boneyard.annotation.engine.ast.ASTProgram
-*	@extends events.EventEmitter
+*	@extends com.boneyard.annotation.engine.ast.ASTElement
 *
 *	@requires underscore
 *	@requires underscore.string
-*	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.engine.ast.ASTElement
 *	@requires com.boneyard.annotation.engine.ast.ASTModule
 **/
-class ASTProgram extends EventEmitter {
+class ASTProgram extends ASTElement {
 
 	/**
 	*	@constructor
@@ -100,6 +100,15 @@ class ASTProgram extends EventEmitter {
 	**/
 	get modules() {
 		return this._modules;
+	}
+
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'ASTProgram';
 	}
 
 }

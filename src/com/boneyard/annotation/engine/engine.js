@@ -8,6 +8,8 @@ import _ from 'underscore';
 import _s from 'underscore.string';
 import  {EventEmitter} from 'events';
 import Reader from './reader/reader';
+import ASTFactory from './factory/ast';
+import AnnotationFactory from './factory/annotation';
 //import Writer from './writer/writer';
 import Logger from '../util/logger';
 
@@ -139,6 +141,18 @@ class Engine extends EventEmitter {
 		return this.runner.settings;
 	}
 
+	/**
+	*	Engine Factory Static Initializer
+	*	@static
+	*	@method factory
+	**/
+	static factory() {
+		this.AST = new ASTFactory();
+		this.Annotation = new AnnotationFactory();
+	}
+
 }
+
+Engine.factory();
 
 export default Engine;

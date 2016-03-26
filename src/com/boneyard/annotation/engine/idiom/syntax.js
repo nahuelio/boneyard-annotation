@@ -17,53 +17,54 @@ class Syntax extends events.EventEmitter {
 
 	/**
 	*	@constructor
-	*	@param ast {com.boneyard.annotation.engine.ast.ASTElement} AST Element
+	*	@param [...args] {Object} constructor arguments
 	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
 	**/
-	constructor(ast) {
-		super();
-		this.ast = ast;
-		return this.source();
+	constructor(...args) {
+		return super();
 	}
 
 	/**
-	*	Default AST Sourcing Strategy
+	*	Default Query Visit Strategy
 	*	@public
-	*	@method source
-	*	@return	com.boneyard.annotation.engine.reader.idiom.Syntax
+	*	@method query
+	*	@param element {com.boneyard.annotation.engine.ast.ASTElement} ast element
+	*	@return com.boneyard.annotation.engine.ast.ASTElement
 	**/
-	source() {
+	query(element) {
+		this.element = element;
+		this.emit('syntax:visit', this);
+		return this.element;
+	}
+
+	/**
+	*	Default Read Visit Strategy
+	*	@public
+	*	@method read
+	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
+	**/
+	read() {
 		return this;
 	}
 
 	/**
-	*	Default AST Conversion Strategy
+	*	Get AST Element
 	*	@public
-	*	@method convert
-	*	@return	com.boneyard.annotation.engine.reader.idiom.Syntax
+	*	@property element
+	*	@type com.boneyard.annotation.engine.ast.ASTElement
 	**/
-	convert() {
-		return this;
+	get element() {
+		return this._element;
 	}
 
 	/**
-	*	Setter AST Element
+	*	Set AST Element
 	*	@public
-	*	@property ast
+	*	@property element
 	*	@type com.boneyard.annotation.engine.ast.ASTElement
 	**/
-	set ast(ast) {
-		this._ast = ast;
-	}
-
-	/**
-	*	Getter Syntax Strategy Element
-	*	@public
-	*	@property ast
-	*	@type com.boneyard.annotation.engine.ast.ASTElement
-	**/
-	get ast() {
-		return this._ast;
+	get element(e) {
+		this._element = e;
 	}
 
 	/**

@@ -28,6 +28,15 @@ class ASTConstructor extends ASTMethod {
 		return super(...args);
 	}
 
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'ASTConstructor';
+	}
+
 }
 
 export default ASTConstructor;

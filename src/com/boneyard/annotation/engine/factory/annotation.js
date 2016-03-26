@@ -6,7 +6,7 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
-import Factory from '../../../util/factory';
+import Factory from '../../util/factory';
 
 /**
 *	Class AnnotationFactory
@@ -51,17 +51,15 @@ class AnnotationFactory extends Factory {
 	static get annotations() {
 		return {
 			core: {
-				action: 'core/action.js',
-				bone: 'core/bone.js',
-				ignore: 'core/ignore.js',
-				json: 'core/json.js',
-				listento: 'core/listento.js',
-				plugin: 'core/plugin.js',
-				spec: 'core/spec.js',
-				wire: 'core/wire.js',
-			},
-			ui: {
-				component: 'ui/component.js'
+				action: 'core/action',
+				bone: 'core/bone',
+				ignore: 'core/ignore',
+				json: 'core/json',
+				listento: 'core/listento',
+				plugin: 'core/plugin',
+				spec: 'core/spec',
+				wire: 'core/wire',
+				component: 'core/component'
 			}
 		}
 	}

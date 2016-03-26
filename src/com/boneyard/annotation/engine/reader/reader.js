@@ -10,14 +10,13 @@ import _s from 'underscore.string';
 import {EventEmitter} from 'events';
 import esprima from 'esprima';
 import q from '../../util/query';
-import ASTFactory from './factory/ast-factory';
-import AnnotationFactory from './factory/annotation-factory';
 import Logger from '../../util/logger';
 
 /**
 *	Class Reader
 *	@namespace com.boneyard.annotation.reader
 *	@class com.boneyard.annotation.reader.Reader
+*	@extends events.EventEmitter
 *
 *	@requires fs-extra
 *	@requires path.resolve
@@ -26,8 +25,6 @@ import Logger from '../../util/logger';
 *	@requires events.EventEmitter
 *	@requires esprima
 *	@requires com.boneyard.annotation.util.Query
-*	@requires com.boneyard.annotation.engine.reader.factory.ASTFactory
-*	@requires com.boneyard.annotation.engine.reader.factory.AnnotationFactory
 *	@requires com.boneyard.annotation.util.Logger
 **/
 class Reader extends EventEmitter {
@@ -43,9 +40,6 @@ class Reader extends EventEmitter {
 		this._engine = engine;
 		this._scanned = [];
 		this._ignored = [];
-		this._astFactory = new ASTFactory();
-		this._annFactory = new AnnotationFactory();
-		this._program = this.astFactory.create('program.js');
 		return this;
 	}
 
@@ -53,7 +47,7 @@ class Reader extends EventEmitter {
 	*	Scan Source Path
 	*	@public
 	*	@method scan
-	*	@return
+	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	scan() {
 		fs.walk(this.settings.source)
@@ -71,10 +65,7 @@ class Reader extends EventEmitter {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	read(asset) {
-		if(this.filter(asset)) {
-			this.emit('reader:asset', this.parse(this.load(asset)));
-		}
-		return this;
+		return this.filter(asset) ? this.emit('reader:asset', this.parse(this.load(asset))) : this;
 	}
 
 	/**
@@ -117,7 +108,7 @@ class Reader extends EventEmitter {
 	*	@return com.boneyard.annotation.reader.Es6Reader
 	**/
 	onModule(asset, node) {
-		this.program.add(this.filename(asset), node);
+		// this.program.add(this.filename(asset), node);
 		return this;
 	}
 
@@ -131,7 +122,11 @@ class Reader extends EventEmitter {
 	filter(asset) {
 		if(asset.stats.isDirectory()) return false;
 		let result = (this.extensions(asset) && !this.ignore(asset));
-		(result) ? this._scanned.push(asset.path) : this._ignored.push(asset.path);
+		if(result) {
+			this._scanned.push(asset.path);
+		} else {
+			this._ignored.push(asset.path);
+		}
 		return result;
 	}
 
@@ -223,36 +218,6 @@ class Reader extends EventEmitter {
 	**/
 	get ignored() {
 		return this._ignored;
-	}
-
-	/**
-	*	Retrieves ASTFactory
-	*	@public
-	*	@property astFactory
-	*	@type com.boneyard.annotation.engine.reader.factory.ASTFactory
-	**/
-	get astFactory() {
-		return this._astFactory;
-	}
-
-	/**
-	*	Retrieves AnnotationFactory
-	*	@public
-	*	@property annFactory
-	*	@type com.boneyard.annotation.engine.reader.factory.AnnotationFactory
-	**/
-	get annFactory() {
-		return this._annFactory;
-	}
-
-	/**
-	*	Retrieves Program
-	*	@public
-	*	@property com.boneyard.annotation.engine.ast.ASTProgram
-	*	@type type
-	**/
-	get program() {
-		return this._program;
 	}
 
 	/**

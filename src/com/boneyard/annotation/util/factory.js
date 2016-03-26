@@ -2,8 +2,8 @@
 *	@module com.boneyard.annotation.util
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
-
 import fs from 'fs-extra';
+import _s from 'underscore.string';
 import {resolve} from 'path';
 import Logger from './logger';
 
@@ -12,6 +12,8 @@ import Logger from './logger';
 *	@namespace com.boneyard.annotation.util
 *	@class com.boneyard.annotation.util.Factory
 *
+*	@requires fs-extra
+*	@requires underscore.string
 *	@requires path.resolve
 *	@requires com.boneyard.annotation.util.Logger
 **/
@@ -29,16 +31,6 @@ class Factory {
 	}
 
 	/**
-	*	Sets a namespace in wich the factory will pull the factory classes
-	*	@public
-	*	@method namespace
-	*	@param [ns] {String} namespace
-	**/
-	set namespace(ns = './') {
-		this._namespace = resolve(__dirname, ns);
-	}
-
-	/**
 	*	Retrieves namespace
 	*	@public
 	*	@property namespace
@@ -46,6 +38,16 @@ class Factory {
 	**/
 	get namespace() {
 		return this._namespace;
+	}
+
+	/**
+	*	Sets a namespace in wich the factory will pull the factory classes
+	*	@public
+	*	@method namespace
+	*	@param [ns] {String} namespace
+	**/
+	set namespace(ns = './') {
+		this._namespace = resolve(__dirname, ns);
 	}
 
 	/**
@@ -57,8 +59,9 @@ class Factory {
 	*	@return com.boneyard.annotation.util.Factory
 	**/
 	register(path = '') {
-		if(path === '' || this.exists(path)) return path;
-		var fullpath = (this.namespace + '/' + path);
+		if(path === '' || !this.exists(path)) return path;
+		path = !_s.endsWith(path, '.js') ? (path + '.js') : path;
+		var fullpath = `${this.namespace}/${path}`;
 		this.factories.set(path, require(fullpath));
 		return this;
 	}

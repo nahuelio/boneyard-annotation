@@ -6,7 +6,7 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
-import Factory from '../../../util/factory';
+import Factory from '../../util/factory';
 
 /**
 *	Class ASTFactory
@@ -50,14 +50,14 @@ class ASTFactory extends Factory {
 	**/
 	static get elements() {
 		return {
-			class: 'class.js',
-			comment: 'comment.js',
-			constructor: 'constructor.js',
-			method: 'method.js',
-			module: 'module.js',
-			parameter: 'parameter.js',
-			program: 'program.js',
-			property: 'property.js'
+			class: 'class',
+			comment: 'comment',
+			constructor: 'constructor',
+			method: 'method',
+			module: 'module',
+			parameter: 'parameter',
+			program: 'program',
+			property: 'property'
 		}
 	}
 
