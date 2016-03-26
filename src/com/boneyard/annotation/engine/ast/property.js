@@ -5,19 +5,19 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import ASTMetadata from './metadata';
+import ASTElement from './element';
 
 /**
 *	Class ASTProperty
 *	@namespace com.boneyard.annotation.engine.ast
 *	@class com.boneyard.annotation.engine.ast.ASTProperty
-*	@extends com.boneyard.annotation.engine.ast.ASTMetadata
+*	@extends com.boneyard.annotation.engine.ast.ASTElement
 *
 *	@requires underscore
 *	@requires underscore.string
-*	@requires com.boneyard.annotation.engine.ast.ASTMetadata
+*	@requires com.boneyard.annotation.engine.ast.ASTElement
 **/
-class ASTProperty extends ASTMetadata {
+class ASTProperty extends ASTElement {
 
 	/**
 	*	@constructor
@@ -60,6 +60,15 @@ class ASTProperty extends ASTMetadata {
 	**/
 	get clazz() {
 		return this._class;
+	}
+
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'ASTProperty';
 	}
 
 }

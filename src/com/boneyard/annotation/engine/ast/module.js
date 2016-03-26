@@ -6,20 +6,20 @@
 import _ from 'underscore';
 import _s from 'underscore.string';
 import q from '../../util/query';
-import ASTMetadata from './metadata';
+import ASTElement from './element';
 
 /**
 *	Class ASTModule
 *	@namespace com.boneyard.annotation.engine.ast
 *	@class com.boneyard.annotation.engine.ast.ASTModule
-*	@extends com.boneyard.annotation.engine.ast.ASTMetadata
+*	@extends com.boneyard.annotation.engine.ast.ASTElement
 *
 *	@requires underscore
 *	@requires underscore.string
 *	@requires com.boneyard.annotation.util.Query
-*	@requires com.boneyard.annotation.engine.ast.ASTMetadata
+*	@requires com.boneyard.annotation.engine.ast.ASTElement
 **/
-class ASTModule extends ASTMetadata {
+class ASTModule extends ASTElement {
 
 	/**
 	*	@constructor
@@ -136,6 +136,15 @@ class ASTModule extends ASTMetadata {
 	**/
 	static parse(node) {
 		return new ASTModule({ node: node });
+	}
+
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'ASTModule';
 	}
 
 }

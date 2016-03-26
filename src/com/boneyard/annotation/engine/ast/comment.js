@@ -5,19 +5,19 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import {EventEmitter} from 'events';
+import ASTElement from './element';
 
 /**
 *	Class ASTComment
 *	@namespace com.boneyard.annotation.engine.ast
 *	@class com.boneyard.annotation.engine.ast.ASTComment
-*	@extends events.EventEmitter
+*	@extends com.boneyard.annotation.engine.ast.ASTElement
 *
 *	@requires underscore
 *	@requires underscore.string
-*	@requires events.EventEmitter
+*	@requires com.boneyard.annotation.engine.ast.ASTElement
 **/
-class ASTComment extends EventEmitter {
+class ASTComment extends ASTElement {
 
 	/**
 	*	@constructor
@@ -37,6 +37,15 @@ class ASTComment extends EventEmitter {
 	**/
 	get annotations() {
 		return this._annotations;
+	}
+
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'ASTComment';
 	}
 
 }
