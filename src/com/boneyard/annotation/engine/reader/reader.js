@@ -1,5 +1,5 @@
 /**
-*	@module com.boneyard.annotation.reader
+*	@module com.boneyard.annotation.engine.reader
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
@@ -8,14 +8,12 @@ import {resolve} from 'path';
 import _ from 'underscore';
 import _s from 'underscore.string';
 import {EventEmitter} from 'events';
-import esprima from 'esprima';
-import q from '../../util/query';
-import Logger from '../../util/logger';
+import Logger from '../../util/logger/logger';
 
 /**
 *	Class Reader
-*	@namespace com.boneyard.annotation.reader
-*	@class com.boneyard.annotation.reader.Reader
+*	@namespace com.boneyard.annotation.engine.reader
+*	@class com.boneyard.annotation.engine.reader.Reader
 *	@extends events.EventEmitter
 *
 *	@requires fs-extra
@@ -23,9 +21,8 @@ import Logger from '../../util/logger';
 *	@requires underscore
 *	@requires underscore.string
 *	@requires events.EventEmitter
-*	@requires esprima
-*	@requires com.boneyard.annotation.util.Query
-*	@requires com.boneyard.annotation.util.Logger
+*	@requires com.boneyard.annotation.engine.idiom.Syntax
+*	@requires com.boneyard.annotation.util.logger.Logger
 **/
 class Reader extends EventEmitter {
 
@@ -50,6 +47,7 @@ class Reader extends EventEmitter {
 	*	@return com.boneyard.annotation.reader.Reader
 	**/
 	scan() {
+		// TODO: create Program Visitor here...
 		fs.walk(this.settings.source)
 			.on('data', _.bind(this.read, this))
 			.on('error', _.bind(this.error, this))
@@ -77,7 +75,7 @@ class Reader extends EventEmitter {
 	**/
 	load(asset) {
 		try {
-			_.extend(asset, { content: fs.readFileSync(asset.path, 'utf8') });
+			_.extend(asset, { relativePath: this.filename(asset), content: fs.readFileSync(asset.path, 'utf8') });
 		} catch(ex) {
 			Logger.out(`Error while parsing file [${asset.path}]:\n\t${ex.message}`, 'r');
 			process.exit(1);
@@ -94,22 +92,8 @@ class Reader extends EventEmitter {
 	*	@return Object
 	**/
 	parse(asset) {
-		q.set(esprima.parse(asset.content, this.options));
-		q.forEach(':root > .body', null, _.bind(this.onModule, this, asset));
+		// FIXME: this.program.accept(Syntax.newVisitor('program', this.program, asset.content));
 		return asset;
-	}
-
-	/**
-	*	Default Module Handler
-	*	@public
-	*	@method onModule
-	*	@param asset {Object} asset reference
-	*	@param node {Object} node reference
-	*	@return com.boneyard.annotation.reader.Es6Reader
-	**/
-	onModule(asset, node) {
-		// this.program.add(this.filename(asset), node);
-		return this;
 	}
 
 	/**
@@ -187,20 +171,6 @@ class Reader extends EventEmitter {
 	}
 
 	/**
-	*	Retrieve Esprima default options
-	*	@public
-	*	@property options
-	*	@type Object
-	**/
-	get options() {
-		return {
-			sourceType: 'module',
-			tolerant: false,
-			attachComments: true
-		};
-	}
-
-	/**
 	*	Retrieve Scanned files
 	*	@public
 	*	@property files
@@ -218,6 +188,16 @@ class Reader extends EventEmitter {
 	**/
 	get ignored() {
 		return this._ignored;
+	}
+
+	/**
+	*	Retrieve Program
+	*	@public
+	*	@property program
+	*	@type com.boneyard.annotation.engine.ast.ASTProgram
+	**/
+	get program() {
+		return this._program;
 	}
 
 	/**

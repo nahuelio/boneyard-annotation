@@ -3,7 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
-import Syntax from './syntax';
+import Syntax from '../syntax';
 
 /**
 *	Class Es6Class

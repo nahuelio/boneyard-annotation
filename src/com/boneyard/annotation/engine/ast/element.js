@@ -5,7 +5,7 @@
 
 import _ from 'underscore';
 import _s from 'underscore.string';
-import  {EventEmitter} from 'events';
+import {EventEmitter} from 'events';
 
 /**
 *	Class ASTElement
@@ -21,11 +21,13 @@ class ASTElement extends EventEmitter {
 
 	/**
 	*	@constructor
-	*	@param [attrs] {Object} constructor attributes
+	*	@param [...args] {Object} constructor arguments
 	*	@return com.boneyard.annotation.engine.ast.ASTElement
 	**/
-	constructor(attrs = {}) {
-		return super();
+	constructor(...args) {
+		super();
+		this.asset = (args.length > 0) ? args[0].asset : null;
+		return this;
 	}
 
 	/**
@@ -39,7 +41,27 @@ class ASTElement extends EventEmitter {
 	accept(visitor) {
 		if(!visitor || !visitor.query || !visitor.read)
 			throw new Error(`${this.toString()} has not received visitor idiom element.`);
-		return visitor.query(this);
+		return visitor.query();
+	}
+
+	/**
+	*	Get Asset in which this element was found
+	*	@public
+	*	@property asset
+	*	@type Object
+	**/
+	get asset() {
+		return this._asset;
+	}
+
+	/**
+	*	Set Asset in which this element was found
+	*	@public
+	*	@property asset
+	*	@type Object
+	**/
+	set asset(asset) {
+		this._asset = asset;
 	}
 
 	/**
@@ -70,7 +92,7 @@ class ASTElement extends EventEmitter {
 	*	@return String
 	**/
 	toString() {
-		return `${[this.constructor.NAME]}`;
+		return `[${this.constructor.NAME}]`;
 	}
 
 	/**
@@ -78,10 +100,10 @@ class ASTElement extends EventEmitter {
 	*	@property NAME
 	*	@type String
 	**/
-	static NAME() {
+	static get NAME() {
 		return 'ASTElement';
 	}
 
 }
 
-export default ASTMetadata;
+export default ASTElement;

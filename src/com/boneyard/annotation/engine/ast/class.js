@@ -25,8 +25,7 @@ class ASTClass extends ASTElement {
 	*	@return com.boneyard.annotation.engine.ast.ASTClass
 	**/
 	constructor(attrs = {}) {
-		super();
-		return this;
+		return super(attrs);
 	}
 
 	/**

@@ -12,9 +12,9 @@ var fs = require('fs-extra'),
 	program = require('commander'),
 	chalk = require('chalk'),
 	pkg = require('../package.json'),
-	es6 = require('babel/register'),
+	es6 = require('babel-register'),
 	basePath = resolve(__dirname, '../src/com/boneyard/annotation/commands'),
-	Runner = require(basePath + '/runner');
+	Runner = require(basePath + '/runner').default;
 
 var year = new Date().getFullYear(),
 	info = _.template(fs.readFileSync(basePath + '/info/yard.info', 'utf8')),

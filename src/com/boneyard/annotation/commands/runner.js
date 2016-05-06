@@ -9,7 +9,7 @@ import _ from 'underscore';
 import glob from 'glob';
 import {EventEmitter} from 'events';
 import Engine from '../engine/engine';
-import Logger from '../util/logger';
+import Logger from '../util/logger/logger';
 
 /**
 *	Class Runner
@@ -22,6 +22,7 @@ import Logger from '../util/logger';
 *	@requires underscore
 *	@requires events.EventEmitter
 *	@requires com.boneyard.annotation.engine.Engine
+*	@requires com.boneyard.annotation.util.logger.Logger
 **/
 class Runner extends EventEmitter {
 
@@ -119,7 +120,7 @@ class Runner extends EventEmitter {
 	get default() {
 		return {
 			ignore: [],
-			esversion: 6,
+			esversion: 'es6',
 			minify: false,
 			env: Logger.environments.dev
 		};

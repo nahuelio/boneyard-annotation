@@ -2,7 +2,7 @@
 	"yard": {
 		"source": "./src/examples/es6",
 		"target": "./dist",
-		"esversion": 6,
+		"esversion": "es6",
 		"extensions": ["es6", "js"],
 		"ignore": ["main.js"],
 		"minify": false,

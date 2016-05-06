@@ -26,13 +26,51 @@ class ASTModule extends ASTElement {
 	*	@param [attrs] {Object} constructor attributes
 	*	@return com.boneyard.annotation.engine.ast.ASTModule
 	**/
-	constructor(attrs = { node: {} }) {
-		super();
+	constructor(...args) {
+		super(...args);
 		this._classes = new Map();
 		this._imports = new Map();
 		this._exports = new Map();
-		q.set(attrs.node);
-		return this.serialize();
+		return this;
+	}
+
+	/**
+	*	Add Import
+	*	@public
+	*	@method addImport
+	*	@param imp {Object} import statement
+	*	@return com.boneyard.annotation.engine.ast.ASTModule
+	**/
+	addImport(imp) {
+		if(!this.imports.has('')) {
+			//this.imports
+		}
+		return this;
+	}
+
+	/**
+	*	Remove Import
+	*	@public
+	*	@method removeImport
+	*	@param imp {Object} import statement
+	*	@return com.boneyard.annotation.engine.ast.ASTModule
+	**/
+	removeImport(imp) {
+		if(this.imports.has('')) {
+			//this.imports
+		}
+		return this;
+	}
+
+	/**
+	*	Retrieves an import statement by predicate, if not found returns null
+	*	@public
+	*	@method findImport
+	*	@param predicate {Function} predicate function
+	*	@return com.boneyard.annotation.engine.ast.ASTModule
+	**/
+	findImport(predicate) {
+		return _.find(this.imports.entries(), (k, v) => { return predicate(v, k); });
 	}
 
 	/**
@@ -44,9 +82,9 @@ class ASTModule extends ASTElement {
 	*	@return com.boneyard.annotation.engine.ast.ASTModule
 	**/
 	serialize() {
-		return this.onImport(q.match(':root :has(.type:val(?))', ['ImportDeclaration']))
-			.onClass(q.match(':root :has(.type:val(?))', ['ClassDeclaration']))
-			.onExport(q.match(':root :has(.type:expr(x^=?))', ['Export']));
+		// return this.onImport(q.match(':root :has(.type:val(?))', ['ImportDeclaration']))
+		// 	.onClass(q.match(':root :has(.type:val(?))', ['ClassDeclaration']))
+		// 	.onExport(q.match(':root :has(.type:expr(x^=?))', ['Export']));
 	}
 
 	/**
@@ -57,7 +95,6 @@ class ASTModule extends ASTElement {
 	*	@return Object
 	**/
 	deserialize() {
-		// TODO: Used By Writer Instruments
 		return _.extend(super.deserialize(), {});
 	}
 
@@ -125,17 +162,6 @@ class ASTModule extends ASTElement {
 	**/
 	get exports() {
 		return this._exports;
-	}
-
-	/**
-	*	Static Module Constructor
-	*	@static
-	*	@method parse
-	*	@param node {Object} ast node
-	*	@return com.boneyard.annotation.engine.ast.ASTModule
-	**/
-	static parse(node) {
-		return new ASTModule({ node: node });
 	}
 
 	/**

@@ -8,10 +8,8 @@ import _ from 'underscore';
 import _s from 'underscore.string';
 import  {EventEmitter} from 'events';
 import Reader from './reader/reader';
-import ASTFactory from './factory/ast';
-import AnnotationFactory from './factory/annotation';
 //import Writer from './writer/writer';
-import Logger from '../util/logger';
+import Logger from '../util/logger/logger';
 
 /**
 *	Class Engine
@@ -25,7 +23,7 @@ import Logger from '../util/logger';
 *	@requires events.EventEmitter
 *	@requires com.boneyard.annotation.engine.reader.Reader
 *	@requires com.boneyard.annotation.engine.writer.Writer
-*	@requires com.boneyard.annotation.util.Logger
+*	@requires com.boneyard.annotation.util.logger.Logger
 **/
 class Engine extends EventEmitter {
 
@@ -42,6 +40,12 @@ class Engine extends EventEmitter {
 		return this.attachEvents();
 	}
 
+	/**
+	*	Attach Events
+	*	@public
+	*	@method attachEVents
+	*	@return com.boneyard.annotation.engine.Engine
+	**/
 	attachEvents() {
 		this._reader
 			.on('reader:asset', _.bind(this.onReaderAsset, this))
@@ -141,18 +145,6 @@ class Engine extends EventEmitter {
 		return this.runner.settings;
 	}
 
-	/**
-	*	Engine Factory Static Initializer
-	*	@static
-	*	@method factory
-	**/
-	static factory() {
-		this.AST = new ASTFactory();
-		this.Annotation = new AnnotationFactory();
-	}
-
 }
-
-Engine.factory();
 
 export default Engine;

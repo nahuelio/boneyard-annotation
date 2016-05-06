@@ -6,18 +6,18 @@
 import fs from 'fs-extra';
 import {resolve} from 'path';
 import _ from 'underscore';
-import Factory from '../../util/factory';
+import Factory from '../../util/factory/factory';
 
 /**
 *	Class ASTFactory
 *	@namespace com.boneyard.annotation.engine.reader.factory
 *	@class com.boneyard.annotation.engine.reader.factory.ASTFactory
-*	@extends com.boneyard.annotation.util.Factory
+*	@extends com.boneyard.annotation.util.factory.Factory
 *
 *	@requires fs-extra
 *	@requires path.resolve
 *	@requires underscore
-*	@requires com.boneyard.annotation.util.Factory
+*	@requires com.boneyard.annotation.util.factory.Factory
 **/
 class ASTFactory extends Factory {
 
@@ -38,7 +38,9 @@ class ASTFactory extends Factory {
 	**/
 	registerAll(ns) {
 		ns = !ns ? ASTFactory.elements : ns;
-		_.each(ns, (v, k) => { return _.isString(v) ? this.register(v) : this.registerAll(ns[k]); });
+		_.each(ns, (v, k) => {
+			return _.isString(v) ? this.register(v) : this.registerAll(ns[k]);
+		});
 		return this;
 	}
 
@@ -51,14 +53,14 @@ class ASTFactory extends Factory {
 	static get elements() {
 		return {
 			class: 'class',
-			comment: 'comment',
-			constructor: 'constructor',
-			method: 'method',
+			//comment: 'comment',
+			//constructor: 'constructor',
+			//method: 'method',
 			module: 'module',
-			parameter: 'parameter',
-			program: 'program',
-			property: 'property'
-		}
+			//parameter: 'parameter',
+			program: 'program'
+			//property: 'property'
+		};
 	}
 
 }

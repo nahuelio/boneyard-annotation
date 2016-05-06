@@ -3,7 +3,9 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 
+import {resolve} from 'path';
 import {EventEmitter} from 'events';
+import _ from 'underscore';
 
 /**
 *	Class Syntax
@@ -11,39 +13,37 @@ import {EventEmitter} from 'events';
 *	@class com.boneyard.annotation.engine.reader.idiom.Syntax
 *	@extends events.EventEmitter
 *
-*	@requires evetns.EventEmitter
+*	@requires path
+*	@requires events.EventEmitter
+*	@requires underscore
 **/
-class Syntax extends events.EventEmitter {
+class Syntax extends EventEmitter {
 
 	/**
 	*	@constructor
-	*	@param [...args] {Object} constructor arguments
-	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
-	**/
-	constructor(...args) {
-		return super();
-	}
-
-	/**
-	*	Default Query Visit Strategy
-	*	@public
-	*	@method query
 	*	@param element {com.boneyard.annotation.engine.ast.ASTElement} ast element
-	*	@return com.boneyard.annotation.engine.ast.ASTElement
+	*	@param [node] {Object} current ast node
+	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
 	**/
-	query(element) {
+	constructor(element, node) {
+		super();
 		this.element = element;
-		this.emit('syntax:visit', this);
-		return this.element;
+		return this.parse(node);
 	}
 
 	/**
-	*	Default Read Visit Strategy
+	*	Default parse strategy will take a given ast node to work as a context for traversing the tree
+	*	and query the ast.
 	*	@public
-	*	@method read
+	*	@throws Error
+	*	@method parse
+	*	@param [node] {Object} current ast node
 	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
 	**/
-	read() {
+	parse(node) {
+		if(!node)
+			throw new Error(`${this.toString()} parse method requires a json node context in order to query the ast`);
+		this.element.node = node;
 		return this;
 	}
 
@@ -63,8 +63,42 @@ class Syntax extends events.EventEmitter {
 	*	@property element
 	*	@type com.boneyard.annotation.engine.ast.ASTElement
 	**/
-	get element(e) {
+	set element(e) {
 		this._element = e;
+	}
+
+	/**
+	*	Retrieve Esprima default options
+	*	@public
+	*	@property options
+	*	@type Object
+	**/
+	get options() {
+		return {
+			sourceType: 'module',
+			tolerant: false,
+			attachComments: true
+		};
+	}
+
+	/**
+	*	Return a string Representation of an instance of this class.
+	*	@public
+	*	@override
+	*	@method toString
+	*	@return String
+	**/
+	toString() {
+		return this.constructor.NAME;
+	}
+
+	/**
+	*	@static
+	*	@property NAME
+	*	@type String
+	**/
+	static NAME() {
+		return 'Syntax';
 	}
 
 	/**
@@ -75,7 +109,27 @@ class Syntax extends events.EventEmitter {
 	*	@return com.boneyard.annotation.engine.reader.idiom.Syntax
 	**/
 	static new(...args) {
-		return new Syntax(...args);
+		return new this(...args);
+	}
+
+	/**
+	*	Get Configuration Settings
+	*	@static
+	*	@property settings
+	*	@type Object
+	**/
+	static get settings() {
+		return this._settings;
+	}
+
+	/**
+	*	Set Configuration Settings
+	*	@static
+	*	@property settings
+	*	@type Object
+	**/
+	static set settings(settings) {
+		this._settings = settings;
 	}
 
 }

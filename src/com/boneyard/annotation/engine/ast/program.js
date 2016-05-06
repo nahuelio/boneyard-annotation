@@ -25,23 +25,22 @@ class ASTProgram extends ASTElement {
 	*	@constructor
 	*	@return com.boneyard.annotation.engine.ast.ASTProgram
 	**/
-	constructor() {
-		super();
+	constructor(...args) {
+		super(...args);
 		this.modules = new Map();
 		return this;
 	}
 
 	/**
-	*	Add a new module by a given key and ast node
+	*	Add a new module
 	*	@public
 	*	@method add
-	*	@param key {String} module key
-	*	@param node {Object} node reference
+	*	@param module {Object} ast module element
 	*	@return com.boneyard.annotation.engine.ast.ASTProgram
 	**/
-	add(key, node) {
-		if(!this.modules.has(key)) {
-			this.modules.set(key, ASTModule.parse(node));
+	add(module) {
+		if(!this.modules.has(module.asset.relativePath)) {
+			this.modules.set(module.asset.relativePath, module);
 		}
 		return this;
 	}
@@ -50,12 +49,12 @@ class ASTProgram extends ASTElement {
 	*	Remove an existing module
 	*	@public
 	*	@method remove
-	*	@param key {String} module key
+	*	@param module {Object} ast module element
 	*	@return com.boneyard.annotation.engine.ast.ASTProgram
 	**/
-	remove(key) {
-		if(this.modules.has(key)) {
-			this.modules.delete(key);
+	remove(module) {
+		if(module && this.modules.has(module.asset.relativePath)) {
+			this.modules.delete(module.asset.relativePath);
 		}
 		return this;
 	}

@@ -1,14 +1,13 @@
 /**
-*	@module com.boneyard.annotation.util
+*	@module com.boneyard.annotation.util.logger
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
-
 import _ from 'underscore';
 
 /**
 *	Class Logger
-*	@namespace com.boneyard.annotation.util
-*	@class com.boneyard.annotation.util.Logger
+*	@namespace com.boneyard.annotation.util.logger
+*	@class com.boneyard.annotation.util.logger.Logger
 *
 *	@requires underscore
 **/

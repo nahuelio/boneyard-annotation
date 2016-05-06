@@ -3,6 +3,7 @@
 *	@author Patricio Ferreira <3dimentionar@gmail.com>
 **/
 import fs from 'fs-extra';
+import _ from 'underscore';
 import _s from 'underscore.string';
 import {resolve} from 'path';
 import Logger from './logger';
@@ -13,6 +14,7 @@ import Logger from './logger';
 *	@class com.boneyard.annotation.util.Factory
 *
 *	@requires fs-extra
+*	@requires underscore
 *	@requires underscore.string
 *	@requires path.resolve
 *	@requires com.boneyard.annotation.util.Logger
@@ -59,10 +61,13 @@ class Factory {
 	*	@return com.boneyard.annotation.util.Factory
 	**/
 	register(path = '') {
-		if(path === '' || !this.exists(path)) return path;
-		path = !_s.endsWith(path, '.js') ? (path + '.js') : path;
-		var fullpath = `${this.namespace}/${path}`;
-		this.factories.set(path, require(fullpath));
+		if(path === '' || this.exists(path)) return this;
+		try {
+			var fullpath = `${this.namespace}/${path}`;
+			this.factories.set(path, require(fullpath));
+		} catch(ex) {
+			console.error(ex.message);
+		}
 		return this;
 	}
 
@@ -115,6 +120,18 @@ class Factory {
 		if(!this.exists(path)) return null;
 		let FactoryClass = this.get(path);
 		return new FactoryClass(...args);
+	}
+
+	/**
+	*	Serialize Factory into JSON
+	*	@public
+	*	@method serialize
+	*	@return Object
+	**/
+	serialize() {
+		let out = {};
+		this.factories.forEach((v, k) => { out[k] = v; });
+		return out;
 	}
 
 }
